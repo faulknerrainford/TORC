@@ -1,0 +1,18 @@
+Metadata-Version: 2.1
+Name: TORC
+Version: 0.1
+Summary: The TORC dna circuit design and analysis tool
+Home-page: https://github.com/faulknerrainford/TORC
+Author: Penn Faulkner Rainford
+Author-email: penn.rainford@york.ac.uk
+License: GLP v3
+Platform: UNKNOWN
+Classifier: Development Status :: 1 - Planning
+Classifier: Intended Audience :: Science/Research
+Classifier: License :: OSI Approved :: GNU General Public License v3 (GPLv3)
+Classifier: Operating System :: POSIX :: Linux
+Classifier: Programming Language :: Python :: 3.8
+License-File: LICENSE
+
+UNKNOWN
+

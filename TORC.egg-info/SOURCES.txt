@@ -1,0 +1,9 @@
+LICENSE
+README.rst
+setup.py
+TORC/__init__.py
+TORC.egg-info/PKG-INFO
+TORC.egg-info/SOURCES.txt
+TORC.egg-info/dependency_links.txt
+TORC.egg-info/requires.txt
+TORC.egg-info/top_level.txt
