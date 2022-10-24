@@ -1,1 +1,6 @@
-sphinx
+sphinx==5.3.0
+numpy==1.23.4
+TORC~=alpha
+matplotlib~=3.6.0
+setuptools==60.9.3
+webcolors~=1.12

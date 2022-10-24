@@ -1,11 +1,16 @@
 ###############################
-Package setup and maintanence
+Package setup and maintenance
 ###############################
 
 Requirements
 ============
 
 These need listing in the requirements file and the setup.py file.
+
+To install requirements:
+
+pip install -r requirements.txt
+
 
 Version
 ==========
@@ -27,3 +32,18 @@ Distributing
 
 See instructions on testing on testpypi and further distributing.
 
+Testing
+========
+
+Info on the creation and use of tests:
+
+https://www.jetbrains.com/help/pycharm/testing.html
+
+https://realpython.com/python-testing/
+
+Before first release
+=======================
+
+Set up PyPI and testPyPI accounts
+Set up tox to run tests on multiple python versions and update version statement in setup.
+(Don't add Tox to git)

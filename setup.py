@@ -10,6 +10,8 @@ setup(
     license='GLP v3',
     packages=['TORC'],
     install_requires=['numpy',
+                      'sphinx',
+                      'matplotlib',
                       ],
 
     classifiers=[
