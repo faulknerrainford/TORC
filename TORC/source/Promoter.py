@@ -1,6 +1,3 @@
-from TORC import Supercoil
-
-
 class Promoter:
     """
     Promoter class increases the amount of protein in the local environment
@@ -10,6 +7,8 @@ class Promoter:
     label           :   String
         Name of the protein being promoted used to ID, in case of multiple promoters of the same type name_i is used
         to number the instances.
+    local       :   LocalArea
+        Tracks the supercoiling and proteins in the circuit
     region          :   Int
         The supercoiling region the promoter belongs to.
     weak    :   float
@@ -20,7 +19,7 @@ class Promoter:
         The channel to send output on to the environment component or supercoiling signals
     """
 
-    def __init__(self, label, region, weak=0, strong=1, output_channel=None, fluorescent=False):
+    def __init__(self, label, region, local, weak=0, strong=1, output_channel=None, fluorescent=False):
         self.label = label
         self.gene = label.split("_")[0]
         self.coil_state = "neutral"
@@ -33,6 +32,7 @@ class Promoter:
             raise TypeError("An output queue must be provided")
         self.output_channel = output_channel
         self.fluorescent = fluorescent
+        self.local = local
 
     def update(self):
         """
@@ -51,7 +51,7 @@ class Promoter:
         Checks coiling signal and updates coil_state if it has changed.
         """
 
-        current_sc_state = Supercoil.region_list[self.region]
+        current_sc_state = self.local.get_supercoil(self.region)
         if self.coil_state != current_sc_state:
             self.coil_state = current_sc_state
         return True

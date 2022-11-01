@@ -39,6 +39,7 @@ Environment
 ------------
 
 .. autoclass:: TORC.Environment
+    :members:
 
 Visible
 --------

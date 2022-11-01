@@ -1,18 +1,23 @@
 from webcolors import rgb_to_name
-from TORC import Environment
+from TORC import LocalArea
 
 
 class Visible:
     """
     Class provides component which tracks the colour of the visual output from any fluorescent proteins produced by the
     system.
+
+    Parameters
+    -----------
+    local       :   LocalArea
+        Tracks the supercoiling and proteins in the circuit
     """
 
-    def __init__(self):
+    def __init__(self, local):
         self.label = "visible"
         self.rgb = [0.0, 0.0, 0.0]
         self.colour = "black"
-        pass
+        self.local = local
 
     def read_signal(self):
         """
@@ -20,24 +25,24 @@ class Visible:
         combined for use.
         """
         # read from red, blue, green, yellow, magenta, cyan environments.
-        if "red" in Environment.environment_dictionary.keys():
-            self.rgb[0] = Environment.environment_dictionary["red"]
-        if "green" in Environment.environment_dictionary.keys():
-            self.rgb[1] = Environment.environment_dictionary["green"]
-        if "blue" in Environment.environment_dictionary.keys():
-            self.rgb[2] = Environment.environment_dictionary["blue"]
-        if "magenta" in Environment.environment_dictionary.keys():
-            self.rgb[0] = self.rgb[0] + Environment.environment_dictionary["magenta"]*0.5
-            self.rgb[2] = self.rgb[2] + Environment.environment_dictionary["magenta"]*0.5
-        if "yellow" in Environment.environment_dictionary.keys():
-            self.rgb[0] = self.rgb[0] + Environment.environment_dictionary["yellow"]*0.5
-            self.rgb[1] = self.rgb[2] + Environment.environment_dictionary["yellow"]*0.5
-        if "cyan" in Environment.environment_dictionary.keys():
-            self.rgb[1] = self.rgb[0] + Environment.environment_dictionary["cyan"]*0.5
-            self.rgb[2] = self.rgb[2] + Environment.environment_dictionary["cyan"]*0.5
+        if "red" in self.local.get_keys():
+            self.rgb[0] = self.local.get_environment("red")
+        if "green" in self.local.get_keys():
+            self.rgb[1] = self.local.get_environment("green")
+        if "blue" in self.local.get_keys():
+            self.rgb[2] = self.local.get_environment("blue")
+        if "magenta" in self.local.get_keys():
+            self.rgb[0] = self.rgb[0] + self.local.get_environment("magenta")*0.5
+            self.rgb[2] = self.rgb[2] + self.local.get_environment("magenta")*0.5
+        if "yellow" in self.local.get_keys():
+            self.rgb[0] = self.rgb[0] + self.local.get_environment("yellow")*0.5
+            self.rgb[1] = self.rgb[2] + self.local.get_environment("yellow")*0.5
+        if "cyan" in self.local.get_keys():
+            self.rgb[1] = self.rgb[0] + self.local.get_environment("cyan")*0.5
+            self.rgb[2] = self.rgb[2] + self.local.get_environment("cyan")*0.5
         # Sum to get an RGB colour and normalize
-        self.rgb = [x/max(self.rgb) for x in self.rgb]
-        pass
+        if max(self.rgb)>0:
+            self.rgb = [x/max(self.rgb) for x in self.rgb]
 
     # noinspection PyTypeChecker
     def check_colour(self):
@@ -46,7 +51,6 @@ class Visible:
         """
         # Match current colour to named colour and return as label/check metric
         self.colour = rgb_to_name(tuple([int(255*x) for x in self.rgb]))
-        pass
 
     def update(self):
         """
@@ -55,4 +59,3 @@ class Visible:
         self.read_signal()
         self.check_colour()
         # TODO: output an updated version of the output colour to terminal to track output
-        pass

@@ -20,3 +20,11 @@ class ReceivingError(SignalError):
     """
     def __init__(self):
         super(ReceivingError, self).__init__()
+
+
+class BridgeError(ValueError):
+    """
+    Bridge ends were not pairable
+    """
+    def __init__(self, message):
+        super(ValueError, self).__init__(message)

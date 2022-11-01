@@ -1,24 +1,26 @@
 from unittest import TestCase
-from TORC import GenetetA, Supercoil, Channel, SignalError
+from TORC import GenetetA, Supercoil, Channel, SignalError, LocalArea
 from threading import Thread
 
 
 class TestSupercoil(TestCase):
 
     def test_get_coil_state(self):
+        local = LocalArea()
         sc_channel, _ = Channel()
-        supercoil = Supercoil(sc_channel)
-        self.assertEqual(Supercoil.region_list[supercoil.supercoiling_region], supercoil.get_coil_state(),
+        supercoil = Supercoil(sc_channel, local)
+        self.assertEqual(local.get_supercoil(supercoil.supercoiling_region), supercoil.get_coil_state(),
                          "Incorrect coiling state")
-        supercoil.region_list[supercoil.supercoiling_region] = "Test"
+        local.set_supercoil(supercoil.supercoiling_region, "Test")
         self.assertEqual(supercoil.get_coil_state(), "Test", "Incorrect test state")
 
     def test_coil(self):
+        local = LocalArea()
         sc_channel_1, _ = Channel()
         sc_channel_2, gene_channel = Channel()
-        supercoil_1 = Supercoil(sc_channel_1)
-        gene = GenetetA(gene_channel, supercoil_1.supercoiling_region)
-        supercoil_2 = Supercoil(sc_channel_2)
+        supercoil_1 = Supercoil(sc_channel_1, local)
+        gene = GenetetA(gene_channel, supercoil_1.supercoiling_region, local)
+        supercoil_2 = Supercoil(sc_channel_2, local)
         self.assertEqual("neutral", supercoil_2.get_coil_state(), "Incorrect coil state at start")
         circuit = [supercoil_2, gene]
         with self.assertRaises(SignalError, msg="Listened with no signal"):
@@ -38,11 +40,12 @@ class TestSupercoil(TestCase):
     #     self.fail()
 
     def test_update(self):
+        local = LocalArea()
         sc_channel_1, _ = Channel()
         sc_channel_2, gene_channel = Channel()
-        supercoil_1 = Supercoil(sc_channel_1)
-        gene = GenetetA(gene_channel, supercoil_1.supercoiling_region)
-        supercoil_2 = Supercoil(sc_channel_2)
+        supercoil_1 = Supercoil(sc_channel_1, local)
+        gene = GenetetA(gene_channel, supercoil_1.supercoiling_region, local)
+        supercoil_2 = Supercoil(sc_channel_2, local)
         circuit = [gene, supercoil_2]
         self.assertEqual("neutral", supercoil_2.get_coil_state(), "Incorrect coiling state at start")
         supercoil_2.update()

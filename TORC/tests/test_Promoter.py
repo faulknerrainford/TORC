@@ -1,5 +1,5 @@
 from unittest import TestCase
-from TORC import GenetetA, SignalError, Supercoil, Promoter, Channel
+from TORC import GenetetA, SignalError, Supercoil, Promoter, Channel, LocalArea
 from queue import Queue
 from threading import Thread
 
@@ -7,24 +7,26 @@ from threading import Thread
 class TestPromoter(TestCase):
 
     def test_update_sequential(self):
+        local = LocalArea()
         sc_channel, _ = Channel()
-        supercoil = Supercoil(sc_channel)
+        supercoil = Supercoil(sc_channel, local)
         test_out_queue = Queue()
-        promoter = Promoter("leu500", supercoil.supercoiling_region, output_channel=test_out_queue)
+        promoter = Promoter("leu500", supercoil.supercoiling_region, local, output_channel=test_out_queue)
         promoter.update()
         self.assertEqual("neutral", promoter.coil_state, "coil state incorrect")
-        Supercoil.region_list[supercoil.supercoiling_region] = "negative"
+        local.set_supercoil(supercoil.supercoiling_region, "negative")
         promoter.update()
         self.assertEqual("negative", promoter.coil_state, "coil state updated failed")
 
     def test_update_concurrent(self):
+        local = LocalArea()
         sc_channel_1, _ = Channel()
-        supercoil_1 = Supercoil(sc_channel_1)
+        supercoil_1 = Supercoil(sc_channel_1, local)
         sc_channel_2, gene_channel = Channel()
-        gene = GenetetA(gene_channel, supercoil_1.supercoiling_region)
-        supercoil_2 = Supercoil(sc_channel_2)
+        gene = GenetetA(gene_channel, supercoil_1.supercoiling_region, local)
+        supercoil_2 = Supercoil(sc_channel_2, local)
         test_out_queue = Queue()
-        promoter = Promoter("leu500", supercoil_2.supercoiling_region, output_channel=test_out_queue)
+        promoter = Promoter("leu500", supercoil_2.supercoiling_region, local, output_channel=test_out_queue)
         circuit = [supercoil_2, gene, promoter]
         promoter.update()
         self.assertEqual("neutral", promoter.coil_state, "coil state incorrect")
@@ -38,21 +40,23 @@ class TestPromoter(TestCase):
         self.assertEqual("negative", promoter.coil_state, "coil state update failed")
 
     def test_input_check(self):
+        local = LocalArea()
         sc_channel, _ = Channel()
-        supercoil = Supercoil(sc_channel)
+        supercoil = Supercoil(sc_channel, local)
         test_out_queue = Queue()
-        promoter = Promoter("leu500", supercoil.supercoiling_region, output_channel=test_out_queue)
+        promoter = Promoter("leu500", supercoil.supercoiling_region, local, output_channel=test_out_queue)
         promoter.input_check()
         self.assertEqual("neutral", promoter.coil_state, "coil state incorrect")
-        Supercoil.region_list[supercoil.supercoiling_region] = "negative"
+        local.set_supercoil(supercoil.supercoiling_region, "negative")
         promoter.input_check()
         self.assertEqual("negative", promoter.coil_state, "coil state update failed")
 
     def test_output_signal(self):
+        local = LocalArea()
         sc_channel, _ = Channel()
-        supercoil = Supercoil(sc_channel)
+        supercoil = Supercoil(sc_channel, local)
         test_out_queue = Queue()
-        promoter = Promoter("red", supercoil.supercoiling_region, output_channel=test_out_queue, fluorescent=True)
+        promoter = Promoter("red", supercoil.supercoiling_region, local, output_channel=test_out_queue, fluorescent=True)
         promoter.output_signal("weak")
         self.assertEqual(0, promoter.output_channel.get(), "Incorrect weak signal")
         promoter.output_signal("strong")

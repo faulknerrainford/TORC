@@ -1,4 +1,4 @@
-from TORC import Environment, Supercoil, SendingError, Channel
+from TORC import SendingError, Channel
 
 
 class Bridge:
@@ -10,6 +10,8 @@ class Bridge:
     ----------
     label : String
         name of protein it looks for in the environment
+    local : LocalArea
+        container tracking supercoiling and protein production within the circuit.
     sc_acw : int
         anti-clockwise supercoiling regions index
     sc_cw : int
@@ -20,7 +22,7 @@ class Bridge:
         Same channel as held by clockwise supercoiling region used to transmit supercoiling from anti-clockwise to
         clockwise regions
     """
-    def __init__(self, label, sc_acw=0, sc_cw=0, channel=None, protein_threshold=0):
+    def __init__(self, label, local, sc_acw=0, sc_cw=0, channel=None, protein_threshold=0):
         self.label = label
         self.supercoiling_clockwise = sc_cw
         self.supercoiling_anticlockwise = sc_acw
@@ -30,6 +32,7 @@ class Bridge:
             self.coil_channel, _ = Channel()
         self.threshold = protein_threshold
         self.bridge_check = None
+        self.local = local
 
     def set_bridge_check(self, bridge):
         """
@@ -54,7 +57,7 @@ class Bridge:
         """
         # Check the other bridge exists (not None) and has same trigger protein and trigger protein in environment
         if self.bridge_check and self.bridge_check.label == self.label and \
-                Environment.environment_dictionary[self.label] > self.threshold:
+                self.local.get_environment(self.label) > self.threshold:
             return True
         else:
             return False
@@ -69,7 +72,7 @@ class Bridge:
             State of the supercoiling region
         """
         # looks up and return anti-clockwise coiling state
-        return Supercoil.region_list[self.supercoiling_anticlockwise]
+        return self.local.get_supercoil(self.supercoiling_anticlockwise)
 
     def coil_out(self, signal):
         """

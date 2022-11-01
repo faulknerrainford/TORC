@@ -1,31 +1,22 @@
-import _queue
-from TORC import ReceivingError, Channel
+from TORC import ReceivingError
 
 
 class Supercoil:
     """
     Supercoil provides supercoiling regions and globals for their use.
 
-    Globals
-    -------
-    super_coil_index : int
-        integer indicating current number of regions and number value of the next to be created.
-    region_list : List<String>
-        List with the coiling state of each supercoiling region.
-
     Parameters
     ----------
-    receiving_queue : JoinableQueue
+    channel :   JoinableQueue
         Queue for receiving signals to update the coiling state, normally sent by gene, block or bridge component.
+    local   :   LocalArea
+        Tracks the supercoiling and proteins in the circuit
     """
-    super_coil_index = 0
-    region_list = []
 
-    def __init__(self, channel):
+    def __init__(self, channel, local):
         self.channel = channel
-        self.supercoiling_region = self.super_coil_index
-        Supercoil.region_list.append("neutral")
-        Supercoil.super_coil_index = Supercoil.super_coil_index + 1
+        self.supercoiling_region = local.add_supercoil()
+        self.local = local
 
     def coil(self):
         """
@@ -41,7 +32,7 @@ class Supercoil:
         except ReceivingError:
             raise ReceivingError
         if update:
-            Supercoil.region_list[self.supercoiling_region] = update
+            self.local.set_supercoil(self.supercoiling_region, update)
 
     def get_coil_state(self):
         """
@@ -52,7 +43,7 @@ class Supercoil:
         String
             Current state of the supercoiling region
         """
-        return self.region_list[self.supercoiling_region]
+        return self.local.get_supercoil(self.supercoiling_region)
 
     def update(self):
         """

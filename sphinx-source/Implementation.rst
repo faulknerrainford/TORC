@@ -9,5 +9,6 @@ Structures.
    :maxdepth: 2
    :caption: Contents:
 
+   code/Circuits
    code/Components
    code/ControlStructures

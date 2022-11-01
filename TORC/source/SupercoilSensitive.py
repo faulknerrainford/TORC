@@ -7,21 +7,23 @@ class SupercoilSensitive(Promoter):
 
     Parameters
     -----------
-    colour           :   String
+    colour          :   String
         Name of the colour being produced used to ID, in case of multiple Fluorescent of the same type colour_i is used
         to number the instances.
     region          :   Int
         The supercoiling region the fluorescent belongs to.
-    weak    :   float
+    local           :   LocalArea
+        Tracks the supercoiling and proteins in the circuit
+    weak            :   float
         The rate of output when neutrally coiled
     strong          :   float
         The rate of output when negatively coiled
-    output_channel    :   JoinableQueue
+    output_channel  :   JoinableQueue
         The channel to send output on to the visible component
     """
 
-    def __init__(self, colour, region, weak=0, strong=1, output_channel=None, fluorescent=False):
-        super(SupercoilSensitive, self).__init__(colour, region, weak, strong, output_channel, fluorescent)
+    def __init__(self, colour, region, local, weak=0, strong=1, output_channel=None, fluorescent=False):
+        super(SupercoilSensitive, self).__init__(colour, region, local, weak, strong, output_channel, fluorescent)
 
     def input_check(self):
         """

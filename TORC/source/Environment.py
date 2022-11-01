@@ -4,9 +4,11 @@ class Environment:
     in the environment and then updates the contents based on output from other components.
 
     Parameters
-    ----------
+    -----------
     label       :   String
         The name of the protein being tracked.
+    local       :   LocalArea
+        Tracks the supercoiling and proteins in the circuit
     content     :   float
         The current amount of protein in the environment.
     decay_rate   :   float
@@ -14,15 +16,18 @@ class Environment:
     input_queue   :   Queue
         The signal channel for receiving additions of protein to the environment
     """
-    environment_dictionary = {}
 
-    def __init__(self, label, content=0, decay_rate=0, input_queue=None, fluorescent=False):
+    def __init__(self, label, local, content=0.0, decay_rate=0, input_queue=None, fluorescent=False):
         self.label = label
         self.content = content
         self.decay = decay_rate
         self.input = input_queue
         self.fluorescent = fluorescent
-        Environment.environment_dictionary[self.label] = self.content
+        self.local = local
+        if self.label not in local.get_keys():
+            local.add_environment(self.label, self.content)
+        else:
+            local.set_environment(self.label, self.content)
 
     def update(self):
         """
@@ -46,4 +51,4 @@ class Environment:
         """
         Updates levels of proteins in the environment using the environment dictionary.
         """
-        Environment.environment_dictionary[self.label] = self.content
+        self.local.set_environment(self.label, self.content)
