@@ -19,3 +19,4 @@ from .source.Environment import Environment
 from .source.Visible import Visible
 from .source.Bridge import Bridge
 from .source.Circuit import Circuit
+from .source.Visualizer import Visualizer
