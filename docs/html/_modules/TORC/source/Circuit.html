@@ -1,0 +1,349 @@
+
+<!DOCTYPE html>
+
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>TORC.source.Circuit &#8212; TORC alpha documentation</title>
+    <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css" />
+    <link rel="stylesheet" type="text/css" href="../../../_static/classic.css" />
+    
+    <script data-url_root="../../../" id="documentation_options" src="../../../_static/documentation_options.js"></script>
+    <script src="../../../_static/jquery.js"></script>
+    <script src="../../../_static/underscore.js"></script>
+    <script src="../../../_static/_sphinx_javascript_frameworks_compat.js"></script>
+    <script src="../../../_static/doctools.js"></script>
+    <script src="../../../_static/sphinx_highlight.js"></script>
+    
+    <link rel="index" title="Index" href="../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../search.html" /> 
+  </head><body>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../../../genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="../../../py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="nav-item nav-item-0"><a href="../../../index.html">TORC alpha documentation</a> &#187;</li>
+          <li class="nav-item nav-item-1"><a href="../../index.html" accesskey="U">Module code</a> &#187;</li>
+        <li class="nav-item nav-item-this"><a href="">TORC.source.Circuit</a></li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  <h1>Source code for TORC.source.Circuit</h1><div class="highlight"><pre>
+<span></span><span class="kn">from</span> <span class="nn">TORC</span> <span class="kn">import</span> <span class="n">Environment</span><span class="p">,</span> <span class="n">Channel</span><span class="p">,</span> <span class="n">Supercoil</span><span class="p">,</span> <span class="n">GenetetA</span><span class="p">,</span> <span class="n">SupercoilSensitive</span><span class="p">,</span> <span class="n">Promoter</span><span class="p">,</span> <span class="n">Bridge</span><span class="p">,</span> <span class="n">Visible</span><span class="p">,</span> <span class="n">LocalArea</span><span class="p">,</span> \
+    <span class="n">BridgeError</span>
+<span class="kn">from</span> <span class="nn">queue</span> <span class="kn">import</span> <span class="n">Queue</span>
+<span class="kn">from</span> <span class="nn">threading</span> <span class="kn">import</span> <span class="n">Thread</span>
+
+
+<div class="viewcode-block" id="Circuit"><a class="viewcode-back" href="../../../code/Circuits.html#TORC.Circuit">[docs]</a><span class="k">class</span> <span class="nc">Circuit</span><span class="p">:</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Class for a plasmid circuit with its own local area of supercoiling and environments.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    components      :   List&lt;Tuple&lt;String, String&gt;&gt;</span>
+<span class="sd">        List of components to build onto the plasmid, in type,name tuples.</span>
+<span class="sd">    environments    :   List&lt;Tuple&lt;String, float&gt;&gt;</span>
+<span class="sd">        List of initial environment conditions for non-empty starting environments in name, content tuples.</span>
+<span class="sd">    label           :   String</span>
+<span class="sd">        Name of the circuit</span>
+<span class="sd">    local           :   LocalArea</span>
+<span class="sd">        Local area can be provided to the system with a full start state if needed.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">components</span><span class="p">,</span> <span class="n">environments</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s2">&quot;circuit1&quot;</span><span class="p">,</span> <span class="n">local</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+        <span class="k">if</span> <span class="n">environments</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">environments</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">component_list</span> <span class="o">=</span> <span class="n">components</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">environments</span> <span class="o">=</span> <span class="n">environments</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">label</span> <span class="o">=</span> <span class="n">label</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">circuit_components</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">env_queues</span> <span class="o">=</span> <span class="p">{}</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">local</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">local</span> <span class="o">=</span> <span class="n">LocalArea</span><span class="p">()</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">local</span> <span class="o">=</span> <span class="n">local</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">visible</span> <span class="o">=</span> <span class="kc">None</span>
+
+    <span class="c1"># noinspection PyTypeChecker</span>
+<div class="viewcode-block" id="Circuit.setup"><a class="viewcode-back" href="../../../code/Circuits.html#TORC.Circuit.setup">[docs]</a>    <span class="k">def</span> <span class="nf">setup</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Sets up the circuit by building the environments, components and supercoiling regions of the circuit.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="c1"># set up listed environments</span>
+        <span class="k">for</span> <span class="n">env</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">environments</span><span class="p">:</span>
+            <span class="n">queue</span> <span class="o">=</span> <span class="n">Queue</span><span class="p">()</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">env_queues</span><span class="p">[</span><span class="n">env</span><span class="p">[</span><span class="mi">0</span><span class="p">]]</span> <span class="o">=</span> <span class="n">queue</span>
+            <span class="k">if</span> <span class="n">env</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="ow">in</span> <span class="p">[</span><span class="s2">&quot;red&quot;</span><span class="p">,</span> <span class="s2">&quot;blue&quot;</span><span class="p">,</span> <span class="s2">&quot;green&quot;</span><span class="p">,</span> <span class="s2">&quot;yellow&quot;</span><span class="p">,</span> <span class="s2">&quot;magenta&quot;</span><span class="p">,</span> <span class="s2">&quot;cyan&quot;</span><span class="p">]:</span>
+                <span class="n">env</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">create_environment</span><span class="p">(</span><span class="n">env</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">queue</span><span class="p">,</span> <span class="n">env</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span> <span class="n">fluorescence</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="n">env</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">create_environment</span><span class="p">(</span><span class="n">env</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">queue</span><span class="p">,</span> <span class="n">env</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span> <span class="n">fluorescence</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">circuit_components</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">circuit_components</span> <span class="o">+</span> <span class="p">[</span><span class="n">env</span><span class="p">]</span>
+        <span class="c1"># set initial supercoiling region</span>
+        <span class="n">current_sc</span><span class="p">,</span> <span class="n">coil</span><span class="p">,</span> <span class="n">sc_index</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">create_supercoil</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">circuit_components</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">circuit_components</span> <span class="o">+</span> <span class="p">[</span><span class="n">current_sc</span><span class="p">]</span>
+        <span class="c1"># generate each component clockwise including any additional supercoiling regions and environments needed</span>
+        <span class="k">for</span> <span class="n">comp</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">component_list</span><span class="p">:</span>
+            <span class="k">if</span> <span class="n">comp</span> <span class="o">==</span> <span class="s2">&quot;tetA&quot;</span><span class="p">:</span>
+                <span class="n">components</span><span class="p">,</span> <span class="n">coil</span><span class="p">,</span> <span class="n">sc_index</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">create_gene</span><span class="p">(</span><span class="s2">&quot;tetA&quot;</span><span class="p">)</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">circuit_components</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">circuit_components</span> <span class="o">+</span> <span class="n">components</span>
+            <span class="k">elif</span> <span class="n">comp</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="ow">in</span> <span class="p">[</span><span class="s2">&quot;C&quot;</span><span class="p">,</span> <span class="s2">&quot;CF&quot;</span><span class="p">,</span> <span class="s2">&quot;P&quot;</span><span class="p">]:</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">circuit_components</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">circuit_components</span> <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">create_promoter</span><span class="p">(</span><span class="n">comp</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">comp</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span> <span class="n">sc_index</span><span class="p">)</span>
+            <span class="k">elif</span> <span class="n">comp</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="ow">in</span> <span class="p">[</span><span class="s2">&quot;bridge&quot;</span><span class="p">]:</span>
+                <span class="n">components</span><span class="p">,</span> <span class="n">coil</span><span class="p">,</span> <span class="n">sc_index</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">create_barrier</span><span class="p">(</span><span class="n">comp</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">comp</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span> <span class="n">sc_index</span><span class="p">)</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">circuit_components</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">circuit_components</span> <span class="o">+</span> <span class="n">components</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">circuit_components</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">circuit_components</span> <span class="o">+</span> <span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">create_visible</span><span class="p">()]</span>
+        <span class="c1"># pair up bridges</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">pair_bridges</span><span class="p">()</span>
+        <span class="c1"># set up visible output</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">visible</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">circuit_components</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span></div>
+
+<div class="viewcode-block" id="Circuit.run"><a class="viewcode-back" href="../../../code/Circuits.html#TORC.Circuit.run">[docs]</a>    <span class="k">def</span> <span class="nf">run</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">steps</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Runs through the compnent update functions for a given number of steps.</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        steps   :   Int</span>
+<span class="sd">            Number of updates to run on each component.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">for</span> <span class="n">step</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">steps</span><span class="p">):</span>
+            <span class="n">threads</span> <span class="o">=</span> <span class="p">[</span><span class="n">Thread</span><span class="p">(</span><span class="n">target</span><span class="o">=</span><span class="n">x</span><span class="o">.</span><span class="n">update</span><span class="p">)</span> <span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">circuit_components</span><span class="p">]</span>
+            <span class="p">[</span><span class="n">x</span><span class="o">.</span><span class="n">start</span><span class="p">()</span> <span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="n">threads</span><span class="p">]</span>
+            <span class="p">[</span><span class="n">x</span><span class="o">.</span><span class="n">join</span><span class="p">()</span> <span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="n">threads</span><span class="p">]</span></div>
+
+<div class="viewcode-block" id="Circuit.create_gene"><a class="viewcode-back" href="../../../code/Circuits.html#TORC.Circuit.create_gene">[docs]</a>    <span class="k">def</span> <span class="nf">create_gene</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">label</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Creates a promoter gene component and the associated new supercoil region.</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        -----------</span>
+<span class="sd">        label   :   String</span>
+<span class="sd">            Suggests which specific gene promoter pair is to be generated, current options: tetA</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        --------</span>
+<span class="sd">        List&lt;GenetetA, Supercoil&gt;</span>
+<span class="sd">            The tetA gene and new supercoiling region</span>
+<span class="sd">        ChannelEnd</span>
+<span class="sd">            The in channel for the new supercoiling region</span>
+<span class="sd">        Int</span>
+<span class="sd">            The index for the new supercoiling region</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="n">label</span> <span class="o">==</span> <span class="s2">&quot;tetA&quot;</span><span class="p">:</span>
+            <span class="n">sc</span><span class="p">,</span> <span class="n">coil</span><span class="p">,</span> <span class="n">sc_ind</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">create_supercoil</span><span class="p">()</span>
+            <span class="n">gene</span> <span class="o">=</span> <span class="n">GenetetA</span><span class="p">(</span><span class="n">coil</span><span class="p">,</span> <span class="n">sc_ind</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="n">local</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">local</span><span class="p">)</span>
+            <span class="k">return</span> <span class="p">[</span><span class="n">gene</span><span class="p">,</span> <span class="n">sc</span><span class="p">],</span> <span class="n">coil</span><span class="p">,</span> <span class="n">sc_ind</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="k">return</span> <span class="kc">None</span></div>
+
+<div class="viewcode-block" id="Circuit.create_promoter"><a class="viewcode-back" href="../../../code/Circuits.html#TORC.Circuit.create_promoter">[docs]</a>    <span class="k">def</span> <span class="nf">create_promoter</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">promoter_type</span><span class="p">,</span> <span class="n">output</span><span class="p">,</span> <span class="n">sc_region</span><span class="p">,</span> <span class="n">weak</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">strong</span><span class="o">=</span><span class="mi">1</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Creates promoters either with a basic, supercoiling sensitive or supercoiling sensitive with fluorescence and</span>
+<span class="sd">        any associated environments needed.</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        promoter_type   :   String</span>
+<span class="sd">            Type of promoter to be created choices from: P (basic promoter), C (supercoilsensitive promoter),</span>
+<span class="sd">            CF (supercoil sensitive fluorescence promoter)</span>
+<span class="sd">        output          :   String</span>
+<span class="sd">            Name of gene/protein to be expressed</span>
+<span class="sd">        sc_region       :   Int</span>
+<span class="sd">            Index of supercoil region the promoter is in.</span>
+<span class="sd">        weak            :   float</span>
+<span class="sd">            output rate of weak signals</span>
+<span class="sd">        strong          :   float</span>
+<span class="sd">            output rate of strong signals</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        --------</span>
+<span class="sd">        List&lt;&gt;</span>
+<span class="sd">            Component list either environment and promoter or just the promoter.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">components</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="k">if</span> <span class="n">output</span> <span class="ow">not</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">local</span><span class="o">.</span><span class="n">get_keys</span><span class="p">():</span>
+            <span class="n">queue</span> <span class="o">=</span> <span class="n">Queue</span><span class="p">()</span>
+            <span class="n">env</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">create_environment</span><span class="p">(</span><span class="n">output</span><span class="p">,</span> <span class="n">queue</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">env_queues</span><span class="p">[</span><span class="n">output</span><span class="p">]</span> <span class="o">=</span> <span class="n">queue</span>
+            <span class="n">components</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">env</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">promoter_type</span> <span class="o">==</span> <span class="s2">&quot;P&quot;</span><span class="p">:</span>
+            <span class="n">promoter</span> <span class="o">=</span> <span class="n">Promoter</span><span class="p">(</span><span class="n">output</span><span class="p">,</span> <span class="n">sc_region</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">local</span><span class="p">,</span> <span class="n">weak</span><span class="o">=</span><span class="n">weak</span><span class="p">,</span> <span class="n">strong</span><span class="o">=</span><span class="n">strong</span><span class="p">,</span>
+                                <span class="n">output_channel</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">env_queues</span><span class="p">[</span><span class="n">output</span><span class="p">])</span>
+            <span class="n">components</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">promoter</span><span class="p">)</span>
+        <span class="k">elif</span> <span class="n">promoter_type</span> <span class="o">==</span> <span class="s2">&quot;C&quot;</span><span class="p">:</span>
+            <span class="n">promoter</span> <span class="o">=</span> <span class="n">SupercoilSensitive</span><span class="p">(</span><span class="n">output</span><span class="p">,</span> <span class="n">sc_region</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">local</span><span class="p">,</span> <span class="n">weak</span><span class="o">=</span><span class="n">weak</span><span class="p">,</span> <span class="n">strong</span><span class="o">=</span><span class="n">strong</span><span class="p">,</span>
+                                          <span class="n">output_channel</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">env_queues</span><span class="p">[</span><span class="n">output</span><span class="p">])</span>
+            <span class="n">components</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">promoter</span><span class="p">)</span>
+        <span class="k">elif</span> <span class="n">promoter_type</span> <span class="o">==</span> <span class="s2">&quot;CF&quot;</span><span class="p">:</span>
+            <span class="n">promoter</span> <span class="o">=</span> <span class="n">SupercoilSensitive</span><span class="p">(</span><span class="n">output</span><span class="p">,</span> <span class="n">sc_region</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">local</span><span class="p">,</span> <span class="n">weak</span><span class="o">=</span><span class="n">weak</span><span class="p">,</span> <span class="n">strong</span><span class="o">=</span><span class="n">strong</span><span class="p">,</span>
+                                          <span class="n">output_channel</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">env_queues</span><span class="p">[</span><span class="n">output</span><span class="p">],</span> <span class="n">fluorescent</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+            <span class="n">components</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">promoter</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">components</span></div>
+
+<div class="viewcode-block" id="Circuit.create_barrier"><a class="viewcode-back" href="../../../code/Circuits.html#TORC.Circuit.create_barrier">[docs]</a>    <span class="k">def</span> <span class="nf">create_barrier</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">barrier_type</span><span class="p">,</span> <span class="n">sensor_input</span><span class="p">,</span> <span class="n">current_ind</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Generates a barrier point, and new supercoiling regions and environments if needed, of type from list: bridge</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        barrier_type    :   String</span>
+<span class="sd">            type of barrier to be created.</span>
+<span class="sd">        sensor_input    :   String</span>
+<span class="sd">            protein to be detected in environment to turn barrier on or off</span>
+<span class="sd">        current_ind     :   Int</span>
+<span class="sd">            index of the supercoiling region anti-clockwise of the barrier.</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        List&lt;&gt;</span>
+<span class="sd">            Components: supercoil region, environment(if needed), barrier</span>
+<span class="sd">        ChannelEnd</span>
+<span class="sd">            channel for modifying the new supercoiling region clockwise of the barrier</span>
+<span class="sd">        Int</span>
+<span class="sd">            Index of new clockwise supercoiling region</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">components</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="n">sc</span><span class="p">,</span> <span class="n">coil</span><span class="p">,</span> <span class="n">sc_ind</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">create_supercoil</span><span class="p">()</span>
+        <span class="n">components</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">sc</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">sensor_input</span> <span class="ow">not</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">local</span><span class="o">.</span><span class="n">get_keys</span><span class="p">():</span>
+            <span class="n">queue</span> <span class="o">=</span> <span class="n">Queue</span><span class="p">()</span>
+            <span class="n">env</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">create_environment</span><span class="p">(</span><span class="n">sensor_input</span><span class="p">,</span> <span class="n">queue</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">env_queues</span><span class="p">[</span><span class="n">sensor_input</span><span class="p">]</span> <span class="o">=</span> <span class="n">queue</span>
+            <span class="n">components</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">env</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">barrier_type</span> <span class="o">==</span> <span class="s2">&quot;bridge&quot;</span><span class="p">:</span>
+            <span class="n">bridge</span> <span class="o">=</span> <span class="n">Bridge</span><span class="p">(</span><span class="n">sensor_input</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">local</span><span class="p">,</span> <span class="n">current_ind</span><span class="p">,</span> <span class="n">sc_ind</span><span class="p">,</span> <span class="n">coil</span><span class="p">)</span>
+            <span class="n">components</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">bridge</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">components</span><span class="p">,</span> <span class="n">coil</span><span class="p">,</span> <span class="n">sc_ind</span></div>
+
+<div class="viewcode-block" id="Circuit.create_supercoil"><a class="viewcode-back" href="../../../code/Circuits.html#TORC.Circuit.create_supercoil">[docs]</a>    <span class="k">def</span> <span class="nf">create_supercoil</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Generate a new supercoil region.</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        Supercoil</span>
+<span class="sd">            The new supercoiling region component</span>
+<span class="sd">        ChannelEnd</span>
+<span class="sd">            The channel to the new supercoiling region</span>
+<span class="sd">        Int</span>
+<span class="sd">            The index of the new supercoiling region</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">sc_coil</span><span class="p">,</span> <span class="n">gene_coil</span> <span class="o">=</span> <span class="n">Channel</span><span class="p">()</span>
+        <span class="n">supercoil</span> <span class="o">=</span> <span class="n">Supercoil</span><span class="p">(</span><span class="n">sc_coil</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">local</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">supercoil</span><span class="p">,</span> <span class="n">gene_coil</span><span class="p">,</span> <span class="n">supercoil</span><span class="o">.</span><span class="n">supercoiling_region</span></div>
+
+<div class="viewcode-block" id="Circuit.create_environment"><a class="viewcode-back" href="../../../code/Circuits.html#TORC.Circuit.create_environment">[docs]</a>    <span class="k">def</span> <span class="nf">create_environment</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">label</span><span class="p">,</span> <span class="n">queue_in</span><span class="p">,</span> <span class="n">content</span><span class="o">=</span><span class="mf">0.0</span><span class="p">,</span> <span class="n">decay_rate</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">fluorescence</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Generates a new environment component for the circuit.</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+
+<span class="sd">        label           :   String</span>
+<span class="sd">            Name of protein or colour being tracked</span>
+<span class="sd">        queue_in        :   Queue</span>
+<span class="sd">            Queue from which the environment will read new input</span>
+<span class="sd">        content         :   float</span>
+<span class="sd">            Amount of protein already in the environment</span>
+<span class="sd">        decay_rate      :   float</span>
+<span class="sd">            The amount of protein that is lost to decay in the environment at each timestep</span>
+<span class="sd">        fluorescence    :   Boolean</span>
+<span class="sd">            indicates if the output protein is fluorescent</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        Environment</span>
+<span class="sd">            The new environment component</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">env</span> <span class="o">=</span> <span class="n">Environment</span><span class="p">(</span><span class="n">label</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">local</span><span class="p">,</span> <span class="n">content</span><span class="o">=</span><span class="n">content</span><span class="p">,</span> <span class="n">decay_rate</span><span class="o">=</span><span class="n">decay_rate</span><span class="p">,</span> <span class="n">input_queue</span><span class="o">=</span><span class="n">queue_in</span><span class="p">,</span>
+                          <span class="n">fluorescent</span><span class="o">=</span><span class="n">fluorescence</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">env</span></div>
+
+<div class="viewcode-block" id="Circuit.create_visible"><a class="viewcode-back" href="../../../code/Circuits.html#TORC.Circuit.create_visible">[docs]</a>    <span class="k">def</span> <span class="nf">create_visible</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Creates a component and that interprets the fluorescent outputs and produces a combined colour.</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        Visible</span>
+<span class="sd">            A component for combining all light output from the proteins in the system.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="n">Visible</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">local</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="Circuit.pair_bridges"><a class="viewcode-back" href="../../../code/Circuits.html#TORC.Circuit.pair_bridges">[docs]</a>    <span class="k">def</span> <span class="nf">pair_bridges</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Connects pairs of bridge points with matching labels</span>
+
+<span class="sd">        Raises</span>
+<span class="sd">        ------</span>
+<span class="sd">        BridgeError</span>
+<span class="sd">            An error indicating the wrong number of bridge points of a single type have been found.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">bridges</span> <span class="o">=</span> <span class="p">[</span><span class="n">x</span> <span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">circuit_components</span> <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">Bridge</span><span class="p">)]</span>
+        <span class="k">for</span> <span class="n">bridge</span> <span class="ow">in</span> <span class="n">bridges</span><span class="p">:</span>
+            <span class="n">poss_joins</span> <span class="o">=</span> <span class="p">[</span><span class="n">x</span> <span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="n">bridges</span> <span class="k">if</span> <span class="n">x</span><span class="o">.</span><span class="n">label</span> <span class="o">==</span> <span class="n">bridge</span><span class="o">.</span><span class="n">label</span> <span class="ow">and</span> <span class="n">x</span> <span class="o">!=</span> <span class="n">bridge</span><span class="p">]</span>
+            <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">poss_joins</span><span class="p">)</span> <span class="o">==</span> <span class="mi">1</span><span class="p">:</span>
+                <span class="n">bridge</span><span class="o">.</span><span class="n">set_bridge_check</span><span class="p">(</span><span class="n">poss_joins</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span>
+                <span class="n">poss_joins</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">set_bridge_check</span><span class="p">(</span><span class="n">bridge</span><span class="p">)</span>
+                <span class="n">bridges</span><span class="o">.</span><span class="n">remove</span><span class="p">(</span><span class="n">poss_joins</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span>
+                <span class="n">bridges</span><span class="o">.</span><span class="n">remove</span><span class="p">(</span><span class="n">bridge</span><span class="p">)</span>
+                <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">bridges</span><span class="p">)</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+                    <span class="k">break</span>
+            <span class="k">elif</span> <span class="nb">len</span><span class="p">(</span><span class="n">poss_joins</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">1</span><span class="p">:</span>
+                <span class="k">raise</span> <span class="n">BridgeError</span><span class="p">(</span><span class="s2">&quot;Too many bridge points of same type&quot;</span><span class="p">)</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="k">raise</span> <span class="n">BridgeError</span><span class="p">(</span><span class="s2">&quot;No bridge point pair found&quot;</span><span class="p">)</span></div></div>
+</pre></div>
+
+            <div class="clearer"></div>
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+<div id="searchbox" style="display: none" role="search">
+  <h3 id="searchlabel">Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="../../../search.html" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false"/>
+      <input type="submit" value="Go" />
+    </form>
+    </div>
+</div>
+<script>document.getElementById('searchbox').style.display = "block"</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../../../genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="../../../py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="nav-item nav-item-0"><a href="../../../index.html">TORC alpha documentation</a> &#187;</li>
+          <li class="nav-item nav-item-1"><a href="../../index.html" >Module code</a> &#187;</li>
+        <li class="nav-item nav-item-this"><a href="">TORC.source.Circuit</a></li> 
+      </ul>
+    </div>
+    <div class="footer" role="contentinfo">
+        &#169; Copyright 2022, Penn Faulkner Rainford.
+      Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 5.3.0.
+    </div>
+  </body>
+</html>

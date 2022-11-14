@@ -1,0 +1,22 @@
+[build-system]
+requires = ["setuptools>=61.0"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "TORC"
+version = "0.0.1"
+authors = [
+  { name="Penn Faulkner Rainford", email="penn.rainford@york.ac.uk" },
+]
+description = "A package for computational modelling of plasmid circuits including supercoiling mechanisms"
+readme = "README.md"
+requires-python = ">=3.7"
+classifiers = [
+    "Programming Language :: Python :: 3",
+    "License :: OSI Approved :: GLP v3",
+    "Operating System :: OS Independent",
+]
+
+[project.urls]
+"Homepage" = "https://github.com/faulknerrainford/TORC"
+"Bug Tracker" = "https://github.com/faulnerrainford/TORC/issues"
