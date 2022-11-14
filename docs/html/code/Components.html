@@ -1,63 +1,122 @@
-
 <!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
 
-<html lang="en">
-  <head>
-    <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.19: https://docutils.sourceforge.io/" />
-
-    <title>Components &#8212; TORC alpha documentation</title>
-    <link rel="stylesheet" type="text/css" href="../_static/pygments.css" />
-    <link rel="stylesheet" type="text/css" href="../_static/classic.css" />
-    
-    <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js"></script>
-    <script src="../_static/jquery.js"></script>
-    <script src="../_static/underscore.js"></script>
-    <script src="../_static/_sphinx_javascript_frameworks_compat.js"></script>
-    <script src="../_static/doctools.js"></script>
-    <script src="../_static/sphinx_highlight.js"></script>
-    
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Components &mdash; TORC alpha documentation</title>
+      <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+      <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
+  <!--[if lt IE 9]>
+    <script src="../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+        <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js"></script>
+        <script src="../_static/jquery.js"></script>
+        <script src="../_static/underscore.js"></script>
+        <script src="../_static/_sphinx_javascript_frameworks_compat.js"></script>
+        <script src="../_static/doctools.js"></script>
+        <script src="../_static/sphinx_highlight.js"></script>
+    <script src="../_static/js/theme.js"></script>
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
     <link rel="next" title="Control Structures" href="ControlStructures.html" />
     <link rel="prev" title="Circuits" href="Circuits.html" /> 
-  </head><body>
-    <div class="related" role="navigation" aria-label="related navigation">
-      <h3>Navigation</h3>
-      <ul>
-        <li class="right" style="margin-right: 10px">
-          <a href="../genindex.html" title="General Index"
-             accesskey="I">index</a></li>
-        <li class="right" >
-          <a href="../py-modindex.html" title="Python Module Index"
-             >modules</a> |</li>
-        <li class="right" >
-          <a href="ControlStructures.html" title="Control Structures"
-             accesskey="N">next</a> |</li>
-        <li class="right" >
-          <a href="Circuits.html" title="Circuits"
-             accesskey="P">previous</a> |</li>
-        <li class="nav-item nav-item-0"><a href="../index.html">TORC alpha documentation</a> &#187;</li>
-          <li class="nav-item nav-item-1"><a href="../Implementation.html" accesskey="U">Implementation</a> &#187;</li>
-        <li class="nav-item nav-item-this"><a href="">Components</a></li> 
-      </ul>
-    </div>  
+</head>
 
-    <div class="document">
-      <div class="documentwrapper">
-        <div class="bodywrapper">
-          <div class="body" role="main">
-            
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+            <a href="../index.html" class="icon icon-home"> TORC
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Contents:</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../Installation.html">Installation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../Replication.html">Replication</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../Mathmatics.html">Mathematics</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="../Implementation.html">Implementation</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="Circuits.html">Circuits</a></li>
+<li class="toctree-l2 current"><a class="current reference internal" href="#">Components</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#promoter">Promoter</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#TORC.Promoter"><code class="docutils literal notranslate"><span class="pre">Promoter</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="#teta">tetA</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#TORC.GenetetA"><code class="docutils literal notranslate"><span class="pre">GenetetA</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="#supercoil-sensitive-promoters">Supercoil Sensitive Promoters</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#TORC.SupercoilSensitive"><code class="docutils literal notranslate"><span class="pre">SupercoilSensitive</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="#supercoiling-region">Supercoiling Region</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#TORC.Supercoil"><code class="docutils literal notranslate"><span class="pre">Supercoil</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="#bridge">Bridge</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#TORC.Bridge"><code class="docutils literal notranslate"><span class="pre">Bridge</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="#environment">Environment</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#TORC.Environment"><code class="docutils literal notranslate"><span class="pre">Environment</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="#visible">Visible</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#TORC.Visible"><code class="docutils literal notranslate"><span class="pre">Visible</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="ControlStructures.html">Control Structures</a></li>
+</ul>
+</li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../index.html">TORC</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../index.html" class="icon icon-home"></a></li>
+          <li class="breadcrumb-item"><a href="../Implementation.html">Implementation</a></li>
+      <li class="breadcrumb-item active">Components</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="../_sources/code/Components.rst.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
   <section id="components">
-<h1>Components<a class="headerlink" href="#components" title="Permalink to this heading">¶</a></h1>
+<h1>Components<a class="headerlink" href="#components" title="Permalink to this heading"></a></h1>
 <section id="promoter">
-<h2>Promoter<a class="headerlink" href="#promoter" title="Permalink to this heading">¶</a></h2>
+<h2>Promoter<a class="headerlink" href="#promoter" title="Permalink to this heading"></a></h2>
 <dl class="py class">
 <dt class="sig sig-object py" id="TORC.Promoter">
-<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">TORC.</span></span><span class="sig-name descname"><span class="pre">Promoter</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">label</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">region</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">local</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">weak</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">strong</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">output_channel</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">fluorescent</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/TORC/source/Promoter.html#Promoter"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#TORC.Promoter" title="Permalink to this definition">¶</a></dt>
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">TORC.</span></span><span class="sig-name descname"><span class="pre">Promoter</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">label</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">region</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">local</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">weak</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">strong</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">output_channel</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">fluorescent</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/TORC/source/Promoter.html#Promoter"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#TORC.Promoter" title="Permalink to this definition"></a></dt>
 <dd><p>Promoter class increases the amount of protein in the local environment</p>
 <dl class="field-list simple">
-<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>label</strong> (<em>String</em>) – Name of the protein being promoted used to ID, in case of multiple promoters of the same type name_i is used
 to number the instances.</p></li>
@@ -71,16 +130,16 @@ to number the instances.</p></li>
 </dl>
 <dl class="py method">
 <dt class="sig sig-object py" id="TORC.Promoter.input_check">
-<span class="sig-name descname"><span class="pre">input_check</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/TORC/source/Promoter.html#Promoter.input_check"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#TORC.Promoter.input_check" title="Permalink to this definition">¶</a></dt>
+<span class="sig-name descname"><span class="pre">input_check</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/TORC/source/Promoter.html#Promoter.input_check"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#TORC.Promoter.input_check" title="Permalink to this definition"></a></dt>
 <dd><p>Checks coiling signal and updates coil_state if it has changed.</p>
 </dd></dl>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="TORC.Promoter.output_signal">
-<span class="sig-name descname"><span class="pre">output_signal</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">strength</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/TORC/source/Promoter.html#Promoter.output_signal"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#TORC.Promoter.output_signal" title="Permalink to this definition">¶</a></dt>
+<span class="sig-name descname"><span class="pre">output_signal</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">strength</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/TORC/source/Promoter.html#Promoter.output_signal"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#TORC.Promoter.output_signal" title="Permalink to this definition"></a></dt>
 <dd><p>Sends correct rate on the output channel</p>
 <dl class="field-list simple">
-<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><p><strong>strength</strong> (<em>String</em>) – indicates if output signal is “weak” or “strong”.</p>
 </dd>
 </dl>
@@ -88,7 +147,7 @@ to number the instances.</p></li>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="TORC.Promoter.update">
-<span class="sig-name descname"><span class="pre">update</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/TORC/source/Promoter.html#Promoter.update"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#TORC.Promoter.update" title="Permalink to this definition">¶</a></dt>
+<span class="sig-name descname"><span class="pre">update</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/TORC/source/Promoter.html#Promoter.update"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#TORC.Promoter.update" title="Permalink to this definition"></a></dt>
 <dd><p>Updates state of promoter including output to the environment and updating coil-state if changed.</p>
 </dd></dl>
 
@@ -96,13 +155,13 @@ to number the instances.</p></li>
 
 </section>
 <section id="teta">
-<h2>tetA<a class="headerlink" href="#teta" title="Permalink to this heading">¶</a></h2>
+<h2>tetA<a class="headerlink" href="#teta" title="Permalink to this heading"></a></h2>
 <dl class="py class">
 <dt class="sig sig-object py" id="TORC.GenetetA">
-<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">TORC.</span></span><span class="sig-name descname"><span class="pre">GenetetA</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">channel</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">supercoil_region</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">local</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/TORC/source/GenetetA.html#GenetetA"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#TORC.GenetetA" title="Permalink to this definition">¶</a></dt>
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">TORC.</span></span><span class="sig-name descname"><span class="pre">GenetetA</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">channel</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">supercoil_region</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">local</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/TORC/source/GenetetA.html#GenetetA"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#TORC.GenetetA" title="Permalink to this definition"></a></dt>
 <dd><p>Gene component, causes supercoiling for region attached by Channel.</p>
 <dl class="field-list simple">
-<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>channel</strong> (<a class="reference internal" href="ControlStructures.html#TORC.ChannelEnd" title="TORC.ChannelEnd"><em>ChannelEnd</em></a>) – channel and event used to signal the supercoiling region clockwise of the gene. Matching end should be provided
 as the receiving channel to supercoil.</p></li>
@@ -113,10 +172,10 @@ as the receiving channel to supercoil.</p></li>
 </dl>
 <dl class="py method">
 <dt class="sig sig-object py" id="TORC.GenetetA.output_signal">
-<span class="sig-name descname"><span class="pre">output_signal</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">strength</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/TORC/source/GenetetA.html#GenetetA.output_signal"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#TORC.GenetetA.output_signal" title="Permalink to this definition">¶</a></dt>
+<span class="sig-name descname"><span class="pre">output_signal</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">strength</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/TORC/source/GenetetA.html#GenetetA.output_signal"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#TORC.GenetetA.output_signal" title="Permalink to this definition"></a></dt>
 <dd><p>Sends negative signal to supercoil via provided channel. Waits for confirmation of receipt before exit.</p>
 <dl class="field-list simple">
-<dt class="field-odd">Raises<span class="colon">:</span></dt>
+<dt class="field-odd">Raises</dt>
 <dd class="field-odd"><p><a class="reference internal" href="ControlStructures.html#TORC.SendingError" title="TORC.SendingError"><strong>SendingError</strong></a> – SignalError: Indicated the signal was not received and so was cleared from pipe.</p>
 </dd>
 </dl>
@@ -126,13 +185,13 @@ as the receiving channel to supercoil.</p></li>
 
 </section>
 <section id="supercoil-sensitive-promoters">
-<h2>Supercoil Sensitive Promoters<a class="headerlink" href="#supercoil-sensitive-promoters" title="Permalink to this heading">¶</a></h2>
+<h2>Supercoil Sensitive Promoters<a class="headerlink" href="#supercoil-sensitive-promoters" title="Permalink to this heading"></a></h2>
 <dl class="py class">
 <dt class="sig sig-object py" id="TORC.SupercoilSensitive">
-<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">TORC.</span></span><span class="sig-name descname"><span class="pre">SupercoilSensitive</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">colour</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">region</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">local</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">weak</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">strong</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">output_channel</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">fluorescent</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/TORC/source/SupercoilSensitive.html#SupercoilSensitive"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#TORC.SupercoilSensitive" title="Permalink to this definition">¶</a></dt>
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">TORC.</span></span><span class="sig-name descname"><span class="pre">SupercoilSensitive</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">colour</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">region</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">local</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">weak</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">strong</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">output_channel</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">fluorescent</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/TORC/source/SupercoilSensitive.html#SupercoilSensitive"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#TORC.SupercoilSensitive" title="Permalink to this definition"></a></dt>
 <dd><p>Fluorescent class increases the amount of visible list of a particular colour in the local environment</p>
 <dl class="field-list simple">
-<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>colour</strong> (<em>String</em>) – Name of the colour being produced used to ID, in case of multiple Fluorescent of the same type colour_i is used
 to number the instances.</p></li>
@@ -146,13 +205,13 @@ to number the instances.</p></li>
 </dl>
 <dl class="py method">
 <dt class="sig sig-object py" id="TORC.SupercoilSensitive.input_check">
-<span class="sig-name descname"><span class="pre">input_check</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/TORC/source/SupercoilSensitive.html#SupercoilSensitive.input_check"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#TORC.SupercoilSensitive.input_check" title="Permalink to this definition">¶</a></dt>
+<span class="sig-name descname"><span class="pre">input_check</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/TORC/source/SupercoilSensitive.html#SupercoilSensitive.input_check"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#TORC.SupercoilSensitive.input_check" title="Permalink to this definition"></a></dt>
 <dd><p>Checks coiling signal and updates coil_state if it has changed.</p>
 <dl class="field-list simple">
-<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dt class="field-odd">Returns</dt>
 <dd class="field-odd"><p>If the input is correct to produce strong rather than weak output.</p>
 </dd>
-<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dt class="field-even">Return type</dt>
 <dd class="field-even"><p>boolean</p>
 </dd>
 </dl>
@@ -162,13 +221,13 @@ to number the instances.</p></li>
 
 </section>
 <section id="supercoiling-region">
-<h2>Supercoiling Region<a class="headerlink" href="#supercoiling-region" title="Permalink to this heading">¶</a></h2>
+<h2>Supercoiling Region<a class="headerlink" href="#supercoiling-region" title="Permalink to this heading"></a></h2>
 <dl class="py class">
 <dt class="sig sig-object py" id="TORC.Supercoil">
-<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">TORC.</span></span><span class="sig-name descname"><span class="pre">Supercoil</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">channel</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">local</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/TORC/source/Supercoil.html#Supercoil"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#TORC.Supercoil" title="Permalink to this definition">¶</a></dt>
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">TORC.</span></span><span class="sig-name descname"><span class="pre">Supercoil</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">channel</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">local</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/TORC/source/Supercoil.html#Supercoil"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#TORC.Supercoil" title="Permalink to this definition"></a></dt>
 <dd><p>Supercoil provides supercoiling regions and globals for their use.</p>
 <dl class="field-list simple">
-<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>channel</strong> (<em>JoinableQueue</em>) – Queue for receiving signals to update the coiling state, normally sent by gene, block or bridge component.</p></li>
 <li><p><strong>local</strong> (<a class="reference internal" href="ControlStructures.html#TORC.LocalArea" title="TORC.LocalArea"><em>LocalArea</em></a>) – Tracks the supercoiling and proteins in the circuit</p></li>
@@ -177,10 +236,10 @@ to number the instances.</p></li>
 </dl>
 <dl class="py method">
 <dt class="sig sig-object py" id="TORC.Supercoil.coil">
-<span class="sig-name descname"><span class="pre">coil</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/TORC/source/Supercoil.html#Supercoil.coil"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#TORC.Supercoil.coil" title="Permalink to this definition">¶</a></dt>
+<span class="sig-name descname"><span class="pre">coil</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/TORC/source/Supercoil.html#Supercoil.coil"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#TORC.Supercoil.coil" title="Permalink to this definition"></a></dt>
 <dd><p>Function for listening for a coil signal and updating the supercoiling state of the region in the region list.</p>
 <dl class="field-list simple">
-<dt class="field-odd">Raises<span class="colon">:</span></dt>
+<dt class="field-odd">Raises</dt>
 <dd class="field-odd"><p><a class="reference internal" href="ControlStructures.html#TORC.ReceivingError" title="TORC.ReceivingError"><strong>ReceivingError</strong></a> – SignalError: Indicates that a signal was listened for but not received.</p>
 </dd>
 </dl>
@@ -188,13 +247,13 @@ to number the instances.</p></li>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="TORC.Supercoil.get_coil_state">
-<span class="sig-name descname"><span class="pre">get_coil_state</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/TORC/source/Supercoil.html#Supercoil.get_coil_state"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#TORC.Supercoil.get_coil_state" title="Permalink to this definition">¶</a></dt>
+<span class="sig-name descname"><span class="pre">get_coil_state</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/TORC/source/Supercoil.html#Supercoil.get_coil_state"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#TORC.Supercoil.get_coil_state" title="Permalink to this definition"></a></dt>
 <dd><p>Reads current coil state from the list.</p>
 <dl class="field-list simple">
-<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dt class="field-odd">Returns</dt>
 <dd class="field-odd"><p>Current state of the supercoiling region</p>
 </dd>
-<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dt class="field-even">Return type</dt>
 <dd class="field-even"><p>String</p>
 </dd>
 </dl>
@@ -202,7 +261,7 @@ to number the instances.</p></li>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="TORC.Supercoil.update">
-<span class="sig-name descname"><span class="pre">update</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/TORC/source/Supercoil.html#Supercoil.update"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#TORC.Supercoil.update" title="Permalink to this definition">¶</a></dt>
+<span class="sig-name descname"><span class="pre">update</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/TORC/source/Supercoil.html#Supercoil.update"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#TORC.Supercoil.update" title="Permalink to this definition"></a></dt>
 <dd><p>Updates supercoiling region by listening for a change in coil signal.</p>
 </dd></dl>
 
@@ -210,14 +269,14 @@ to number the instances.</p></li>
 
 </section>
 <section id="bridge">
-<h2>Bridge<a class="headerlink" href="#bridge" title="Permalink to this heading">¶</a></h2>
+<h2>Bridge<a class="headerlink" href="#bridge" title="Permalink to this heading"></a></h2>
 <dl class="py class">
 <dt class="sig sig-object py" id="TORC.Bridge">
-<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">TORC.</span></span><span class="sig-name descname"><span class="pre">Bridge</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">label</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">local</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">sc_acw</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">sc_cw</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">channel</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">protein_threshold</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/TORC/source/Bridge.html#Bridge"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#TORC.Bridge" title="Permalink to this definition">¶</a></dt>
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">TORC.</span></span><span class="sig-name descname"><span class="pre">Bridge</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">label</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">local</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">sc_acw</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">sc_cw</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">channel</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">protein_threshold</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/TORC/source/Bridge.html#Bridge"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#TORC.Bridge" title="Permalink to this definition"></a></dt>
 <dd><p>Bridge class provides the bridge end components and their functions for checking for environment proteins, other
 bridge components and transmitting supercoiling between supercoiling regions.</p>
 <dl class="field-list simple">
-<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>label</strong> (<em>String</em>) – name of protein it looks for in the environment</p></li>
 <li><p><strong>local</strong> (<a class="reference internal" href="ControlStructures.html#TORC.LocalArea" title="TORC.LocalArea"><em>LocalArea</em></a>) – container tracking supercoiling and protein production within the circuit.</p></li>
@@ -231,14 +290,14 @@ clockwise regions</p></li>
 </dl>
 <dl class="py method">
 <dt class="sig sig-object py" id="TORC.Bridge.check_state">
-<span class="sig-name descname"><span class="pre">check_state</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/TORC/source/Bridge.html#Bridge.check_state"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#TORC.Bridge.check_state" title="Permalink to this definition">¶</a></dt>
+<span class="sig-name descname"><span class="pre">check_state</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/TORC/source/Bridge.html#Bridge.check_state"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#TORC.Bridge.check_state" title="Permalink to this definition"></a></dt>
 <dd><p>Checks the other bridge exists (not None) and has same trigger protein and trigger protein in environment. If
 bridge component correct and protein present return true if not return false.</p>
 <dl class="field-list simple">
-<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dt class="field-odd">Returns</dt>
 <dd class="field-odd"><p>True if bridge closed/active, False otherwise.</p>
 </dd>
-<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dt class="field-even">Return type</dt>
 <dd class="field-even"><p>boolean</p>
 </dd>
 </dl>
@@ -246,13 +305,13 @@ bridge component correct and protein present return true if not return false.</p
 
 <dl class="py method">
 <dt class="sig sig-object py" id="TORC.Bridge.coil_in">
-<span class="sig-name descname"><span class="pre">coil_in</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/TORC/source/Bridge.html#Bridge.coil_in"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#TORC.Bridge.coil_in" title="Permalink to this definition">¶</a></dt>
+<span class="sig-name descname"><span class="pre">coil_in</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/TORC/source/Bridge.html#Bridge.coil_in"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#TORC.Bridge.coil_in" title="Permalink to this definition"></a></dt>
 <dd><p>Reads and returns the state of the supercoiling regions</p>
 <dl class="field-list simple">
-<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dt class="field-odd">Returns</dt>
 <dd class="field-odd"><p>State of the supercoiling region</p>
 </dd>
-<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dt class="field-even">Return type</dt>
 <dd class="field-even"><p>String</p>
 </dd>
 </dl>
@@ -260,13 +319,13 @@ bridge component correct and protein present return true if not return false.</p
 
 <dl class="py method">
 <dt class="sig sig-object py" id="TORC.Bridge.coil_out">
-<span class="sig-name descname"><span class="pre">coil_out</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">signal</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/TORC/source/Bridge.html#Bridge.coil_out"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#TORC.Bridge.coil_out" title="Permalink to this definition">¶</a></dt>
+<span class="sig-name descname"><span class="pre">coil_out</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">signal</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/TORC/source/Bridge.html#Bridge.coil_out"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#TORC.Bridge.coil_out" title="Permalink to this definition"></a></dt>
 <dd><p>Sends the coil signal to the next clockwise supercoiling region.</p>
 <dl class="field-list simple">
-<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><p><strong>signal</strong> (<em>String</em>) – State to update the supercoiling region to.</p>
 </dd>
-<dt class="field-even">Raises<span class="colon">:</span></dt>
+<dt class="field-even">Raises</dt>
 <dd class="field-even"><p><a class="reference internal" href="ControlStructures.html#TORC.SendingError" title="TORC.SendingError"><strong>SendingError</strong></a> – Failed to send signal</p>
 </dd>
 </dl>
@@ -274,10 +333,10 @@ bridge component correct and protein present return true if not return false.</p
 
 <dl class="py method">
 <dt class="sig sig-object py" id="TORC.Bridge.set_bridge_check">
-<span class="sig-name descname"><span class="pre">set_bridge_check</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">bridge</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/TORC/source/Bridge.html#Bridge.set_bridge_check"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#TORC.Bridge.set_bridge_check" title="Permalink to this definition">¶</a></dt>
+<span class="sig-name descname"><span class="pre">set_bridge_check</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">bridge</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/TORC/source/Bridge.html#Bridge.set_bridge_check"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#TORC.Bridge.set_bridge_check" title="Permalink to this definition"></a></dt>
 <dd><p>Set the bridge check variable to point to the other end of bridge</p>
 <dl class="field-list simple">
-<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><p><strong>bridge</strong> (<a class="reference internal" href="#TORC.Bridge" title="TORC.Bridge"><em>Bridge</em></a>) – Other end of bridge</p>
 </dd>
 </dl>
@@ -285,7 +344,7 @@ bridge component correct and protein present return true if not return false.</p
 
 <dl class="py method">
 <dt class="sig sig-object py" id="TORC.Bridge.update">
-<span class="sig-name descname"><span class="pre">update</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/TORC/source/Bridge.html#Bridge.update"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#TORC.Bridge.update" title="Permalink to this definition">¶</a></dt>
+<span class="sig-name descname"><span class="pre">update</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/TORC/source/Bridge.html#Bridge.update"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#TORC.Bridge.update" title="Permalink to this definition"></a></dt>
 <dd><p>Checks if the bridge is open and if it is transmits the supercoiling state between the supercoiling regions
 either side.</p>
 </dd></dl>
@@ -294,14 +353,14 @@ either side.</p>
 
 </section>
 <section id="environment">
-<h2>Environment<a class="headerlink" href="#environment" title="Permalink to this heading">¶</a></h2>
+<h2>Environment<a class="headerlink" href="#environment" title="Permalink to this heading"></a></h2>
 <dl class="py class">
 <dt class="sig sig-object py" id="TORC.Environment">
-<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">TORC.</span></span><span class="sig-name descname"><span class="pre">Environment</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">label</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">local</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">content</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0.0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">decay_rate</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">input_queue</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">fluorescent</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/TORC/source/Environment.html#Environment"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#TORC.Environment" title="Permalink to this definition">¶</a></dt>
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">TORC.</span></span><span class="sig-name descname"><span class="pre">Environment</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">label</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">local</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">content</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0.0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">decay_rate</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">input_queue</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">fluorescent</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/TORC/source/Environment.html#Environment"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#TORC.Environment" title="Permalink to this definition"></a></dt>
 <dd><p>Environment class tracks presence of a protein in the environment. It signals out the current state of the protein
 in the environment and then updates the contents based on output from other components.</p>
 <dl class="field-list simple">
-<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>label</strong> (<em>String</em>) – The name of the protein being tracked.</p></li>
 <li><p><strong>local</strong> (<a class="reference internal" href="ControlStructures.html#TORC.LocalArea" title="TORC.LocalArea"><em>LocalArea</em></a>) – Tracks the supercoiling and proteins in the circuit</p></li>
@@ -313,20 +372,20 @@ in the environment and then updates the contents based on output from other comp
 </dl>
 <dl class="py method">
 <dt class="sig sig-object py" id="TORC.Environment.read_signal">
-<span class="sig-name descname"><span class="pre">read_signal</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/TORC/source/Environment.html#Environment.read_signal"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#TORC.Environment.read_signal" title="Permalink to this definition">¶</a></dt>
+<span class="sig-name descname"><span class="pre">read_signal</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/TORC/source/Environment.html#Environment.read_signal"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#TORC.Environment.read_signal" title="Permalink to this definition"></a></dt>
 <dd><p>Reads in any signals on the input queue to add to the current levels and then decays with a catch to prevent
 levels below 0.</p>
 </dd></dl>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="TORC.Environment.send_signal">
-<span class="sig-name descname"><span class="pre">send_signal</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/TORC/source/Environment.html#Environment.send_signal"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#TORC.Environment.send_signal" title="Permalink to this definition">¶</a></dt>
+<span class="sig-name descname"><span class="pre">send_signal</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/TORC/source/Environment.html#Environment.send_signal"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#TORC.Environment.send_signal" title="Permalink to this definition"></a></dt>
 <dd><p>Updates levels of proteins in the environment using the environment dictionary.</p>
 </dd></dl>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="TORC.Environment.update">
-<span class="sig-name descname"><span class="pre">update</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/TORC/source/Environment.html#Environment.update"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#TORC.Environment.update" title="Permalink to this definition">¶</a></dt>
+<span class="sig-name descname"><span class="pre">update</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/TORC/source/Environment.html#Environment.update"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#TORC.Environment.update" title="Permalink to this definition"></a></dt>
 <dd><p>Updates content of the environment by first sending the current state out and then by reading in new input to
 the environment.</p>
 </dd></dl>
@@ -335,33 +394,33 @@ the environment.</p>
 
 </section>
 <section id="visible">
-<h2>Visible<a class="headerlink" href="#visible" title="Permalink to this heading">¶</a></h2>
+<h2>Visible<a class="headerlink" href="#visible" title="Permalink to this heading"></a></h2>
 <dl class="py class">
 <dt class="sig sig-object py" id="TORC.Visible">
-<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">TORC.</span></span><span class="sig-name descname"><span class="pre">Visible</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">local</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/TORC/source/Visible.html#Visible"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#TORC.Visible" title="Permalink to this definition">¶</a></dt>
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">TORC.</span></span><span class="sig-name descname"><span class="pre">Visible</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">local</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/TORC/source/Visible.html#Visible"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#TORC.Visible" title="Permalink to this definition"></a></dt>
 <dd><p>Class provides component which tracks the colour of the visual output from any fluorescent proteins produced by the
 system.</p>
 <dl class="field-list simple">
-<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><p><strong>local</strong> (<a class="reference internal" href="ControlStructures.html#TORC.LocalArea" title="TORC.LocalArea"><em>LocalArea</em></a>) – Tracks the supercoiling and proteins in the circuit</p>
 </dd>
 </dl>
 <dl class="py method">
 <dt class="sig sig-object py" id="TORC.Visible.check_colour">
-<span class="sig-name descname"><span class="pre">check_colour</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/TORC/source/Visible.html#Visible.check_colour"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#TORC.Visible.check_colour" title="Permalink to this definition">¶</a></dt>
+<span class="sig-name descname"><span class="pre">check_colour</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/TORC/source/Visible.html#Visible.check_colour"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#TORC.Visible.check_colour" title="Permalink to this definition"></a></dt>
 <dd><p>Converts the rgb list created in read_signal to a string name of a colour.</p>
 </dd></dl>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="TORC.Visible.read_signal">
-<span class="sig-name descname"><span class="pre">read_signal</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/TORC/source/Visible.html#Visible.read_signal"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#TORC.Visible.read_signal" title="Permalink to this definition">¶</a></dt>
+<span class="sig-name descname"><span class="pre">read_signal</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/TORC/source/Visible.html#Visible.read_signal"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#TORC.Visible.read_signal" title="Permalink to this definition"></a></dt>
 <dd><p>Reads in the signals from the 6 main colour components: red, blue, green, yellow, cyan, magenta. These are then
 combined for use.</p>
 </dd></dl>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="TORC.Visible.update">
-<span class="sig-name descname"><span class="pre">update</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/TORC/source/Visible.html#Visible.update"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#TORC.Visible.update" title="Permalink to this definition">¶</a></dt>
+<span class="sig-name descname"><span class="pre">update</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/TORC/source/Visible.html#Visible.update"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#TORC.Visible.update" title="Permalink to this definition"></a></dt>
 <dd><p>Read in signals from environment and updates colour name.</p>
 </dd></dl>
 
@@ -371,136 +430,34 @@ combined for use.</p>
 </section>
 
 
-            <div class="clearer"></div>
+           </div>
           </div>
-        </div>
-      </div>
-      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
-        <div class="sphinxsidebarwrapper">
-  <div>
-    <h3><a href="../index.html">Table of Contents</a></h3>
-    <ul>
-<li><a class="reference internal" href="#">Components</a><ul>
-<li><a class="reference internal" href="#promoter">Promoter</a><ul>
-<li><a class="reference internal" href="#TORC.Promoter"><code class="docutils literal notranslate"><span class="pre">Promoter</span></code></a><ul>
-<li><a class="reference internal" href="#TORC.Promoter.input_check"><code class="docutils literal notranslate"><span class="pre">Promoter.input_check()</span></code></a></li>
-<li><a class="reference internal" href="#TORC.Promoter.output_signal"><code class="docutils literal notranslate"><span class="pre">Promoter.output_signal()</span></code></a></li>
-<li><a class="reference internal" href="#TORC.Promoter.update"><code class="docutils literal notranslate"><span class="pre">Promoter.update()</span></code></a></li>
-</ul>
-</li>
-</ul>
-</li>
-<li><a class="reference internal" href="#teta">tetA</a><ul>
-<li><a class="reference internal" href="#TORC.GenetetA"><code class="docutils literal notranslate"><span class="pre">GenetetA</span></code></a><ul>
-<li><a class="reference internal" href="#TORC.GenetetA.output_signal"><code class="docutils literal notranslate"><span class="pre">GenetetA.output_signal()</span></code></a></li>
-</ul>
-</li>
-</ul>
-</li>
-<li><a class="reference internal" href="#supercoil-sensitive-promoters">Supercoil Sensitive Promoters</a><ul>
-<li><a class="reference internal" href="#TORC.SupercoilSensitive"><code class="docutils literal notranslate"><span class="pre">SupercoilSensitive</span></code></a><ul>
-<li><a class="reference internal" href="#TORC.SupercoilSensitive.input_check"><code class="docutils literal notranslate"><span class="pre">SupercoilSensitive.input_check()</span></code></a></li>
-</ul>
-</li>
-</ul>
-</li>
-<li><a class="reference internal" href="#supercoiling-region">Supercoiling Region</a><ul>
-<li><a class="reference internal" href="#TORC.Supercoil"><code class="docutils literal notranslate"><span class="pre">Supercoil</span></code></a><ul>
-<li><a class="reference internal" href="#TORC.Supercoil.coil"><code class="docutils literal notranslate"><span class="pre">Supercoil.coil()</span></code></a></li>
-<li><a class="reference internal" href="#TORC.Supercoil.get_coil_state"><code class="docutils literal notranslate"><span class="pre">Supercoil.get_coil_state()</span></code></a></li>
-<li><a class="reference internal" href="#TORC.Supercoil.update"><code class="docutils literal notranslate"><span class="pre">Supercoil.update()</span></code></a></li>
-</ul>
-</li>
-</ul>
-</li>
-<li><a class="reference internal" href="#bridge">Bridge</a><ul>
-<li><a class="reference internal" href="#TORC.Bridge"><code class="docutils literal notranslate"><span class="pre">Bridge</span></code></a><ul>
-<li><a class="reference internal" href="#TORC.Bridge.check_state"><code class="docutils literal notranslate"><span class="pre">Bridge.check_state()</span></code></a></li>
-<li><a class="reference internal" href="#TORC.Bridge.coil_in"><code class="docutils literal notranslate"><span class="pre">Bridge.coil_in()</span></code></a></li>
-<li><a class="reference internal" href="#TORC.Bridge.coil_out"><code class="docutils literal notranslate"><span class="pre">Bridge.coil_out()</span></code></a></li>
-<li><a class="reference internal" href="#TORC.Bridge.set_bridge_check"><code class="docutils literal notranslate"><span class="pre">Bridge.set_bridge_check()</span></code></a></li>
-<li><a class="reference internal" href="#TORC.Bridge.update"><code class="docutils literal notranslate"><span class="pre">Bridge.update()</span></code></a></li>
-</ul>
-</li>
-</ul>
-</li>
-<li><a class="reference internal" href="#environment">Environment</a><ul>
-<li><a class="reference internal" href="#TORC.Environment"><code class="docutils literal notranslate"><span class="pre">Environment</span></code></a><ul>
-<li><a class="reference internal" href="#TORC.Environment.read_signal"><code class="docutils literal notranslate"><span class="pre">Environment.read_signal()</span></code></a></li>
-<li><a class="reference internal" href="#TORC.Environment.send_signal"><code class="docutils literal notranslate"><span class="pre">Environment.send_signal()</span></code></a></li>
-<li><a class="reference internal" href="#TORC.Environment.update"><code class="docutils literal notranslate"><span class="pre">Environment.update()</span></code></a></li>
-</ul>
-</li>
-</ul>
-</li>
-<li><a class="reference internal" href="#visible">Visible</a><ul>
-<li><a class="reference internal" href="#TORC.Visible"><code class="docutils literal notranslate"><span class="pre">Visible</span></code></a><ul>
-<li><a class="reference internal" href="#TORC.Visible.check_colour"><code class="docutils literal notranslate"><span class="pre">Visible.check_colour()</span></code></a></li>
-<li><a class="reference internal" href="#TORC.Visible.read_signal"><code class="docutils literal notranslate"><span class="pre">Visible.read_signal()</span></code></a></li>
-<li><a class="reference internal" href="#TORC.Visible.update"><code class="docutils literal notranslate"><span class="pre">Visible.update()</span></code></a></li>
-</ul>
-</li>
-</ul>
-</li>
-</ul>
-</li>
-</ul>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="Circuits.html" class="btn btn-neutral float-left" title="Circuits" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="ControlStructures.html" class="btn btn-neutral float-right" title="Control Structures" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
 
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2022, Penn Faulkner Rainford.</p>
   </div>
-  <div>
-    <h4>Previous topic</h4>
-    <p class="topless"><a href="Circuits.html"
-                          title="previous chapter">Circuits</a></p>
-  </div>
-  <div>
-    <h4>Next topic</h4>
-    <p class="topless"><a href="ControlStructures.html"
-                          title="next chapter">Control Structures</a></p>
-  </div>
-  <div role="note" aria-label="source link">
-    <h3>This Page</h3>
-    <ul class="this-page-menu">
-      <li><a href="../_sources/code/Components.rst.txt"
-            rel="nofollow">Show Source</a></li>
-    </ul>
-   </div>
-<div id="searchbox" style="display: none" role="search">
-  <h3 id="searchlabel">Quick search</h3>
-    <div class="searchformwrapper">
-    <form class="search" action="../search.html" method="get">
-      <input type="text" name="q" aria-labelledby="searchlabel" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false"/>
-      <input type="submit" value="Go" />
-    </form>
-    </div>
-</div>
-<script>document.getElementById('searchbox').style.display = "block"</script>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
         </div>
       </div>
-      <div class="clearer"></div>
-    </div>
-    <div class="related" role="navigation" aria-label="related navigation">
-      <h3>Navigation</h3>
-      <ul>
-        <li class="right" style="margin-right: 10px">
-          <a href="../genindex.html" title="General Index"
-             >index</a></li>
-        <li class="right" >
-          <a href="../py-modindex.html" title="Python Module Index"
-             >modules</a> |</li>
-        <li class="right" >
-          <a href="ControlStructures.html" title="Control Structures"
-             >next</a> |</li>
-        <li class="right" >
-          <a href="Circuits.html" title="Circuits"
-             >previous</a> |</li>
-        <li class="nav-item nav-item-0"><a href="../index.html">TORC alpha documentation</a> &#187;</li>
-          <li class="nav-item nav-item-1"><a href="../Implementation.html" >Implementation</a> &#187;</li>
-        <li class="nav-item nav-item-this"><a href="">Components</a></li> 
-      </ul>
-    </div>
-    <div class="footer" role="contentinfo">
-        &#169; Copyright 2022, Penn Faulkner Rainford.
-      Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 5.3.0.
-    </div>
-  </body>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
 </html>
