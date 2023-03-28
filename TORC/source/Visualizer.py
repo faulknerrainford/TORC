@@ -23,6 +23,7 @@ class Visualizer:
     def __init__(self, components):
         # TODO: settings for output and videos
         # TODO: initialise the drawing
+        # TODO: linear genome vizualiser as well as plasmid
         self.figure, self.axis = plt.subplots(1, 1)
         self.plasmid_components = ["ori"] + [x for x in components if not (isinstance(x, Supercoil) or
                                                                            isinstance(x, Environment) or
@@ -281,30 +282,30 @@ class Visualizer:
             label = "C"
             if component.fluorescent:
                 label = label + "F"
-            label = label + "_" + component.label
+            label = "$" + label + "_{" + component.label + "}$"
             return label
         elif isinstance(component, Promoter):
             label = "P"
             if component.fluorescent:
                 label = label + "F"
-            label = label + "_" + component.label
+            label = "$" + label + "_{" + component.label + "}$"
             return label
         elif isinstance(component, Environment):
             label = "E"
             if component.fluorescent:
                 label = "F"
-            label = label + "_" + component.label
+            label = "$" + label + "_{" + component.label + "}$"
             return label
         elif isinstance(component, Visible):
-            return "V_" + component.colour
+            return "$V_{" + component.colour + "}$"
         elif isinstance(component, Supercoil):
-            return "S_" + str(component.supercoiling_region)
+            return "$S_" + str(component.supercoiling_region) + "$"
         elif isinstance(component, Bridge):
             bridges = [x for x in self.plasmid_components if isinstance(x, Bridge) and x.label == component.label]
             if component == bridges[0]:
-                return "BRA_" + component.label
+                return "$BRA_{" + component.label + "}$"
             elif component == bridges[1]:
-                return "BRC_" + component.label
+                return "$BRC_{" + component.label + "}$"
             else:
                 return "LabelError"
         else:

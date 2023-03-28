@@ -67,6 +67,14 @@
 <li class="toctree-l4"><a class="reference internal" href="#TORC.Bridge"><code class="docutils literal notranslate"><span class="pre">Bridge</span></code></a></li>
 </ul>
 </li>
+<li class="toctree-l3"><a class="reference internal" href="#inhibitor">Inhibitor</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#TORC.Inhibitor"><code class="docutils literal notranslate"><span class="pre">Inhibitor</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="#origin">Origin</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#TORC.Origin"><code class="docutils literal notranslate"><span class="pre">Origin</span></code></a></li>
+</ul>
+</li>
 <li class="toctree-l3"><a class="reference internal" href="#environment">Environment</a><ul>
 <li class="toctree-l4"><a class="reference internal" href="#TORC.Environment"><code class="docutils literal notranslate"><span class="pre">Environment</span></code></a></li>
 </ul>
@@ -113,8 +121,10 @@
 <h2>Promoter<a class="headerlink" href="#promoter" title="Permalink to this heading"></a></h2>
 <dl class="py class">
 <dt class="sig sig-object py" id="TORC.Promoter">
-<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">TORC.</span></span><span class="sig-name descname"><span class="pre">Promoter</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">label</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">region</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">local</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">weak</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">strong</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">output_channel</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">fluorescent</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/TORC/source/Promoter.html#Promoter"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#TORC.Promoter" title="Permalink to this definition"></a></dt>
-<dd><p>Promoter class increases the amount of protein in the local environment</p>
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">TORC.</span></span><span class="sig-name descname"><span class="pre">Promoter</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">label</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">region</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">local</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">weak</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">strong</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">output_channel</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">fluorescent</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">promote</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">repress</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">sc_sensitive</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/TORC/source/Promoter.html#Promoter"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#TORC.Promoter" title="Permalink to this definition"></a></dt>
+<dd><p>Promoter class increases the amount of protein in the local environment based on the current state of environmental
+proteins and supercoiling. This includes the existence of proteins in the environment both promoting and repressing
+expression.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
@@ -131,7 +141,10 @@ to number the instances.</p></li>
 <dl class="py method">
 <dt class="sig sig-object py" id="TORC.Promoter.input_check">
 <span class="sig-name descname"><span class="pre">input_check</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/TORC/source/Promoter.html#Promoter.input_check"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#TORC.Promoter.input_check" title="Permalink to this definition"></a></dt>
-<dd><p>Checks coiling signal and updates coil_state if it has changed.</p>
+<dd><p>Checks coiling signal and updates coil_state if it has changed.
+Checks if repressor active -&gt; returns false
+Checks if promoter protein present -&gt; returns true
+Checks if supercoiling negative and sc_sensitive -&gt; returns true</p>
 </dd></dl>
 
 <dl class="py method">
@@ -352,11 +365,78 @@ either side.</p>
 </dd></dl>
 
 </section>
+<section id="inhibitor">
+<h2>Inhibitor<a class="headerlink" href="#inhibitor" title="Permalink to this heading"></a></h2>
+<dl class="py class">
+<dt class="sig sig-object py" id="TORC.Inhibitor">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">TORC.</span></span><span class="sig-name descname"><span class="pre">Inhibitor</span></span><a class="reference internal" href="../_modules/TORC/source/Inhibitor.html#Inhibitor"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#TORC.Inhibitor" title="Permalink to this definition"></a></dt>
+<dd><p>Manages communication for between two environments to provide the ability to inhibit a protein in the
+environment</p>
+<dl class="py method">
+<dt class="sig sig-object py" id="TORC.Inhibitor.get">
+<span class="sig-name descname"><span class="pre">get</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/TORC/source/Inhibitor.html#Inhibitor.get"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#TORC.Inhibitor.get" title="Permalink to this definition"></a></dt>
+<dd><p>Returns the amount to reduce both environments by due to annihilation.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns</dt>
+<dd class="field-odd"><p>amount to reduce environment by, can not be more than the environments current content.</p>
+</dd>
+<dt class="field-even">Return type</dt>
+<dd class="field-even"><p><a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.11)">int</a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="TORC.Inhibitor.send">
+<span class="sig-name descname"><span class="pre">send</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">u</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/TORC/source/Inhibitor.html#Inhibitor.send"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#TORC.Inhibitor.send" title="Permalink to this definition"></a></dt>
+<dd><p>Sends a value to the inhibitor, if it is still waiting on the second value nothing happens otherwise the result
+is calculated and returns using the queue</p>
+<section id="parameter">
+<h3>Parameter<a class="headerlink" href="#parameter" title="Permalink to this heading"></a></h3>
+<dl class="simple">
+<dt>u<span class="classifier">int</span></dt><dd><p>current value of one of the environments</p>
+</dd>
+</dl>
+</section>
+</dd></dl>
+
+</dd></dl>
+
+</section>
+<section id="origin">
+<h2>Origin<a class="headerlink" href="#origin" title="Permalink to this heading"></a></h2>
+<dl class="py class">
+<dt class="sig sig-object py" id="TORC.Origin">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">TORC.</span></span><span class="sig-name descname"><span class="pre">Origin</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">label</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">local</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">sc_cw</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">sc_acw</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">init_coil</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/TORC/source/Origin.html#Origin"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#TORC.Origin" title="Permalink to this definition"></a></dt>
+<dd><p>Class for the origin of replication supercoiling barrier in plasmids. Acts as a solid barrier with no transmission
+of supercoiling. Checks that both given supercoiling regions exist.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>label</strong> (<em>String</em>) – Name of the origin of replication, can be place holder to label which origin of replication is being used.</p></li>
+<li><p><strong>local</strong> (<a class="reference internal" href="ControlStructures.html#TORC.LocalArea" title="TORC.LocalArea"><em>LocalArea</em></a>) – The local area object holds information on local environments and supercoiling regions for a single circuit.</p></li>
+<li><p><strong>sc_cw</strong> (<em>Int</em>) – The index of the clockwise supercoiling region, should be the first supercoiling region in the plasmid.</p></li>
+<li><p><strong>sc_acw</strong> (<em>Int</em>) – The index of the anti-clockwise supercoiling region, should be the last supercoiling region in the plasmid.</p></li>
+<li><p><strong>init_coil</strong> (<em>Channel</em>) – The Channel for feeding coiling information to the clockwise (initial) supercoiling region. Is not currently
+used.</p></li>
+</ul>
+</dd>
+</dl>
+<dl class="py method">
+<dt class="sig sig-object py" id="TORC.Origin.update">
+<span class="sig-name descname"><span class="pre">update</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/TORC/source/Origin.html#Origin.update"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#TORC.Origin.update" title="Permalink to this definition"></a></dt>
+<dd><p>Currently the origin of replication performs no action other than defining a barrier between supercoiling
+regions. Its update therefore does nothing.</p>
+</dd></dl>
+
+</dd></dl>
+
+</section>
 <section id="environment">
 <h2>Environment<a class="headerlink" href="#environment" title="Permalink to this heading"></a></h2>
 <dl class="py class">
 <dt class="sig sig-object py" id="TORC.Environment">
-<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">TORC.</span></span><span class="sig-name descname"><span class="pre">Environment</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">label</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">local</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">content</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0.0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">decay_rate</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">input_queue</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">fluorescent</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/TORC/source/Environment.html#Environment"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#TORC.Environment" title="Permalink to this definition"></a></dt>
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">TORC.</span></span><span class="sig-name descname"><span class="pre">Environment</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">label</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">local</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">content</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0.0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">decay_rate</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">input_queue</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">fluorescent</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">inhibitors</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/TORC/source/Environment.html#Environment"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#TORC.Environment" title="Permalink to this definition"></a></dt>
 <dd><p>Environment class tracks presence of a protein in the environment. It signals out the current state of the protein
 in the environment and then updates the contents based on output from other components.</p>
 <dl class="field-list simple">
@@ -370,6 +450,12 @@ in the environment and then updates the contents based on output from other comp
 </ul>
 </dd>
 </dl>
+<dl class="py method">
+<dt class="sig sig-object py" id="TORC.Environment.inhibit">
+<span class="sig-name descname"><span class="pre">inhibit</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/TORC/source/Environment.html#Environment.inhibit"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#TORC.Environment.inhibit" title="Permalink to this definition"></a></dt>
+<dd><p>Updates levels of proteins based on annihilation with an inhibitor.</p>
+</dd></dl>
+
 <dl class="py method">
 <dt class="sig sig-object py" id="TORC.Environment.read_signal">
 <span class="sig-name descname"><span class="pre">read_signal</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/TORC/source/Environment.html#Environment.read_signal"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#TORC.Environment.read_signal" title="Permalink to this definition"></a></dt>

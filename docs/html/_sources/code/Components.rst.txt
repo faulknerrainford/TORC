@@ -35,6 +35,18 @@ Bridge
 .. autoclass:: TORC.Bridge
     :members:
 
+Inhibitor
+---------
+
+.. autoclass:: TORC.Inhibitor
+    :members:
+
+Origin
+------
+
+.. autoclass:: TORC.Origin
+    :members:
+
 Environment
 ------------
 

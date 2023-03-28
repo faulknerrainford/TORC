@@ -88,12 +88,16 @@
 <span class="sd">        The signal channel for receiving additions of protein to the environment</span>
 <span class="sd">    &quot;&quot;&quot;</span>
 
-    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">label</span><span class="p">,</span> <span class="n">local</span><span class="p">,</span> <span class="n">content</span><span class="o">=</span><span class="mf">0.0</span><span class="p">,</span> <span class="n">decay_rate</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">input_queue</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">fluorescent</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">label</span><span class="p">,</span> <span class="n">local</span><span class="p">,</span> <span class="n">content</span><span class="o">=</span><span class="mf">0.0</span><span class="p">,</span> <span class="n">decay_rate</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">input_queue</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">fluorescent</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">inhibitors</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">label</span> <span class="o">=</span> <span class="n">label</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">content</span> <span class="o">=</span> <span class="n">content</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">decay</span> <span class="o">=</span> <span class="n">decay_rate</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">input</span> <span class="o">=</span> <span class="n">input_queue</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">fluorescent</span> <span class="o">=</span> <span class="n">fluorescent</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">inhibitors</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">inhibitors</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">inhibitors</span> <span class="o">=</span> <span class="n">inhibitors</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">local</span> <span class="o">=</span> <span class="n">local</span>
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">label</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">local</span><span class="o">.</span><span class="n">get_keys</span><span class="p">():</span>
             <span class="n">local</span><span class="o">.</span><span class="n">add_environment</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">label</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">content</span><span class="p">)</span>
@@ -106,7 +110,8 @@
 <span class="sd">        the environment.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">send_signal</span><span class="p">()</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">read_signal</span><span class="p">()</span></div>
+        <span class="bp">self</span><span class="o">.</span><span class="n">read_signal</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">inhibit</span><span class="p">()</span></div>
 
 <div class="viewcode-block" id="Environment.read_signal"><a class="viewcode-back" href="../../../code/Components.html#TORC.Environment.read_signal">[docs]</a>    <span class="k">def</span> <span class="nf">read_signal</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
@@ -116,13 +121,21 @@
         <span class="n">length</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">input</span><span class="o">.</span><span class="n">qsize</span><span class="p">()</span>
         <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">length</span><span class="p">):</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">content</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">content</span> <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">input</span><span class="o">.</span><span class="n">get</span><span class="p">()</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">content</span> <span class="o">=</span> <span class="nb">max</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">content</span> <span class="o">-</span> <span class="bp">self</span><span class="o">.</span><span class="n">decay</span><span class="p">,</span> <span class="mi">0</span><span class="p">)</span></div>
+        <span class="bp">self</span><span class="o">.</span><span class="n">content</span> <span class="o">=</span> <span class="nb">max</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">content</span> <span class="o">-</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">decay</span><span class="p">),</span> <span class="mi">0</span><span class="p">)</span></div>
 
 <div class="viewcode-block" id="Environment.send_signal"><a class="viewcode-back" href="../../../code/Components.html#TORC.Environment.send_signal">[docs]</a>    <span class="k">def</span> <span class="nf">send_signal</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Updates levels of proteins in the environment using the environment dictionary.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">local</span><span class="o">.</span><span class="n">set_environment</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">label</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">content</span><span class="p">)</span></div></div>
+        <span class="bp">self</span><span class="o">.</span><span class="n">local</span><span class="o">.</span><span class="n">set_environment</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">label</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">content</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="Environment.inhibit"><a class="viewcode-back" href="../../../code/Components.html#TORC.Environment.inhibit">[docs]</a>    <span class="k">def</span> <span class="nf">inhibit</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Updates levels of proteins based on annihilation with an inhibitor.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">for</span> <span class="n">inh</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">inhibitors</span><span class="p">:</span>
+            <span class="n">inh</span><span class="o">.</span><span class="n">send</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">content</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">content</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">content</span> <span class="o">-</span> <span class="n">inh</span><span class="o">.</span><span class="n">get</span><span class="p">()</span></div></div>
 </pre></div>
 
            </div>

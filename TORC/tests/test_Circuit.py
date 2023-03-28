@@ -66,7 +66,7 @@ class TestCircuit(TestCase):
         components = circuit.create_promoter("CF", "red", 0)
         self.assertEqual(len(components), 2, "Incorrect number of components returned, fluorescent")
 
-    def test_create_barrier(self):
+    def test_create_barrier_bridge(self):
         # create bridge
         circuit = Circuit([])
         components, coil, sc_ind = circuit.create_barrier("bridge", "lac", 0)
@@ -74,6 +74,15 @@ class TestCircuit(TestCase):
         self.assertIn("lac", circuit.local.get_keys(), "lac environ not created")
         # check bridge has correct label
         self.assertEqual("lac", components[2].label, "Incorrect bridge created")
+
+    def test_create_barrier_origin(self):
+        # create origin
+        circuit = Circuit([])
+        sc, coil, ind = circuit.create_supercoil()
+        circuit.local.add_supercoil()
+        component, coil, sc_ind = circuit.create_barrier("origin", None, ind, sc)
+        self.assertEqual("Origin", component[0].label, "Incorrect label")
+        self.assertEqual(2, len(circuit.local.supercoil_regions), "Incorrect sc region add")
 
     def test_create_visible(self):
         circuit = Circuit([])

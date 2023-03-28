@@ -1,5 +1,5 @@
 from unittest import TestCase
-from TORC import Promoter, Supercoil, Environment, SignalError, Channel, LocalArea
+from TORC import Promoter, Supercoil, Environment, SignalError, Channel, LocalArea, Inhibitor
 from queue import Queue
 from threading import Thread
 
@@ -51,6 +51,20 @@ class TestEnvironment(TestCase):
         environment.send_signal()
         self.assertEqual(42, local.get_environment(environment.label), "Incorrect update of signal")
 
+    def test_inhibit(self):
+        local = LocalArea()
+        inhibitor = Inhibitor()
+        environmentA = Environment("A", local, content=20, inhibitors=[inhibitor])
+        environmentB = Environment("B", local, content=3, inhibitors=[inhibitor])
+        try:
+            threads = [Thread(target=x.inhibit) for x in [environmentB, environmentA]]
+            [x.start() for x in threads]
+            [x.join() for x in threads]
+        except SignalError:
+            self.fail("Inhibit failed")
+        self.assertEqual(17, environmentA.content, "Failed inhibit A")
+        self.assertEqual(0, environmentB.content, "Failed inhibit B")
+
     def test_update_sequential(self):
         local = LocalArea()
         sc_channel, _ = Channel()
@@ -81,3 +95,26 @@ class TestEnvironment(TestCase):
             except SignalError:
                 self.fail("Update failed for supercoiling, gene and promoter")
         self.assertEqual(13, environment.content, "Incorrect concurrent update of content")
+
+    def test_update_concurrent_inhibitor(self):
+        local = LocalArea()
+        test_queue = Queue()
+        inh_queue = Queue()
+        supercoil = Supercoil(test_queue, local)
+        test_in_queue = Queue()
+        inhibitor = Inhibitor()
+        inhibit_env = Environment("Inh", local, content=2, input_queue=inh_queue, inhibitors=[inhibitor])
+        promoter = Promoter("leu500", supercoil.supercoiling_region, local, output_channel=test_in_queue)
+        environment = Environment("leu500", local, content=12, input_queue=test_in_queue, inhibitors=[inhibitor])
+        self.assertEqual(12, environment.content, "Incorrect initial content")
+        local.set_supercoil(supercoil.supercoiling_region, "negative")
+        circuit = [promoter, environment, inhibit_env]
+        for i in range(1):
+            try:
+                threads = [Thread(target=x.update) for x in circuit]
+                [x.start() for x in threads]
+                [x.join() for x in threads]
+            except SignalError:
+                self.fail("Update failed for supercoiling, gene and promoter")
+        self.assertEqual(11, environment.content, "Incorrect concurrent update of content")
+        self.assertEqual(0, inhibit_env.content, "Did not empty inhibitor")

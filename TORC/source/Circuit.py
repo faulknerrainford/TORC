@@ -1,5 +1,5 @@
 from TORC import Environment, Channel, Supercoil, GenetetA, SupercoilSensitive, Promoter, Bridge, Visible, LocalArea, \
-    BridgeError
+    BridgeError, Origin
 from queue import Queue
 from threading import Thread
 
@@ -11,7 +11,7 @@ class Circuit:
     Parameters
     ----------
     components      :   List<Tuple<String, String>>
-        List of components to build onto the plasmid, in type,name tuples.
+        List of components to build onto the circuit, in type,name tuples.
     environments    :   List<Tuple<String, float>>
         List of initial environment conditions for non-empty starting environments in name, content tuples.
     label           :   String
@@ -33,6 +33,7 @@ class Circuit:
         else:
             self.local = local
         self.visible = None
+        self.init_coil = None
 
     # noinspection PyTypeChecker
     def setup(self):
@@ -50,6 +51,7 @@ class Circuit:
             self.circuit_components = self.circuit_components + [env]
         # set initial supercoiling region
         current_sc, coil, sc_index = self.create_supercoil()
+        self.init_coil = coil
         self.circuit_components = self.circuit_components + [current_sc]
         # generate each component clockwise including any additional supercoiling regions and environments needed
         for comp in self.component_list:
@@ -69,7 +71,7 @@ class Circuit:
 
     def run(self, steps):
         """
-        Runs through the compnent update functions for a given number of steps.
+        Runs through the component update functions for a given number of steps.
 
         Parameters
         ----------
@@ -92,6 +94,7 @@ class Circuit:
 
         Returns
         --------
+        self.fail()
         List<GenetetA, Supercoil>
             The tetA gene and new supercoiling region
         ChannelEnd
@@ -114,12 +117,12 @@ class Circuit:
         Parameters
         ----------
         promoter_type   :   String
-            Type of promoter to be created choices from: P (basic promoter), C (supercoilsensitive promoter),
+            Type of promoter to be created choices from: P (basic promoter), C (supercoil sensitive promoter),
             CF (supercoil sensitive fluorescence promoter)
         output          :   String
             Name of gene/protein to be expressed
         sc_region       :   Int
-            Index of supercoil region the promoter is in.
+            Index of supercoil region the promoter is in.n
         weak            :   float
             output rate of weak signals
         strong          :   float
@@ -150,9 +153,10 @@ class Circuit:
             components.append(promoter)
         return components
 
-    def create_barrier(self, barrier_type, sensor_input, current_ind):
+    def create_barrier(self, barrier_type, sensor_input, current_ind, init_sc_coil=None):
         """
-        Generates a barrier point, and new supercoiling regions and environments if needed, of type from list: bridge
+        Generates a barrier point, and new supercoiling regions and environments if needed, of type from list: bridge,
+        origin
 
         Parameters
         ----------
@@ -162,20 +166,27 @@ class Circuit:
             protein to be detected in environment to turn barrier on or off
         current_ind     :   Int
             index of the supercoiling region anti-clockwise of the barrier.
+        init_sc         :   Supercoil
+            the initial supercoiling region for plasmids which need to connect last to first using the origin of
+            replication barrier.
 
         Returns
         -------
         List<>
             Components: supercoil region, environment(if needed), barrier
         ChannelEnd
-            channel for modifying the new supercoiling region clockwise of the barrier
+            channel for modifying the new supercoiling region clockwise of the barrier,
         Int
             Index of new clockwise supercoiling region
         """
         components = []
-        sc, coil, sc_ind = self.create_supercoil()
-        components.append(sc)
-        if sensor_input not in self.local.get_keys():
+        if barrier_type != "origin":
+            sc, coil, sc_ind = self.create_supercoil()
+            components.append(sc)
+        else:
+            sc_ind = 0
+            coil = init_sc_coil
+        if sensor_input and sensor_input not in self.local.get_keys():
             queue = Queue()
             env = self.create_environment(sensor_input, queue)
             self.env_queues[sensor_input] = queue
@@ -183,6 +194,9 @@ class Circuit:
         if barrier_type == "bridge":
             bridge = Bridge(sensor_input, self.local, current_ind, sc_ind, coil)
             components.append(bridge)
+        if barrier_type == "origin":
+            origin = Origin("Origin", self.local, current_ind, sc_ind, coil)
+            components.append(origin)
         return components, coil, sc_ind
 
     def create_supercoil(self):

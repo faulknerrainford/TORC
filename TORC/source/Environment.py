@@ -17,12 +17,16 @@ class Environment:
         The signal channel for receiving additions of protein to the environment
     """
 
-    def __init__(self, label, local, content=0.0, decay_rate=0, input_queue=None, fluorescent=False):
+    def __init__(self, label, local, content=0.0, decay_rate=0, input_queue=None, fluorescent=False, inhibitors=None):
         self.label = label
         self.content = content
         self.decay = decay_rate
         self.input = input_queue
         self.fluorescent = fluorescent
+        if not inhibitors:
+            self.inhibitors = []
+        else:
+            self.inhibitors = inhibitors
         self.local = local
         if self.label not in local.get_keys():
             local.add_environment(self.label, self.content)
@@ -36,6 +40,7 @@ class Environment:
         """
         self.send_signal()
         self.read_signal()
+        self.inhibit()
 
     def read_signal(self):
         """
@@ -45,10 +50,18 @@ class Environment:
         length = self.input.qsize()
         for i in range(length):
             self.content = self.content + self.input.get()
-        self.content = max(self.content - self.decay, 0)
+        self.content = max(self.content - (self.decay), 0)
 
     def send_signal(self):
         """
         Updates levels of proteins in the environment using the environment dictionary.
         """
         self.local.set_environment(self.label, self.content)
+
+    def inhibit(self):
+        """
+        Updates levels of proteins based on annihilation with an inhibitor.
+        """
+        for inh in self.inhibitors:
+            inh.send(self.content)
+            self.content = self.content - inh.get()

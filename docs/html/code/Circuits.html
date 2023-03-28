@@ -51,6 +51,14 @@
 </ul>
 </li>
 <li class="toctree-l3"><a class="reference internal" href="#examples">Examples</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#plasmid">Plasmid</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#TORC.Plasmid"><code class="docutils literal notranslate"><span class="pre">Plasmid</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="#genome">Genome</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#TORC.Genome"><code class="docutils literal notranslate"><span class="pre">Genome</span></code></a></li>
+</ul>
+</li>
 </ul>
 </li>
 <li class="toctree-l2"><a class="reference internal" href="Components.html">Components</a></li>
@@ -86,6 +94,10 @@
              
   <section id="circuits">
 <h1>Circuits<a class="headerlink" href="#circuits" title="Permalink to this heading"></a></h1>
+<p>Circuits in TORC are divided into two subclasses: Plasmid and Genome. This is dictated but the shape of the DNA. In
+Plasmids the DNA is circular with the first and last supercoiling regions connected (but not propagated) by an origin of
+replication. The Genome is a linear segment of DNA, currently this operates with a first and last supercoiling regions
+which are not effected by the DNA outside the segment being modelled.</p>
 <section id="circuit">
 <h2>Circuit<a class="headerlink" href="#circuit" title="Permalink to this heading"></a></h2>
 <dl class="py class">
@@ -95,7 +107,7 @@
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>components</strong> (<em>List&lt;Tuple&lt;String</em><em>, </em><em>String&gt;&gt;</em>) – List of components to build onto the plasmid, in type,name tuples.</p></li>
+<li><p><strong>components</strong> (<em>List&lt;Tuple&lt;String</em><em>, </em><em>String&gt;&gt;</em>) – List of components to build onto the circuit, in type,name tuples.</p></li>
 <li><p><strong>environments</strong> (<em>List&lt;Tuple&lt;String</em><em>, </em><em>float&gt;&gt;</em>) – List of initial environment conditions for non-empty starting environments in name, content tuples.</p></li>
 <li><p><strong>label</strong> (<em>String</em>) – Name of the circuit</p></li>
 <li><p><strong>local</strong> (<a class="reference internal" href="ControlStructures.html#TORC.LocalArea" title="TORC.LocalArea"><em>LocalArea</em></a>) – Local area can be provided to the system with a full start state if needed.</p></li>
@@ -104,20 +116,23 @@
 </dl>
 <dl class="py method">
 <dt class="sig sig-object py" id="TORC.Circuit.create_barrier">
-<span class="sig-name descname"><span class="pre">create_barrier</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">barrier_type</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">sensor_input</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">current_ind</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/TORC/source/Circuit.html#Circuit.create_barrier"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#TORC.Circuit.create_barrier" title="Permalink to this definition"></a></dt>
-<dd><p>Generates a barrier point, and new supercoiling regions and environments if needed, of type from list: bridge</p>
+<span class="sig-name descname"><span class="pre">create_barrier</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">barrier_type</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">sensor_input</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">current_ind</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">init_sc_coil</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/TORC/source/Circuit.html#Circuit.create_barrier"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#TORC.Circuit.create_barrier" title="Permalink to this definition"></a></dt>
+<dd><p>Generates a barrier point, and new supercoiling regions and environments if needed, of type from list: bridge,
+origin</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>barrier_type</strong> (<em>String</em>) – type of barrier to be created.</p></li>
 <li><p><strong>sensor_input</strong> (<em>String</em>) – protein to be detected in environment to turn barrier on or off</p></li>
 <li><p><strong>current_ind</strong> (<em>Int</em>) – index of the supercoiling region anti-clockwise of the barrier.</p></li>
+<li><p><strong>init_sc</strong> (<a class="reference internal" href="Components.html#TORC.Supercoil" title="TORC.Supercoil"><em>Supercoil</em></a>) – the initial supercoiling region for plasmids which need to connect last to first using the origin of
+replication barrier.</p></li>
 </ul>
 </dd>
 <dt class="field-even">Returns</dt>
 <dd class="field-even"><p><ul class="simple">
 <li><p><em>List&lt;&gt;</em> – Components: supercoil region, environment(if needed), barrier</p></li>
-<li><p><em>ChannelEnd</em> – channel for modifying the new supercoiling region clockwise of the barrier</p></li>
+<li><p><em>ChannelEnd</em> – channel for modifying the new supercoiling region clockwise of the barrier,</p></li>
 <li><p><em>Int</em> – Index of new clockwise supercoiling region</p></li>
 </ul>
 </p>
@@ -158,6 +173,7 @@
 </dd>
 <dt class="field-even">Returns</dt>
 <dd class="field-even"><p><ul class="simple">
+<li><p><em>self.fail()</em></p></li>
 <li><p><em>List&lt;GenetetA, Supercoil&gt;</em> – The tetA gene and new supercoiling region</p></li>
 <li><p><em>ChannelEnd</em> – The in channel for the new supercoiling region</p></li>
 <li><p><em>Int</em> – The index for the new supercoiling region</p></li>
@@ -175,10 +191,10 @@ any associated environments needed.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>promoter_type</strong> (<em>String</em>) – Type of promoter to be created choices from: P (basic promoter), C (supercoilsensitive promoter),
+<li><p><strong>promoter_type</strong> (<em>String</em>) – Type of promoter to be created choices from: P (basic promoter), C (supercoil sensitive promoter),
 CF (supercoil sensitive fluorescence promoter)</p></li>
 <li><p><strong>output</strong> (<em>String</em>) – Name of gene/protein to be expressed</p></li>
-<li><p><strong>sc_region</strong> (<em>Int</em>) – Index of supercoil region the promoter is in.</p></li>
+<li><p><strong>sc_region</strong> (<em>Int</em>) – Index of supercoil region the promoter is in.n</p></li>
 <li><p><strong>weak</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.11)"><em>float</em></a>) – output rate of weak signals</p></li>
 <li><p><strong>strong</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.11)"><em>float</em></a>) – output rate of strong signals</p></li>
 </ul>
@@ -236,7 +252,7 @@ CF (supercoil sensitive fluorescence promoter)</p></li>
 <dl class="py method">
 <dt class="sig sig-object py" id="TORC.Circuit.run">
 <span class="sig-name descname"><span class="pre">run</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">steps</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/TORC/source/Circuit.html#Circuit.run"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#TORC.Circuit.run" title="Permalink to this definition"></a></dt>
-<dd><p>Runs through the compnent update functions for a given number of steps.</p>
+<dd><p>Runs through the component update functions for a given number of steps.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><p><strong>steps</strong> (<em>Int</em>) – Number of updates to run on each component.</p>
@@ -270,6 +286,58 @@ CF (supercoil sensitive fluorescence promoter)</p></li>
 </pre></div>
 </div>
 </div>
+</section>
+<section id="plasmid">
+<h2>Plasmid<a class="headerlink" href="#plasmid" title="Permalink to this heading"></a></h2>
+<dl class="py class">
+<dt class="sig sig-object py" id="TORC.Plasmid">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">TORC.</span></span><span class="sig-name descname"><span class="pre">Plasmid</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">components</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">environments</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">label</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'circuit1'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">local</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/TORC/source/Plasmid.html#Plasmid"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#TORC.Plasmid" title="Permalink to this definition"></a></dt>
+<dd><p>Implements the circular circuits on plasmids. Adds an origin of replication which connects first and last #
+supercoiling regions, does not transmit coiling between them.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>components</strong> (<em>List&lt;Tuple&lt;String</em><em>, </em><em>String&gt;&gt;</em>) – List of components to build onto the plasmid, in type,name tuples.</p></li>
+<li><p><strong>environments</strong> (<em>List&lt;Tuple&lt;String</em><em>, </em><em>float&gt;&gt;</em>) – List of initial environment conditions for non-empty starting environments in name, content tuples.</p></li>
+<li><p><strong>label</strong> (<em>String</em>) – Name of the circuit</p></li>
+<li><p><strong>local</strong> (<a class="reference internal" href="ControlStructures.html#TORC.LocalArea" title="TORC.LocalArea"><em>LocalArea</em></a>) – Local area can be provided to the system with a full start state if needed.</p></li>
+</ul>
+</dd>
+</dl>
+<dl class="py method">
+<dt class="sig sig-object py" id="TORC.Plasmid.setup">
+<span class="sig-name descname"><span class="pre">setup</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/TORC/source/Plasmid.html#Plasmid.setup"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#TORC.Plasmid.setup" title="Permalink to this definition"></a></dt>
+<dd><p>Sets up the circuit by building the environments, components and supercoiling regions of the circuit. Connects
+the final supercoiling region to the first with an origin of replication component.</p>
+</dd></dl>
+
+</dd></dl>
+
+</section>
+<section id="genome">
+<h2>Genome<a class="headerlink" href="#genome" title="Permalink to this heading"></a></h2>
+<dl class="py class">
+<dt class="sig sig-object py" id="TORC.Genome">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">TORC.</span></span><span class="sig-name descname"><span class="pre">Genome</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">components</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">environments</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">label</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'circuit1'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">local</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/TORC/source/Genome.html#Genome"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#TORC.Genome" title="Permalink to this definition"></a></dt>
+<dd><p>Implements the linear circuits of genomes.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>components</strong> (<em>List&lt;Tuple&lt;String</em><em>, </em><em>String&gt;&gt;</em>) – List of components to build onto the plasmid, in type,name tuples.</p></li>
+<li><p><strong>environments</strong> (<em>List&lt;Tuple&lt;String</em><em>, </em><em>float&gt;&gt;</em>) – List of initial environment conditions for non-empty starting environments in name, content tuples.</p></li>
+<li><p><strong>label</strong> (<em>String</em>) – Name of the circuit</p></li>
+<li><p><strong>local</strong> (<a class="reference internal" href="ControlStructures.html#TORC.LocalArea" title="TORC.LocalArea"><em>LocalArea</em></a>) – Local area can be provided to the system with a full start state if needed.</p></li>
+</ul>
+</dd>
+</dl>
+<dl class="py method">
+<dt class="sig sig-object py" id="TORC.Genome.setup">
+<span class="sig-name descname"><span class="pre">setup</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/TORC/source/Genome.html#Genome.setup"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#TORC.Genome.setup" title="Permalink to this definition"></a></dt>
+<dd><p>Sets up the circuit by building the environments, components and supercoiling regions of the circuit.</p>
+</dd></dl>
+
+</dd></dl>
+
 </section>
 </section>
 

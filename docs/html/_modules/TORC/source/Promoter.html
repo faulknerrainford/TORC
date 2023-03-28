@@ -71,7 +71,9 @@
   <h1>Source code for TORC.source.Promoter</h1><div class="highlight"><pre>
 <div class="viewcode-block" id="Promoter"><a class="viewcode-back" href="../../../code/Components.html#TORC.Promoter">[docs]</a><span></span><span class="k">class</span> <span class="nc">Promoter</span><span class="p">:</span>
     <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">    Promoter class increases the amount of protein in the local environment</span>
+<span class="sd">    Promoter class increases the amount of protein in the local environment based on the current state of environmental</span>
+<span class="sd">    proteins and supercoiling. This includes the existence of proteins in the environment both promoting and repressing</span>
+<span class="sd">    expression.</span>
 
 <span class="sd">    Parameters</span>
 <span class="sd">    -----------</span>
@@ -90,7 +92,8 @@
 <span class="sd">        The channel to send output on to the environment component or supercoiling signals</span>
 <span class="sd">    &quot;&quot;&quot;</span>
 
-    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">label</span><span class="p">,</span> <span class="n">region</span><span class="p">,</span> <span class="n">local</span><span class="p">,</span> <span class="n">weak</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">strong</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">output_channel</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">fluorescent</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">label</span><span class="p">,</span> <span class="n">region</span><span class="p">,</span> <span class="n">local</span><span class="p">,</span> <span class="n">weak</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">strong</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">output_channel</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">fluorescent</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">promote</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+                 <span class="n">repress</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">sc_sensitive</span><span class="o">=</span><span class="kc">True</span><span class="p">):</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">label</span> <span class="o">=</span> <span class="n">label</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">gene</span> <span class="o">=</span> <span class="n">label</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s2">&quot;_&quot;</span><span class="p">)[</span><span class="mi">0</span><span class="p">]</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">coil_state</span> <span class="o">=</span> <span class="s2">&quot;neutral&quot;</span>
@@ -104,12 +107,14 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">output_channel</span> <span class="o">=</span> <span class="n">output_channel</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">fluorescent</span> <span class="o">=</span> <span class="n">fluorescent</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">local</span> <span class="o">=</span> <span class="n">local</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">promote</span> <span class="o">=</span> <span class="n">promote</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">repress</span> <span class="o">=</span> <span class="n">repress</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">sc_sensitive</span> <span class="o">=</span> <span class="n">sc_sensitive</span>
 
 <div class="viewcode-block" id="Promoter.update"><a class="viewcode-back" href="../../../code/Components.html#TORC.Promoter.update">[docs]</a>    <span class="k">def</span> <span class="nf">update</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Updates state of promoter including output to the environment and updating coil-state if changed.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
-
         <span class="bp">self</span><span class="o">.</span><span class="n">input_check</span><span class="p">()</span>
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">input_check</span><span class="p">():</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">output_signal</span><span class="p">(</span><span class="s2">&quot;strong&quot;</span><span class="p">)</span>
@@ -120,12 +125,22 @@
 <div class="viewcode-block" id="Promoter.input_check"><a class="viewcode-back" href="../../../code/Components.html#TORC.Promoter.input_check">[docs]</a>    <span class="k">def</span> <span class="nf">input_check</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Checks coiling signal and updates coil_state if it has changed.</span>
+<span class="sd">        Checks if repressor active -&gt; returns false</span>
+<span class="sd">        Checks if promoter protein present -&gt; returns true</span>
+<span class="sd">        Checks if supercoiling negative and sc_sensitive -&gt; returns true</span>
 <span class="sd">        &quot;&quot;&quot;</span>
-
         <span class="n">current_sc_state</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">local</span><span class="o">.</span><span class="n">get_supercoil</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">region</span><span class="p">)</span>
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">coil_state</span> <span class="o">!=</span> <span class="n">current_sc_state</span><span class="p">:</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">coil_state</span> <span class="o">=</span> <span class="n">current_sc_state</span>
-        <span class="k">return</span> <span class="kc">True</span></div>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">repress</span><span class="p">:</span>
+            <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">local</span><span class="o">.</span><span class="n">get_environment</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">repress</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
+                <span class="k">return</span> <span class="kc">False</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">promote</span><span class="p">:</span>
+            <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">local</span><span class="o">.</span><span class="n">get_environment</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">promote</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
+                <span class="k">return</span> <span class="kc">True</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">coil_state</span> <span class="o">==</span> <span class="s2">&quot;negative&quot;</span><span class="p">:</span>
+            <span class="k">return</span> <span class="kc">True</span>
+        <span class="k">return</span> <span class="kc">False</span></div>
 
 <div class="viewcode-block" id="Promoter.output_signal"><a class="viewcode-back" href="../../../code/Components.html#TORC.Promoter.output_signal">[docs]</a>    <span class="k">def</span> <span class="nf">output_signal</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">strength</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>

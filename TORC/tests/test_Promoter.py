@@ -1,5 +1,5 @@
 from unittest import TestCase
-from TORC import GenetetA, SignalError, Supercoil, Promoter, Channel, LocalArea
+from TORC import GenetetA, SignalError, Supercoil, Promoter, Channel, LocalArea, Environment
 from queue import Queue
 from threading import Thread
 
@@ -39,7 +39,7 @@ class TestPromoter(TestCase):
                 self.fail("Update failed for supercoiling, gene and promoter")
         self.assertEqual("negative", promoter.coil_state, "coil state update failed")
 
-    def test_input_check(self):
+    def test_input_check_sc_sensitive(self):
         local = LocalArea()
         sc_channel, _ = Channel()
         supercoil = Supercoil(sc_channel, local)
@@ -48,8 +48,36 @@ class TestPromoter(TestCase):
         promoter.input_check()
         self.assertEqual("neutral", promoter.coil_state, "coil state incorrect")
         local.set_supercoil(supercoil.supercoiling_region, "negative")
-        promoter.input_check()
+        ret = promoter.input_check()
         self.assertEqual("negative", promoter.coil_state, "coil state update failed")
+        self.assertEqual(True, ret, "sc sensitive promoter check failed")
+
+    def test_input_check_protein_promoted(self):
+        local = LocalArea()
+        sc_channel, _ = Channel()
+        supercoil = Supercoil(sc_channel, local)
+        test_out_queue = Queue()
+        promoter = Promoter("leu500", supercoil.supercoiling_region, local, output_channel=test_out_queue,
+                            promote="protein", sc_sensitive=False)
+        protein = Environment("protein", local, content=10)
+        ret = promoter.input_check()
+        self.assertEqual(True, ret, "protein promoter check failed")
+
+    def test_input_check_repressed(self):
+        local = LocalArea()
+        sc_channel, _ = Channel()
+        supercoil = Supercoil(sc_channel, local)
+        test_out_queue = Queue()
+        promoter = Promoter("leu500", supercoil.supercoiling_region, local, output_channel=test_out_queue,
+                            promote="protein", repress="repressor", sc_sensitive=False)
+        repressor = Environment("repressor", local, content=10)
+        protein = Environment("protein", local, content=10)
+        ret = promoter.input_check()
+        self.assertEqual(False, ret, "repressor check failed with content")
+        repressor.content = 0
+        repressor.send_signal()
+        ret = promoter.input_check()
+        self.assertEqual(True, ret, "repressor check failed without content")
 
     def test_output_signal(self):
         local = LocalArea()

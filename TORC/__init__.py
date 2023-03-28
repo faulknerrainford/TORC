@@ -15,8 +15,12 @@ from .source.Supercoil import Supercoil
 from .source.Promoter import Promoter
 from .source.GenetetA import GenetetA
 from .source.SupercoilSensitive import SupercoilSensitive
+from .source.Inhibitor import Inhibitor
 from .source.Environment import Environment
 from .source.Visible import Visible
 from .source.Bridge import Bridge
+from .source.Origin import Origin
 from .source.Circuit import Circuit
+from .source.Plasmid import Plasmid
+from .source.Genome import Genome
 from .source.Visualizer import Visualizer
