@@ -24,3 +24,4 @@ from .source.Circuit import Circuit
 from .source.Plasmid import Plasmid
 from .source.Genome import Genome
 from .source.Visualizer import Visualizer
+from .source.Barrier import Barrier

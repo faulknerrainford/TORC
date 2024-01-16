@@ -1,4 +1,4 @@
-class Origin:
+class Origin(Barrier):
     """
     Class for the origin of replication supercoiling barrier in plasmids. Acts as a solid barrier with no transmission
     of supercoiling. Checks that both given supercoiling regions exist.

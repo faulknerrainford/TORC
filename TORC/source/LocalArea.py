@@ -6,9 +6,11 @@ class LocalArea:
 
     def __init__(self):
         self.supercoil_regions = []
+        self.clockwise_channels = []
+        self.anticlockwise_channels = []
         self.environments = {}
 
-    def add_supercoil(self):
+    def add_supercoil(self, cw_channel, acw_channel):
         """
         Adds a new supercoiling region tracker to the circuit
 
@@ -17,7 +19,9 @@ class LocalArea:
         ind
             Index of the new supercoiling region.
         """
-        self.supercoil_regions = self.supercoil_regions + ["neutral"]
+        self.supercoil_regions = self.supercoil_regions + [0]
+        self.clockwise_channels = self.anticlockwise_channels + [cw_channel]
+        self.anticlockwise_channels = self.anticlockwise_channels + [acw_channel]
         return len(self.supercoil_regions)-1
 
     def add_environment(self, label, value):
@@ -53,7 +57,7 @@ class LocalArea:
         Parameters
         ----------
         ind     : int
-            Index of teh supercoiling region wanted
+            Index of the supercoiling region wanted
 
         Returns
         -------
@@ -61,6 +65,38 @@ class LocalArea:
             Current state of supercoiling in the system
         """
         return self.supercoil_regions[ind]
+
+    def get_supercoil_cw(self, ind):
+        """
+        Get the cw channel of the supercoiling region
+
+        Parameters
+        ----------
+        ind : int
+            Index of the supercoiling region wanted
+
+        Returns
+        -------
+        Queue
+            The queue for updating clockwise supercoiling for the requested region
+        """
+        return self.clockwise_channels[ind]
+
+    def get_supercoil_acw(self, ind):
+        """
+        Get the acw channel of the supercoiling region
+
+        Parameters
+        ----------
+        ind : int
+            Index of the supercoiling region wanted
+
+        Returns
+        -------
+        Queue
+            The queue for updating anticlockwise supercoiling for the requested region
+        """
+        return self.anticlockwise_channels[ind]
 
     def set_environment(self, label, value):
         """

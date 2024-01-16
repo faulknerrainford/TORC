@@ -4,8 +4,8 @@ import math
 import matplotlib.pyplot as plt
 import matplotlib.lines as lines
 from TORC import Supercoil, Environment, Visible, SupercoilSensitive, Promoter, GenetetA, Bridge
-matplotlib.use('TkAgg')
 
+matplotlib.use('TkAgg')
 
 Barriers = (str, GenetetA, Bridge)
 
@@ -20,9 +20,9 @@ class Visualizer:
         List of components in the plasmid system.
     """
 
-    def __init__(self, components):
+    def __init__(self, components, plasmid=True):
         # TODO: settings for output and videos
-        # TODO: initialise the drawing
+        # initialise the drawing
         # TODO: linear genome vizualiser as well as plasmid
         self.figure, self.axis = plt.subplots(1, 1)
         self.plasmid_components = ["ori"] + [x for x in components if not (isinstance(x, Supercoil) or
@@ -32,9 +32,10 @@ class Visualizer:
         self.environments = [x for x in components if isinstance(x, Environment) or isinstance(x, Visible)]
         self.component_count = len(self.plasmid_components)
         self.plasmid_positions = []
-        pass
+        self.plasmid = plasmid
+        self.shapes = []
 
-    def draw_plasmid(self, comp_size=0.2):
+    def draw_plasmid(self, comp_size=0.2, plasmid=True):
         """
         Draws and displays plasmid with the components representations with a given size.
 
@@ -42,43 +43,89 @@ class Visualizer:
         ----------
         comp_size   :   float
             Size on the axis of a side of the square components. All other components are sized relative to this.
+        plasmid     :   boolean (True)
+            Indicates if a plasmid or genome is being built
         """
-        centre = (-1, 0)
-        radius = 0.6
-        last_barrier = None
+        offset = comp_size/4
         current_supercoil = 0
-        # adds the circle
         self.axis.set_xlim(-2, 1)
         self.axis.set_ylim(-1, 1)
-        drawing_colored_circle = plt.Circle(centre, radius, edgecolor="orange", linestyle="--", fill=False)
-        self.axis.set_aspect(1)
-        self.axis.add_artist(drawing_colored_circle)
-        # add components and labels
-        # get plasmid coordinates
-        self.get_plasmid_coordinates(centre, radius)
-        # add bridge arc
-        for shape in self.draw_bridge_arcs(centre, radius, comp_size, arc_level=0.5):
-            if shape:
-                self.axis.add_artist(shape)
+        if plasmid:
+            centre = (-1, 0)
+            radius = 0.6
+            last_barrier = None
+            # adds the circle
+            drawing_colored_circle = plt.Circle(centre, radius, edgecolor="orange", linestyle="--", fill=False)
+            self.axis.set_aspect(1)
+            self.shapes.append(drawing_colored_circle)
+            self.axis.add_artist(drawing_colored_circle)
+            # add components and labels
+            # get plasmid coordinates
+            self.get_plasmid_coordinates(centre, radius)
+            # draw bridge arcs
+            for shape in self.draw_bridge_arcs(centre, radius, comp_size, arc_level=0.5):
+                if shape:
+                    self.shapes.append(shape)
+                    self.axis.add_artist(shape)
+        else:
+            length = len(self.plasmid_components)
+            # TODO: checks for bridge and draws multiple lines and sets offset
+            # TODO: add offset inds
+            offset_inds = []
+            # adds the line
+            xcoords = [-1.75, 0.75]
+            drawing_colored_line = plt.plot([0, 0], xcoords, linestyle="--", edgecolor="orange")
+            self.axis.set_aspect(1)
+            self.shapes.append(drawing_colored_line)
+            self.axis.add_artist(drawing_colored_line)
+            self.get_genome_coordinates([-1.75, 0.75], comp_size)
+            # TODO: add bridge arc
+            for shape in self.draw_bridge_arcs_genome(xcoords, comp_size, arc_level=0.5):
+                if shape:
+                    self.shapes.append(shape)
+                    self.axis.add_artist(shape)
         for ind in range(len(self.plasmid_components)):
+            if ind in range(offset_inds):
+                offset_active = True
+            else:
+                offset_active = False
             if isinstance(self.plasmid_components[ind], Barriers):
                 if last_barrier is not None:
                     # add sc label
-                    if not(current_supercoil == 0 and ind == 1):
-                        sc_label, sc_box = self.get_supercoil_label(last_barrier, ind, centre,
-                                                                    radius,
-                                                                    current_supercoil, comp_size)
+                    if not (current_supercoil == 0 and ind == 1):
+                        if plasmid:
+                            sc_label, sc_box = self.get_supercoil_label_plasmid(last_barrier, ind, centre,
+                                                                                radius, current_supercoil, comp_size)
+                        else:
+                            sc_label, sc_box = self.get_supercoiling_label_genome(last_barrier, ind, [-1.75, 0.75],
+                                                                                  current_supercoil, comp_size,
+                                                                                  offset_active, offset)
+                        self.shapes.append(sc_box)
+                        self.shapes.append(sc_label)
                         self.axis.add_artist(sc_box)
                         self.axis.add_artist(sc_label)
                         current_supercoil = current_supercoil + 1
                 last_barrier = ind
                 # add dividers
-                self.axis.add_artist(self.get_barrier_line(ind, comp_size))
-            for component in self.get_components(ind, comp_size):
+                if plasmid:
+                    barrier = self.get_barrier_line_plasmid(ind, comp_size)
+                else:
+                    # TODO: barrier lines for genomes and offset bridges
+                    barrier = self.get_barrier_line_genome(ind, comp_size, offset_active, offset)
+                self.axis.add_artist(barrier)
+                self.shapes.append(barrier)
+            # TODO: components for barriers and offsets
+            for component in self.get_components(ind, comp_size, offset_active, offset):
                 self.axis.add_artist(component)
         if current_supercoil < len(self.supercoils):
-            sc_label, sc_box = self.get_supercoil_label(last_barrier, len(self.plasmid_components), centre, radius,
-                                                        current_supercoil, comp_size)
+            if plasmid:
+                sc_label, sc_box = self.get_supercoil_label_plasmid(last_barrier, len(self.plasmid_components), centre,
+                                                                    radius, current_supercoil, comp_size)
+            else:
+                # TODO: supercoiling labelling with offsets
+                sc_label, sc_box = self.get_supercoiling_label_genome(last_barrier, len(self.plasmid_components),
+                                                                      [-1.75, 0.75], current_supercoil, comp_size,
+                                                                      offset_active, offset)
             self.axis.add_artist(sc_box)
             self.axis.add_artist(sc_label)
         for env in self.draw_environments(comp_size):
@@ -103,22 +150,22 @@ class Visualizer:
             components.
         """
         envs_pos = []
-        four_row_pos = (2.5*comp_size, comp_size, -comp_size, -2.5*comp_size)
-        three_row_pos = (1.5*comp_size, 0, -1.5*comp_size)
+        four_row_pos = (2.5 * comp_size, comp_size, -comp_size, -2.5 * comp_size)
+        three_row_pos = (1.5 * comp_size, 0, -1.5 * comp_size)
         # calculate positions
         if len(self.environments) <= 4:
             # single column
             if len(self.environments) % 2:
                 envs_pos.append((0.5, 0))
                 if len(self.environments) > 1:
-                    envs_pos.append((0.5, 1.5*comp_size))
-                    envs_pos.append((0.5, -1.5*comp_size))
+                    envs_pos.append((0.5, 1.5 * comp_size))
+                    envs_pos.append((0.5, -1.5 * comp_size))
             else:
                 envs_pos.append((0.5, comp_size))
                 envs_pos.append((0.5, -comp_size))
                 if len(self.environments) > 2:
-                    envs_pos.append((0.5, 2.5*comp_size))
-                    envs_pos.append((0.5, -2.5*comp_size))
+                    envs_pos.append((0.5, 2.5 * comp_size))
+                    envs_pos.append((0.5, -2.5 * comp_size))
         elif len(self.environments) % 4 == 0:
             # 4 rows
             row = 0
@@ -127,7 +174,7 @@ class Visualizer:
                 envs_pos.append((four_row_pos[row], col))
                 row = (row + 1) % 4
                 if row == 0:
-                    col = col + comp_size/2
+                    col = col + comp_size / 2
         elif len(self.environments) % 3 == 0:
             # 3 rows
             row = 0
@@ -160,9 +207,16 @@ class Visualizer:
         for ind in range(len(self.environments)):
             if isinstance(self.environments[ind], Visible):
                 colour = "orange"
-            envs.append(plt.Circle(envs_pos[ind], comp_size*0.6, edgecolor=colour, facecolor="white"))
-            envs.append(plt.Text(envs_pos[ind][0]-(comp_size/3), envs_pos[ind][1]-(comp_size/6),
-                                 self.get_label(self.environments[ind])))
+            if not self.plasmid:
+                # Rotate the environment 90 degrees anti-clockwise for linear genomes
+                envs.append(plt.Circle((envs_pos[ind][1], envs_pos[ind][0]), comp_size * 0.6, edgecolor=colour,
+                                       facecolor="white"))
+                envs.append(plt.Text(envs_pos[ind][1] - (comp_size / 3), envs_pos[ind][0] - (comp_size / 6),
+                                     self.get_label(self.environments[ind])))
+            else:
+                envs.append(plt.Circle(envs_pos[ind], comp_size * 0.6, edgecolor=colour, facecolor="white"))
+                envs.append(plt.Text(envs_pos[ind][0] - (comp_size / 3), envs_pos[ind][1] - (comp_size / 6),
+                                     self.get_label(self.environments[ind])))
         return envs
 
     def shade_sc_regions(self):
@@ -186,16 +240,36 @@ class Visualizer:
             The radius of the circle representing the plasmid.
         """
         # work out the position of coordinates based on size and position of circle.
-        angle_incr = (2*math.pi)/self.component_count
+        angle_incr = (2 * math.pi) / self.component_count
         angle_ori = 0
         for i in range(self.component_count):
-            angle_draw = (angle_ori-(math.pi/2)) % (2*math.pi)
-            x = radius*np.sin(angle_draw) + center[0]
-            y = radius*np.cos(angle_draw) + center[1]
+            angle_draw = (angle_ori - (math.pi / 2)) % (2 * math.pi)
+            x = radius * np.sin(angle_draw) + center[0]
+            y = radius * np.cos(angle_draw) + center[1]
             self.plasmid_positions.append((x, y))
             angle_ori = angle_ori + angle_incr
 
-    def get_supercoil_label(self, inda, indb, center, radius, sc_ind, comp_size):
+    def get_genome_coordinates(self, xcoords, comp_size):
+        """
+        Calculates the cartesian coordinates to position the plasmids components evenly along the genome drawn as a line
+        on the x-axis with the ends given in the list xcoords.
+
+        Parameters
+        ----------
+        xcoords     :   List<float, float>
+            List giving the start and finish of the genome on the x-axis
+        comp_size   :   float
+            Size of the components that will be on the line
+        """
+        # work out the position of coordinates based on length of the line
+        first = xcoords[0] + comp_size
+        last = xcoords[1] - comp_size
+        length_incr = last - first / self.component_count - 1
+        for i in range(self.component_count):
+            x = first + i * length_incr
+            self.plasmid_positions.append((x, 0))
+
+    def get_supercoil_label_plasmid(self, inda, indb, center, radius, sc_ind, comp_size):
         """
         Creates the diamond and text label for the supercoiling region between two plasmid components.
 
@@ -221,14 +295,50 @@ class Visualizer:
         plt.Rectangle
             The diamond for the label
         """
-        angle_incr = (2*math.pi)/self.component_count
+        angle_incr = (2 * math.pi) / self.component_count
         theta_a = angle_incr * inda
-        theta_mid = theta_a + (((math.pi*(indb-inda))/self.component_count) % (2*math.pi))
-        mid_draw = (theta_mid-(math.pi/2)) % (2*math.pi)
-        x = (radius/2) * np.sin(mid_draw) + center[0]
-        y = (radius/2) * np.cos(mid_draw) + center[1]
-        sc_label = plt.Text(x-(comp_size/3), y-(comp_size/4), self.get_label(self.supercoils[sc_ind]))
-        sc_box = plt.Rectangle((x-(comp_size/2), y-(comp_size/2)), comp_size, comp_size,
+        theta_mid = theta_a + (((math.pi * (indb - inda)) / self.component_count) % (2 * math.pi))
+        mid_draw = (theta_mid - (math.pi / 2)) % (2 * math.pi)
+        x = (radius / 2) * np.sin(mid_draw) + center[0]
+        y = (radius / 2) * np.cos(mid_draw) + center[1]
+        sc_label = plt.Text(x - (comp_size / 3), y - (comp_size / 4), self.get_label(self.supercoils[sc_ind]))
+        sc_box = plt.Rectangle((x - (comp_size / 2), y - (comp_size / 2)), comp_size, comp_size,
+                               angle=45, rotation_point='center', edgecolor='purple', facecolor='white')
+        return sc_label, sc_box
+
+    def get_supercoiling_label_genome(self, inda, indb, xcoords, sc_ind, compsize):
+        """
+        Creates the diamond and test label for the supercoiling region between two genome components.
+
+        Parameters
+        ----------
+        inda        :   int
+            The index of the left genome component
+        indb        :   int
+            The index of the right genome component
+        xcoords     :   List<float, float>
+            The start and end of the genome line
+        sc_ind      :   int
+            The index of the supercoiling region being labeled
+        compsize    :   float
+            The size of one side of the diamond
+
+        Returns
+        -------
+        plt.Text
+            The text of the label
+        plt.Rectangle
+            The diamond for the label
+        """
+        first = xcoords[0] + compsize
+        last = xcoords[1] - compsize
+        length_incr = last - first / self.component_count - 1
+        len_a = first + length_incr * inda
+        len_mid = len_a + ((indb - inda) * length_incr) / 2
+        x = len_mid
+        y = 0 - 1.5 * compsize
+        sc_label = plt.Text(x - (compsize / 3), y - (compsize / 4), self.get_label(self.supercoils[sc_ind]))
+        sc_box = plt.Rectangle((x - (compsize / 2), y - (compsize / 2)), compsize, compsize,
                                angle=45, rotation_point='center', edgecolor='purple', facecolor='white')
         return sc_label, sc_box
 
@@ -334,7 +444,7 @@ class Visualizer:
         # get indexes pairs of bridges
         bridge_dict_points = {}
         bridge_dict_ind = {}
-        arc_adjust = 0.6*arc_level
+        arc_adjust = 0.6 * arc_level
         for ind in range(len(self.plasmid_components)):
             if isinstance(self.plasmid_components[ind], Bridge):
                 if self.plasmid_components[ind].label in bridge_dict_points.keys():
@@ -354,17 +464,17 @@ class Visualizer:
                 for point in bridge_dict_points[pair]:
                     # get midpoint of line and draw dot
                     point = self.adjust_point(point, comp_size)
-                    mid_point = ((point[0]-centre[0])*arc_adjust + centre[0], (point[1]-centre[1])*arc_adjust
+                    mid_point = ((point[0] - centre[0]) * arc_adjust + centre[0], (point[1] - centre[1]) * arc_adjust
                                  + centre[1])
                     bridge_arc.append(mid_point)
                     dots.append(plt.Circle(mid_point, 0.03, color="black"))
-                theta1 = bridge_dict_ind[pair][0]*(360/self.component_count)
+                theta1 = bridge_dict_ind[pair][0] * (360 / self.component_count)
                 theta2 = bridge_dict_ind[pair][1] * (360 / self.component_count)
                 print(theta1)
                 print(theta2)
                 # add arc
-                bridge_arc = matplotlib.patches.Arc(centre, radius*arc_level, radius*arc_level, angle=-180,
-                                                    theta1=360-theta2, theta2=360-theta1, edgecolor="black")
+                bridge_arc = matplotlib.patches.Arc(centre, radius * arc_level, radius * arc_level, angle=-180,
+                                                    theta1=360 - theta2, theta2=360 - theta1, edgecolor="black")
                 bridge_arc_pairs.append(bridge_arc)
                 return [dots[0], dots[1], bridge_arc]
         return []

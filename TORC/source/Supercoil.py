@@ -7,16 +7,27 @@ class Supercoil:
 
     Parameters
     ----------
-    channel :   JoinableQueue
-        Queue for receiving signals to update the coiling state, normally sent by gene, block or bridge component.
-    local   :   LocalArea
+    cw_channel  :   JoinableQueue
+        Queue for receiving signals to update the clockwise coiling state, spent by all transcribing genes.
+        component.
+    acw_channel :   JoinableQueue
+        Queue for receiving signals to update the anti-clockwise coiling state, spent by all transcribing genes.
+    local       :   LocalArea
         Tracks the supercoiling and proteins in the circuit
+    global_sc   : float
+        global supercoiling of the plasmid, used to set initial supercoiling values
+    relax       : float
+        The proportion of relaxation that occurs on update from previous time
     """
-
-    def __init__(self, channel, local):
-        self.channel = channel
-        self.supercoiling_region = local.add_supercoil()
+    def __init__(self, cw_channel, acw_channel, local, global_sc=0, relax=1):
+        self.cw_channel = cw_channel
+        self.acw_channel = acw_channel
+        self.supercoiling_region = local.add_supercoil(cw_channel, acw_channel)
         self.local = local
+        # clockwise and anti-clockwise regions
+        self.cw_sc = global_sc
+        self.acw_sc = global_sc
+        self.relax = relax
 
     def coil(self):
         """
@@ -27,12 +38,18 @@ class Supercoil:
         ReceivingError: SignalError
             Indicates that a signal was listened for but not received.
         """
-        try:
-            update = self.channel.recv()
-        except ReceivingError:
-            raise ReceivingError
-        if update:
-            self.local.set_supercoil(self.supercoiling_region, update)
+        # TODO: add cw/acw send to other regions
+        self.cw_sc = self.cw_sc*self.relax
+        self.acw_sc = self.acw_sc*self.relax
+        # process queue for each channel
+        length = self.cw_channel.qsize()
+        for i in range(length):
+            self.cw_sc = self.cw_sc + self.cw_channel.get()
+        length = self.acw_channel.qsize()
+        for i in range(length):
+            self.acw_sc = self.acw_sc + self.acw_channel.get()
+        # update region as sum
+        self.local.set_supercoil(self.supercoiling_region, self.cw_sc+self.acw_sc)
 
     def get_coil_state(self):
         """
@@ -49,7 +66,4 @@ class Supercoil:
         """
         Updates supercoiling region by listening for a change in coil signal.
         """
-        try:
-            self.coil()
-        except ReceivingError:
-            pass
+        self.coil()

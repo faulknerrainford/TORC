@@ -8,28 +8,31 @@ class TestPromoter(TestCase):
 
     def test_update_sequential(self):
         local = LocalArea()
-        sc_channel, _ = Channel()
-        supercoil = Supercoil(sc_channel, local)
+        cw_channel = Queue()
+        acw_channel = Queue()
+        supercoil = Supercoil(cw_channel, acw_channel, local)
         test_out_queue = Queue()
         promoter = Promoter("leu500", supercoil.supercoiling_region, local, output_channel=test_out_queue)
         promoter.update()
-        self.assertEqual("neutral", promoter.coil_state, "coil state incorrect")
-        local.set_supercoil(supercoil.supercoiling_region, "negative")
+        self.assertEqual(0, promoter.coil_state, "coil state incorrect")
+        local.set_supercoil(supercoil.supercoiling_region, -1)
         promoter.update()
-        self.assertEqual("negative", promoter.coil_state, "coil state updated failed")
+        self.assertEqual(-1, promoter.coil_state, "coil state updated failed")
 
     def test_update_concurrent(self):
         local = LocalArea()
-        sc_channel_1, _ = Channel()
-        supercoil_1 = Supercoil(sc_channel_1, local)
-        sc_channel_2, gene_channel = Channel()
-        gene = GenetetA(gene_channel, supercoil_1.supercoiling_region, local)
-        supercoil_2 = Supercoil(sc_channel_2, local)
+        cw_channel_1 = Queue()
+        acw_channel_1 = Queue()
+        supercoil_1 = Supercoil(cw_channel_1, acw_channel_1, local)
+        cw_channel_2 = Queue()
+        acw_channel_2 = Queue()
+        gene = GenetetA(cw_channel_2, supercoil_1.supercoiling_region, local)
+        supercoil_2 = Supercoil(cw_channel_2, acw_channel_2, local)
         test_out_queue = Queue()
         promoter = Promoter("leu500", supercoil_2.supercoiling_region, local, output_channel=test_out_queue)
         circuit = [supercoil_2, gene, promoter]
         promoter.update()
-        self.assertEqual("neutral", promoter.coil_state, "coil state incorrect")
+        self.assertEqual(0, promoter.coil_state, "coil state incorrect")
         for i in range(2):
             try:
                 threads = [Thread(target=x.update) for x in circuit]
@@ -37,25 +40,27 @@ class TestPromoter(TestCase):
                 [x.join() for x in threads]
             except SignalError:
                 self.fail("Update failed for supercoiling, gene and promoter")
-        self.assertEqual("negative", promoter.coil_state, "coil state update failed")
+        self.assertEqual(-1, promoter.coil_state, "coil state update failed")
 
     def test_input_check_sc_sensitive(self):
         local = LocalArea()
-        sc_channel, _ = Channel()
-        supercoil = Supercoil(sc_channel, local)
+        cw_channel = Queue()
+        acw_channel = Queue()
+        supercoil = Supercoil(cw_channel, acw_channel, local)
         test_out_queue = Queue()
         promoter = Promoter("leu500", supercoil.supercoiling_region, local, output_channel=test_out_queue)
         promoter.input_check()
-        self.assertEqual("neutral", promoter.coil_state, "coil state incorrect")
-        local.set_supercoil(supercoil.supercoiling_region, "negative")
+        self.assertEqual(0, promoter.coil_state, "coil state incorrect")
+        local.set_supercoil(supercoil.supercoiling_region, -1)
         ret = promoter.input_check()
-        self.assertEqual("negative", promoter.coil_state, "coil state update failed")
+        self.assertEqual(-1, promoter.coil_state, "coil state update failed")
         self.assertEqual(True, ret, "sc sensitive promoter check failed")
 
     def test_input_check_protein_promoted(self):
         local = LocalArea()
-        sc_channel, _ = Channel()
-        supercoil = Supercoil(sc_channel, local)
+        cw_channel = Queue()
+        acw_channel = Queue()
+        supercoil = Supercoil(cw_channel, acw_channel, local)
         test_out_queue = Queue()
         promoter = Promoter("leu500", supercoil.supercoiling_region, local, output_channel=test_out_queue,
                             promote="protein", sc_sensitive=False)
@@ -65,8 +70,9 @@ class TestPromoter(TestCase):
 
     def test_input_check_repressed(self):
         local = LocalArea()
-        sc_channel, _ = Channel()
-        supercoil = Supercoil(sc_channel, local)
+        cw_channel = Queue()
+        acw_channel = Queue()
+        supercoil = Supercoil(cw_channel, acw_channel, local)
         test_out_queue = Queue()
         promoter = Promoter("leu500", supercoil.supercoiling_region, local, output_channel=test_out_queue,
                             promote="protein", repress="repressor", sc_sensitive=False)
@@ -81,11 +87,26 @@ class TestPromoter(TestCase):
 
     def test_output_signal(self):
         local = LocalArea()
-        sc_channel, _ = Channel()
-        supercoil = Supercoil(sc_channel, local)
+        cw_channel = Queue()
+        acw_channel = Queue()
+        supercoil = Supercoil(cw_channel, acw_channel, local)
         test_out_queue = Queue()
-        promoter = Promoter("red", supercoil.supercoiling_region, local, output_channel=test_out_queue, fluorescent=True)
+        promoter = Promoter("red", supercoil.supercoiling_region, local, output_channel=test_out_queue,
+                            fluorescent=True)
         promoter.output_signal("weak")
         self.assertEqual(0, promoter.output_channel.get(), "Incorrect weak signal")
         promoter.output_signal("strong")
         self.assertEqual(1, promoter.output_channel.get(), "Incorrect strong signal")
+
+    def test_output_supercoiling(self):
+        local = LocalArea()
+        cw_channel = Queue()
+        acw_channel = Queue()
+        supercoil = Supercoil(cw_channel, acw_channel, local)
+        test_out_queue = Queue()
+        promoter = Promoter("red", supercoil.supercoiling_region, local, output_channel=test_out_queue,
+                            fluorescent=True, sc_rate=3)
+        promoter.output_signal("strong")
+        supercoil.coil()
+        self.assertEqual(3, supercoil.cw_sc, "Incorrect local supercoiling after transcription")
+        self.assertEqual(-3, supercoil.acw_sc, "Incorrect local supercoiling after transcription")

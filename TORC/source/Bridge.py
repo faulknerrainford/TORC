@@ -1,7 +1,7 @@
 from TORC import SendingError, Channel
 
 
-class Bridge:
+class Bridge(Barrier):
     """
     Bridge class provides the bridge end components and their functions for checking for environment proteins, other
     bridge components and transmitting supercoiling between supercoiling regions.

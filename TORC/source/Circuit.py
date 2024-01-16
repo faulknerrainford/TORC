@@ -48,15 +48,23 @@ class Circuit:
                 env = self.create_environment(env[0], queue, env[1], fluorescence=True)
             else:
                 env = self.create_environment(env[0], queue, env[1], fluorescence=False)
+            # TODO: set degradation rates from table
             self.circuit_components = self.circuit_components + [env]
         # set initial supercoiling region
+        # TODO: add initial supercoiling if global supercoiling is set
         current_sc, coil, sc_index = self.create_supercoil()
         self.init_coil = coil
         self.circuit_components = self.circuit_components + [current_sc]
         # generate each component clockwise including any additional supercoiling regions and environments needed
         for comp in self.component_list:
+            # TODO: user label lookup in table to assign different types eg. if comp[0].type = promoter rather than
+            #  in list. Separate gene, promoter, location out to help with set up.
             if comp == "tetA":
-                components, coil, sc_index = self.create_gene("tetA")
+                components, temp_coil, temp_sc_index = self.create_gene("tetA")
+                if temp_coil is not None:
+                    coil = temp_coil
+                if sc_index is not None:
+                    sc_index = temp_sc_index
                 self.circuit_components = self.circuit_components + components
             elif comp[0] in ["C", "CF", "P"]:
                 self.circuit_components = self.circuit_components + self.create_promoter(comp[0], comp[1], sc_index)
@@ -68,6 +76,7 @@ class Circuit:
         self.pair_bridges()
         # set up visible output
         self.visible = self.circuit_components[-1]
+        # TODO: Ensure barriers listening and propogating in both directions on correct channels
 
     def run(self, steps):
         """
@@ -104,7 +113,7 @@ class Circuit:
         """
         if label == "tetA":
             sc, coil, sc_ind = self.create_supercoil()
-            gene = GenetetA(coil, sc_ind-1, local=self.local)
+            gene = GenetetA(coil, sc_ind - 1, local=self.local)
             return [gene, sc], coil, sc_ind
         else:
             return None
@@ -133,6 +142,7 @@ class Circuit:
         List<>
             Component list either environment and promoter or just the promoter.
         """
+        # TODO: Use look up table here
         components = []
         if output not in self.local.get_keys():
             queue = Queue()
@@ -166,7 +176,7 @@ class Circuit:
             protein to be detected in environment to turn barrier on or off
         current_ind     :   Int
             index of the supercoiling region anti-clockwise of the barrier.
-        init_sc         :   Supercoil
+        init_sc_coil         :   Supercoil
             the initial supercoiling region for plasmids which need to connect last to first using the origin of
             replication barrier.
 

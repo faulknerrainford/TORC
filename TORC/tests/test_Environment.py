@@ -7,8 +7,9 @@ from threading import Thread
 class TestEnvironment(TestCase):
     def test_read_signal_no_decay(self):
         local = LocalArea()
-        sc_channel, _ = Channel()
-        supercoil = Supercoil(sc_channel, local)
+        cw_channel = Queue()
+        acw_channel = Queue()
+        supercoil = Supercoil(cw_channel, acw_channel, local)
         test_in_queue = Queue()
         promoter = Promoter("leu500", supercoil.supercoiling_region, local, output_channel=test_in_queue)
         environment = Environment("leu500", local, input_queue=test_in_queue)
@@ -22,8 +23,9 @@ class TestEnvironment(TestCase):
 
     def test_read_signal_decay(self):
         local = LocalArea()
-        sc_channel, _ = Channel()
-        supercoil = Supercoil(sc_channel, local)
+        cw_channel = Queue()
+        acw_channel = Queue()
+        supercoil = Supercoil(cw_channel, acw_channel, local)
         test_in_queue = Queue()
         promoter = Promoter("leu500", supercoil.supercoiling_region, local, output_channel=test_in_queue)
         environment = Environment("leu500", local, decay_rate=0.5, input_queue=test_in_queue)
@@ -67,8 +69,9 @@ class TestEnvironment(TestCase):
 
     def test_update_sequential(self):
         local = LocalArea()
-        sc_channel, _ = Channel()
-        supercoil = Supercoil(sc_channel, local)
+        cw_channel = Queue()
+        acw_channel = Queue()
+        supercoil = Supercoil(cw_channel, acw_channel, local)
         test_in_queue = Queue()
         promoter = Promoter("leu500", supercoil.supercoiling_region, local, output_channel=test_in_queue)
         environment = Environment("leu500", local, input_queue=test_in_queue)
@@ -79,8 +82,9 @@ class TestEnvironment(TestCase):
 
     def test_update_concurrent(self):
         local = LocalArea()
-        test_queue = Queue()
-        supercoil = Supercoil(test_queue, local)
+        cw_channel = Queue()
+        acw_channel = Queue()
+        supercoil = Supercoil(cw_channel, acw_channel, local)
         test_in_queue = Queue()
         promoter = Promoter("leu500", supercoil.supercoiling_region, local, output_channel=test_in_queue)
         environment = Environment("leu500", local, content=12, input_queue=test_in_queue)
@@ -94,13 +98,15 @@ class TestEnvironment(TestCase):
                 [x.join() for x in threads]
             except SignalError:
                 self.fail("Update failed for supercoiling, gene and promoter")
-        self.assertEqual(13, environment.content, "Incorrect concurrent update of content")
+        self.assertEqual(12, environment.content, "Incorrect concurrent update of content")
 
     def test_update_concurrent_inhibitor(self):
         local = LocalArea()
         test_queue = Queue()
         inh_queue = Queue()
-        supercoil = Supercoil(test_queue, local)
+        cw_channel = Queue()
+        acw_channel = Queue()
+        supercoil = Supercoil(cw_channel, acw_channel, local)
         test_in_queue = Queue()
         inhibitor = Inhibitor()
         inhibit_env = Environment("Inh", local, content=2, input_queue=inh_queue, inhibitors=[inhibitor])
@@ -116,5 +122,5 @@ class TestEnvironment(TestCase):
                 [x.join() for x in threads]
             except SignalError:
                 self.fail("Update failed for supercoiling, gene and promoter")
-        self.assertEqual(11, environment.content, "Incorrect concurrent update of content")
+        self.assertEqual(10, environment.content, "Incorrect concurrent update of content")
         self.assertEqual(0, inhibit_env.content, "Did not empty inhibitor")

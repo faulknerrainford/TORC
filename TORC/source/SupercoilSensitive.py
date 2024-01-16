@@ -34,6 +34,6 @@ class SupercoilSensitive(Promoter):
         boolean
             If the input is correct to produce strong rather than weak output.
         """
-        super(SupercoilSensitive, self).input_check()
-        if self.coil_state == "negative":
+        # super(SupercoilSensitive, self).input_check()
+        if self.coil_state < 0:
             return True
