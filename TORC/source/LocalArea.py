@@ -14,13 +14,20 @@ class LocalArea:
         """
         Adds a new supercoiling region tracker to the circuit
 
+        Parameters
+        ----------
+        cw_channel  :   Queue
+            queue for sending cw supercoiling signals to the new supercoiling region
+        acw_channel :   Queue
+            queue for sending acw supercoiling signals to the new supercoiling region
+
         Returns
         --------
         ind
             Index of the new supercoiling region.
         """
         self.supercoil_regions = self.supercoil_regions + [0]
-        self.clockwise_channels = self.anticlockwise_channels + [cw_channel]
+        self.clockwise_channels = self.clockwise_channels + [cw_channel]
         self.anticlockwise_channels = self.anticlockwise_channels + [acw_channel]
         return len(self.supercoil_regions)-1
 
@@ -61,7 +68,7 @@ class LocalArea:
 
         Returns
         -------
-        String
+        float
             Current state of supercoiling in the system
         """
         return self.supercoil_regions[ind]

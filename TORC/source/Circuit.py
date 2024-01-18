@@ -33,7 +33,8 @@ class Circuit:
         else:
             self.local = local
         self.visible = None
-        self.init_coil = None
+        self.init_cw = None
+        self.init_acw = None
 
     # noinspection PyTypeChecker
     def setup(self):
@@ -52,31 +53,36 @@ class Circuit:
             self.circuit_components = self.circuit_components + [env]
         # set initial supercoiling region
         # TODO: add initial supercoiling if global supercoiling is set
-        current_sc, coil, sc_index = self.create_supercoil()
-        self.init_coil = coil
+        current_sc, cw, acw, sc_index = self.create_supercoil()
+        self.init_cw = cw
+        self.init_acw = acw
         self.circuit_components = self.circuit_components + [current_sc]
         # generate each component clockwise including any additional supercoiling regions and environments needed
         for comp in self.component_list:
             # TODO: user label lookup in table to assign different types eg. if comp[0].type = promoter rather than
             #  in list. Separate gene, promoter, location out to help with set up.
             if comp == "tetA":
-                components, temp_coil, temp_sc_index = self.create_gene("tetA")
-                if temp_coil is not None:
-                    coil = temp_coil
+                current_sc = [x for x in self.circuit_components if isinstance(x, Supercoil)
+                              and x.supercoiling_region == sc_index][0]
+                components, temp_cw, temp_acw, temp_sc_index = self.create_gene("tetA", current_sc)
+                if temp_cw is not None:
+                    cw = temp_cw
+                    acw = temp_acw
                 if sc_index is not None:
                     sc_index = temp_sc_index
                 self.circuit_components = self.circuit_components + components
             elif comp[0] in ["C", "CF", "P"]:
                 self.circuit_components = self.circuit_components + self.create_promoter(comp[0], comp[1], sc_index)
             elif comp[0] in ["bridge"]:
-                components, coil, sc_index = self.create_barrier(comp[0], comp[1], sc_index)
+                current_sc = [x for x in self.circuit_components if isinstance(x, Supercoil)
+                              and x.supercoiling_region == sc_index][0]
+                components, cw, acw, sc_index = self.create_barrier(comp[0], comp[1], current_sc)
                 self.circuit_components = self.circuit_components + components
         self.circuit_components = self.circuit_components + [self.create_visible()]
         # pair up bridges
         self.pair_bridges()
         # set up visible output
         self.visible = self.circuit_components[-1]
-        # TODO: Ensure barriers listening and propogating in both directions on correct channels
 
     def run(self, steps):
         """
@@ -92,7 +98,7 @@ class Circuit:
             [x.start() for x in threads]
             [x.join() for x in threads]
 
-    def create_gene(self, label):
+    def create_gene(self, label, current_sc):
         """
         Creates a promoter gene component and the associated new supercoil region.
 
@@ -100,21 +106,24 @@ class Circuit:
         -----------
         label   :   String
             Suggests which specific gene promoter pair is to be generated, current options: tetA
+        current_sc  :   Supercoil
+            The current supercoiling region
 
         Returns
         --------
-        self.fail()
         List<GenetetA, Supercoil>
             The tetA gene and new supercoiling region
-        ChannelEnd
-            The in channel for the new supercoiling region
+        Queue
+            clockwise coiling for supercoiling region queue
+        Queue
+            anticlockwise coiling for supercoiling region queue
         Int
             The index for the new supercoiling region
         """
         if label == "tetA":
-            sc, coil, sc_ind = self.create_supercoil()
-            gene = GenetetA(coil, sc_ind - 1, local=self.local)
-            return [gene, sc], coil, sc_ind
+            sc, cw, acw, sc_ind = self.create_supercoil()
+            gene = GenetetA(cw, sc, current_sc, local=self.local)
+            return [gene, sc], cw, acw, sc_ind
         else:
             return None
 
@@ -131,7 +140,7 @@ class Circuit:
         output          :   String
             Name of gene/protein to be expressed
         sc_region       :   Int
-            Index of supercoil region the promoter is in.n
+            Index of supercoil region the promoter is in.
         weak            :   float
             output rate of weak signals
         strong          :   float
@@ -163,7 +172,7 @@ class Circuit:
             components.append(promoter)
         return components
 
-    def create_barrier(self, barrier_type, sensor_input, current_ind, init_sc_coil=None):
+    def create_barrier(self, barrier_type, sensor_input, current_sc):
         """
         Generates a barrier point, and new supercoiling regions and environments if needed, of type from list: bridge,
         origin
@@ -174,40 +183,43 @@ class Circuit:
             type of barrier to be created.
         sensor_input    :   String
             protein to be detected in environment to turn barrier on or off
-        current_ind     :   Int
-            index of the supercoiling region anti-clockwise of the barrier.
-        init_sc_coil         :   Supercoil
-            the initial supercoiling region for plasmids which need to connect last to first using the origin of
-            replication barrier.
+        current_sc      :   Supercoil
+            current supercoiling region anti-clockwise of the barrier.
 
         Returns
         -------
         List<>
             Components: supercoil region, environment(if needed), barrier
-        ChannelEnd
-            channel for modifying the new supercoiling region clockwise of the barrier,
+        Queue
+            Queue for cw supercoiling of the new supercoiling region
+        Queue
+            Queue for acw supercoiling of the new supercoiling region
         Int
             Index of new clockwise supercoiling region
         """
         components = []
         if barrier_type != "origin":
-            sc, coil, sc_ind = self.create_supercoil()
-            components.append(sc)
+            sc, cw, acw, sc_ind = self.create_supercoil()
         else:
+            # id the original supercoiling region to close loop
+            sc = [x for x in self.circuit_components if isinstance(x, Supercoil) and x.supercoiling_region == 0][0]
             sc_ind = 0
-            coil = init_sc_coil
+            cw = self.local.get_supercoil_cw(sc_ind)
+            acw = self.local.get_supercoil_acw(sc_ind)
+        components.append(sc)
         if sensor_input and sensor_input not in self.local.get_keys():
             queue = Queue()
             env = self.create_environment(sensor_input, queue)
             self.env_queues[sensor_input] = queue
             components.append(env)
         if barrier_type == "bridge":
-            bridge = Bridge(sensor_input, self.local, current_ind, sc_ind, coil)
+            bridge = Bridge(sensor_input, self.local, acw_sc_region=current_sc, cw_sc_region=sc)
             components.append(bridge)
         if barrier_type == "origin":
-            origin = Origin("Origin", self.local, current_ind, sc_ind, coil)
+            origin = Origin("Origin", self.local, sc, current_sc)
             components.append(origin)
-        return components, coil, sc_ind
+            components.remove(sc)
+        return components, cw, acw, sc_ind
 
     def create_supercoil(self):
         """
@@ -217,14 +229,17 @@ class Circuit:
         -------
         Supercoil
             The new supercoiling region component
-        ChannelEnd
-            The channel to the new supercoiling region
+        Queue
+            clockwise coiling queue
+        Queue
+            anticlockwise coiling queue
         Int
             The index of the new supercoiling region
         """
-        sc_coil, gene_coil = Channel()
-        supercoil = Supercoil(sc_coil, self.local)
-        return supercoil, gene_coil, supercoil.supercoiling_region
+        cw_queue = Queue()
+        acw_queue = Queue()
+        supercoil = Supercoil(cw_queue, acw_queue, self.local)
+        return supercoil, cw_queue, acw_queue, supercoil.supercoiling_region
 
     def create_environment(self, label, queue_in, content=0.0, decay_rate=0, fluorescence=False):
         """

@@ -12,6 +12,7 @@ from .source.TORCError import SignalError, SendingError, ReceivingError, BridgeE
 from .source.LocalArea import LocalArea
 from .source.Channel import ChannelEnd, Channel
 from .source.Supercoil import Supercoil
+from .source.Barrier import Barrier
 from .source.Promoter import Promoter
 from .source.GenetetA import GenetetA
 from .source.SupercoilSensitive import SupercoilSensitive
@@ -24,4 +25,3 @@ from .source.Circuit import Circuit
 from .source.Plasmid import Plasmid
 from .source.Genome import Genome
 from .source.Visualizer import Visualizer
-from .source.Barrier import Barrier

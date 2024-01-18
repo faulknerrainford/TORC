@@ -65,6 +65,9 @@ class Promoter:
             self.output_signal("weak")
 
     def state_update(self):
+        """
+        Checks and updates the supercoiling state of the promoter.
+        """
         current_sc_state = self.local.get_supercoil(self.region)
         if self.coil_state != current_sc_state:
             self.coil_state = current_sc_state

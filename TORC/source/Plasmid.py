@@ -1,4 +1,4 @@
-from TORC import Circuit
+from TORC import Circuit, Supercoil
 
 
 class Plasmid(Circuit):
@@ -28,6 +28,12 @@ class Plasmid(Circuit):
         """
         super(Plasmid, self).setup()
         # set up origin of replication and link from final supercoiling region to initial supercoiling region
-        components, coil, sc_index = self.create_barrier("origin", None, len(self.local.supercoil_regions)-1,
-                                                         self.init_coil)
+        # find final and initial supercoiling regions
+        init = [x for x in self.circuit_components if isinstance(x, Supercoil) and x.supercoiling_region == 0][0]
+        scs = [x for x in self.circuit_components if isinstance(x, Supercoil)]
+        last = scs[0]
+        for x in scs:
+            if x.supercoiling_region > last.supercoiling_region:
+                last = x
+        components, cw, acw, sc_index = self.create_barrier("origin", None, init)
         self.circuit_components = self.circuit_components + components

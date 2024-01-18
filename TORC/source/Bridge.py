@@ -1,4 +1,4 @@
-from TORC import SendingError, Channel
+from TORC import SendingError, Channel, Barrier
 
 
 class Bridge(Barrier):
@@ -8,31 +8,22 @@ class Bridge(Barrier):
 
     Parameters
     ----------
-    label : String
+    label               :   String
         name of protein it looks for in the environment
-    local : LocalArea
+    local               :   LocalArea
         container tracking supercoiling and protein production within the circuit.
-    sc_acw : int
+    cw_sc_region        :   Supercoil
         anti-clockwise supercoiling regions index
-    sc_cw : int
+    acw_sc_region       :   Supercoil
         clockwise supercoiling regions index (should share the queue with this bridge)
-    protein_threshold : float
+    protein_threshold   :   float
         Required amount of protein in the environment for bridge to be active.
-    channel : Channel
-        Same channel as held by clockwise supercoiling region used to transmit supercoiling from anti-clockwise to
-        clockwise regions
     """
-    def __init__(self, label, local, sc_acw=0, sc_cw=0, channel=None, protein_threshold=0):
+    def __init__(self, label, local, cw_sc_region, acw_sc_region, protein_threshold=0):
+        super(Bridge, self).__init__(local, cw_sc_region, acw_sc_region)
         self.label = label
-        self.supercoiling_clockwise = sc_cw
-        self.supercoiling_anticlockwise = sc_acw
-        if channel:
-            self.coil_channel = channel
-        else:
-            self.coil_channel, _ = Channel()
         self.threshold = protein_threshold
         self.bridge_check = None
-        self.local = local
 
     def set_bridge_check(self, bridge):
         """
@@ -45,59 +36,59 @@ class Bridge(Barrier):
         """
         self.bridge_check = bridge
 
-    def check_state(self):
+    def barrier_check(self):
         """
         Checks the other bridge exists (not None) and has same trigger protein and trigger protein in environment. If
         bridge component correct and protein present return true if not return false.
 
         Returns
         --------
-        boolean
+        Boolean
             True if bridge closed/active, False otherwise.
         """
         # Check the other bridge exists (not None) and has same trigger protein and trigger protein in environment
         if self.bridge_check and self.bridge_check.label == self.label and \
                 self.local.get_environment(self.label) > self.threshold:
-            return True
-        else:
             return False
+        else:
+            return True
 
-    def coil_in(self):
-        """
-        Reads and returns the state of the supercoiling regions
+    # def coil_in(self):
+    #     """
+    #     Reads and returns the state of the supercoiling regions
+    #
+    #     Returns
+    #     --------
+    #     String
+    #         State of the supercoiling region
+    #     """
+    #     # looks up and return anti-clockwise coiling state
+    #     return self.local.get_supercoil(self.supercoiling_anticlockwise)
+    #
+    # def coil_out(self, signal):
+    #     """
+    #     Sends the coil signal to the next clockwise supercoiling region.
+    #
+    #     Parameters
+    #     ----------
+    #     signal  :   String
+    #         State to update the supercoiling region to.
+    #
+    #     Raises
+    #     --------
+    #     SendingError
+    #         Failed to send signal
+    #     """
+    #     # sends a coil signal on coil_queue to supercoiling clockwise
+    #     try:
+    #         self.coil_channel.send(signal)
+    #     except SendingError:
+    #         raise SendingError
 
-        Returns
-        --------
-        String
-            State of the supercoiling region
-        """
-        # looks up and return anti-clockwise coiling state
-        return self.local.get_supercoil(self.supercoiling_anticlockwise)
-
-    def coil_out(self, signal):
-        """
-        Sends the coil signal to the next clockwise supercoiling region.
-
-        Parameters
-        ----------
-        signal  :   String
-            State to update the supercoiling region to.
-
-        Raises
-        --------
-        SendingError
-            Failed to send signal
-        """
-        # sends a coil signal on coil_queue to supercoiling clockwise
-        try:
-            self.coil_channel.send(signal)
-        except SendingError:
-            raise SendingError
-
-    def update(self):
-        """
-        Checks if the bridge is open and if it is transmits the supercoiling state between the supercoiling regions
-        either side.
-        """
-        if not self.check_state():
-            self.coil_out(self.coil_in())
+    # def update(self):
+    #     """
+    #     Checks if the bridge is open and if it is transmits the supercoiling state between the supercoiling regions
+    #     either side.
+    #     """
+    #     if not self.check_state():
+    #         self.coil_out(self.coil_in())

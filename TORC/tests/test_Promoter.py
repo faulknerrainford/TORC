@@ -26,8 +26,8 @@ class TestPromoter(TestCase):
         supercoil_1 = Supercoil(cw_channel_1, acw_channel_1, local)
         cw_channel_2 = Queue()
         acw_channel_2 = Queue()
-        gene = GenetetA(cw_channel_2, supercoil_1.supercoiling_region, local)
         supercoil_2 = Supercoil(cw_channel_2, acw_channel_2, local)
+        gene = GenetetA(cw_channel_2, supercoil_1, supercoil_2, local)
         test_out_queue = Queue()
         promoter = Promoter("leu500", supercoil_2.supercoiling_region, local, output_channel=test_out_queue)
         circuit = [supercoil_2, gene, promoter]
@@ -51,7 +51,10 @@ class TestPromoter(TestCase):
         promoter = Promoter("leu500", supercoil.supercoiling_region, local, output_channel=test_out_queue)
         promoter.input_check()
         self.assertEqual(0, promoter.coil_state, "coil state incorrect")
-        local.set_supercoil(supercoil.supercoiling_region, -1)
+        # local.set_supercoil(supercoil.supercoiling_region, -1)
+        supercoil.cw_sc = -1
+        supercoil.coil()
+        promoter.state_update()
         ret = promoter.input_check()
         self.assertEqual(-1, promoter.coil_state, "coil state update failed")
         self.assertEqual(True, ret, "sc sensitive promoter check failed")

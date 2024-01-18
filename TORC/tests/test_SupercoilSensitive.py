@@ -29,7 +29,7 @@ class TestSupercoilSensitive(TestCase):
         cw_channel_2 = Queue()
         acw_channel_2 = Queue()
         supercoil_2 = Supercoil(cw_channel_2, acw_channel_2, local)
-        gene = GenetetA(cw_channel_2, supercoil_1.supercoiling_region, local)
+        gene = GenetetA(cw_channel_2, supercoil_1, supercoil_2, local)
         test_out_queue = Queue()
         promoter = SupercoilSensitive("blue", supercoil_2.supercoiling_region, local, output_channel=test_out_queue)
         circuit = [supercoil_2, gene, promoter]

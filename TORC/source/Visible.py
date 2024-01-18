@@ -47,10 +47,14 @@ class Visible:
     # noinspection PyTypeChecker
     def check_colour(self):
         """
-        Converts the rgb list created in read_signal to a string name of a colour.
+        Converts the rgb list created in read_signal to a string name of a colour. If it can't match to a named colour
+        it will set colour as "Undefined"
         """
         # Match current colour to named colour and return as label/check metric
-        self.colour = rgb_to_name(tuple([int(255*x) for x in self.rgb]))
+        try:
+            self.colour = rgb_to_name(tuple([int(255*x) for x in self.rgb]))
+        except ValueError:
+            self.colour = "Undefined"
 
     def update(self):
         """

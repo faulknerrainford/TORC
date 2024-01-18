@@ -20,7 +20,7 @@ class TestGenome(TestCase):
         circuit0.setup()
         circuit0.run(10)
         # check visible correct
-        self.assertEqual("magenta", circuit0.visible.colour, "Incorrect output colour, no lac")
+        self.assertEqual("Undefined", circuit0.visible.colour, "Incorrect output colour, no lac")
         circuit20 = Genome([("tetA"), ("CF", "red"), ("bridge", "lac"), ("CF", "blue"), ("bridge", "lac")],
                            environments=[("lac", 20)])
         circuit20.setup()

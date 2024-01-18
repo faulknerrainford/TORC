@@ -7,10 +7,10 @@ class Supercoil:
 
     Parameters
     ----------
-    cw_channel  :   JoinableQueue
+    cw_channel  :   Queue
         Queue for receiving signals to update the clockwise coiling state, spent by all transcribing genes.
         component.
-    acw_channel :   JoinableQueue
+    acw_channel :   Queue
         Queue for receiving signals to update the anti-clockwise coiling state, spent by all transcribing genes.
     local       :   LocalArea
         Tracks the supercoiling and proteins in the circuit
@@ -33,12 +33,7 @@ class Supercoil:
         """
         Function for listening for a coil signal and updating the supercoiling state of the region in the region list.
 
-        Raises
-        ------
-        ReceivingError: SignalError
-            Indicates that a signal was listened for but not received.
         """
-        # TODO: add cw/acw send to other regions
         self.cw_sc = self.cw_sc*self.relax
         self.acw_sc = self.acw_sc*self.relax
         # process queue for each channel
@@ -57,7 +52,7 @@ class Supercoil:
 
         Returns
         --------
-        String
+        float
             Current state of the supercoiling region
         """
         return self.local.get_supercoil(self.supercoiling_region)
