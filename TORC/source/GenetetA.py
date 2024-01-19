@@ -8,7 +8,7 @@ class GenetetA(Promoter, Barrier):
     Parameters
     ----------
     channel                 :   Queue
-        Queue used to signal the supercoiling region clockwise of the gene.
+        Queue to output supercoiling
     cw_supercoil_region     :   Supercoil
         Region of supercoiling negative supercoiling is generated in, this is the region clockwise of the gene.
     acw_supercoil_region    :   Supercoil
@@ -24,8 +24,12 @@ class GenetetA(Promoter, Barrier):
     gene_instance_count = 0
 
     def __init__(self, channel, cw_supercoil_region, acw_supercoil_region, local, sc_strength=-1, clockwise=False):
-        Promoter.__init__(self, "tetA", acw_supercoil_region.supercoiling_region, local, clockwise=clockwise,
-                          output_channel=channel)
+        if clockwise:
+            Promoter.__init__(self, "tetA", cw_supercoil_region.supercoiling_region, local, clockwise=clockwise,
+                              output_channel=local.get_supercoil_acw(acw_supercoil_region.supercoiling_region))
+        else:
+            Promoter.__init__(self, "tetA", acw_supercoil_region.supercoiling_region, local, clockwise=clockwise,
+                              output_channel=local.get_supercoil_cw(cw_supercoil_region.supercoiling_region))
         Barrier.__init__(self, local, cw_sc_region=cw_supercoil_region, acw_sc_region=acw_supercoil_region)
         self.id = "Gene_" + self.label + "_" + str(GenetetA.gene_instance_count)
         self.sc_strength = sc_strength

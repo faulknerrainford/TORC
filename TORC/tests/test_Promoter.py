@@ -113,3 +113,16 @@ class TestPromoter(TestCase):
         supercoil.coil()
         self.assertEqual(3, supercoil.cw_sc, "Incorrect local supercoiling after transcription")
         self.assertEqual(-3, supercoil.acw_sc, "Incorrect local supercoiling after transcription")
+
+    def test_promoter_inversion_supercoiling(self):
+        local = LocalArea()
+        cw_channel = Queue()
+        acw_channel = Queue()
+        supercoil = Supercoil(cw_channel, acw_channel, local)
+        test_out_queue = Queue()
+        promoter = Promoter("red", supercoil.supercoiling_region, local, output_channel=test_out_queue,
+                            fluorescent=True, sc_rate=3, clockwise=False)
+        promoter.output_signal("strong")
+        supercoil.coil()
+        self.assertEqual(3, supercoil.acw_sc, "Incorrect local supercoiling after transcription")
+        self.assertEqual(-3, supercoil.cw_sc, "Incorrect local supercoiling after transcription")

@@ -32,11 +32,22 @@ class TestGenetetA(TestCase):
         acw_supercoil_2_channel = Queue()
         supercoil_1 = Supercoil(cw_supercoil_1_channel, acw_supercoil_1_channel, local)
         supercoil_2 = Supercoil(cw_supercoil_2_channel, acw_supercoil_2_channel, local)
-        gene = GenetetA(cw_supercoil_2_channel, supercoil_1, supercoil_2, local)
+        gene = GenetetA(cw_supercoil_2_channel, supercoil_2, supercoil_1, local)
         threads = [Thread(target=gene.update), Thread(target=supercoil_2.update)]
         [x.start() for x in threads]
         [x.join() for x in threads]
         self.assertEqual(-1, local.get_supercoil(supercoil_2.supercoiling_region), "Did not update region")
 
-    # def test_transcribe(self):
-    #     self.fail()
+    def test_inverted_GenetetA(self):
+        local = LocalArea()
+        cw_supercoil_1_channel = Queue()
+        acw_supercoil_1_channel = Queue()
+        cw_supercoil_2_channel = Queue()
+        acw_supercoil_2_channel = Queue()
+        supercoil_1 = Supercoil(cw_supercoil_1_channel, acw_supercoil_1_channel, local)
+        supercoil_2 = Supercoil(cw_supercoil_2_channel, acw_supercoil_2_channel, local)
+        gene = GenetetA(acw_supercoil_1_channel, supercoil_2, supercoil_1, local, clockwise=True)
+        threads = [Thread(target=gene.update), Thread(target=supercoil_1.update)]
+        [x.start() for x in threads]
+        [x.join() for x in threads]
+        self.assertEqual(-1, local.get_supercoil(supercoil_1.supercoiling_region), "Did not update correct region")

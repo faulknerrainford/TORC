@@ -35,6 +35,13 @@ class Promoter:
 
     def __init__(self, label, region, local, weak=0, strong=1, output_channel=None, fluorescent=False, promote=None,
                  repress=None, sc_sensitive=True, sc_rate=0, clockwise=True):
+        # TODO: modify to work with distribution taking promote level (should be returned from input_check) to provide
+        #  rate of transcription
+        # TODO: remove weak strong for distribution parameters
+        # TODO: modify input check to return value
+        # TODO: add a rate calculation functions between input and output
+        # TODO: modify output to take value as strength
+        # TODO: update tetA and supercoiling and elsewhere based on the changes
         self.label = label
         self.gene = label.split("_")[0]
         self.coil_state = 0

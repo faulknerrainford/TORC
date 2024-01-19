@@ -62,4 +62,3 @@ class Visible:
         """
         self.read_signal()
         self.check_colour()
-        # TODO: output an updated version of the output colour to terminal to track output

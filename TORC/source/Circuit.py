@@ -61,10 +61,14 @@ class Circuit:
         for comp in self.component_list:
             # TODO: user label lookup in table to assign different types eg. if comp[0].type = promoter rather than
             #  in list. Separate gene, promoter, location out to help with set up.
-            if comp == "tetA":
+            if comp == "tetA" or comp[0] == "tetA":
+                if len(comp) > 1 and comp[1] == "clockwise":
+                    orientation = True
+                else:
+                    orientation = False
                 current_sc = [x for x in self.circuit_components if isinstance(x, Supercoil)
                               and x.supercoiling_region == sc_index][0]
-                components, temp_cw, temp_acw, temp_sc_index = self.create_gene("tetA", current_sc)
+                components, temp_cw, temp_acw, temp_sc_index = self.create_gene("tetA", current_sc, orientation)
                 if temp_cw is not None:
                     cw = temp_cw
                     acw = temp_acw
@@ -72,7 +76,12 @@ class Circuit:
                     sc_index = temp_sc_index
                 self.circuit_components = self.circuit_components + components
             elif comp[0] in ["C", "CF", "P"]:
-                self.circuit_components = self.circuit_components + self.create_promoter(comp[0], comp[1], sc_index)
+                if len(comp) > 2 and comp[2] == "anticlockwise":
+                    orientation = True
+                else:
+                    orientation = False
+                self.circuit_components = self.circuit_components + self.create_promoter(comp[0], comp[1], sc_index,
+                                                                                         clockwise=orientation)
             elif comp[0] in ["bridge"]:
                 current_sc = [x for x in self.circuit_components if isinstance(x, Supercoil)
                               and x.supercoiling_region == sc_index][0]
@@ -98,7 +107,7 @@ class Circuit:
             [x.start() for x in threads]
             [x.join() for x in threads]
 
-    def create_gene(self, label, current_sc):
+    def create_gene(self, label, current_sc, clockwise=True):
         """
         Creates a promoter gene component and the associated new supercoil region.
 
@@ -108,6 +117,8 @@ class Circuit:
             Suggests which specific gene promoter pair is to be generated, current options: tetA
         current_sc  :   Supercoil
             The current supercoiling region
+        clockwise   :   Boolean
+            The orientation of the gene being added
 
         Returns
         --------
@@ -122,12 +133,12 @@ class Circuit:
         """
         if label == "tetA":
             sc, cw, acw, sc_ind = self.create_supercoil()
-            gene = GenetetA(cw, sc, current_sc, local=self.local)
+            gene = GenetetA(cw, sc, current_sc, local=self.local, clockwise=clockwise)
             return [gene, sc], cw, acw, sc_ind
         else:
             return None
 
-    def create_promoter(self, promoter_type, output, sc_region, weak=0, strong=1):
+    def create_promoter(self, promoter_type, output, sc_region, weak=0, strong=1, clockwise=True):
         """
         Creates promoters either with a basic, supercoiling sensitive or supercoiling sensitive with fluorescence and
         any associated environments needed.
@@ -145,6 +156,8 @@ class Circuit:
             output rate of weak signals
         strong          :   float
             output rate of strong signals
+        clockwise       :   Boolean
+            Indicates the orientation of the promoter gene pair on the plasmid
 
         Returns
         --------
@@ -160,15 +173,15 @@ class Circuit:
             components.append(env)
         if promoter_type == "P":
             promoter = Promoter(output, sc_region, self.local, weak=weak, strong=strong,
-                                output_channel=self.env_queues[output])
+                                output_channel=self.env_queues[output], clockwise=clockwise)
             components.append(promoter)
         elif promoter_type == "C":
             promoter = SupercoilSensitive(output, sc_region, self.local, weak=weak, strong=strong,
-                                          output_channel=self.env_queues[output])
+                                          output_channel=self.env_queues[output], clockwise=clockwise)
             components.append(promoter)
         elif promoter_type == "CF":
             promoter = SupercoilSensitive(output, sc_region, self.local, weak=weak, strong=strong,
-                                          output_channel=self.env_queues[output], fluorescent=True)
+                                          output_channel=self.env_queues[output], fluorescent=True, clockwise=clockwise)
             components.append(promoter)
         return components
 

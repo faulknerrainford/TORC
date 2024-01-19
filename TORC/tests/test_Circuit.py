@@ -33,6 +33,31 @@ class TestCircuit(TestCase):
         # check correct environments and visible correct
         self.assertEqual(0, circuit20.visible.rgb[2], "Incorrect output colour, with lac")
 
+    def test_setup_flipped(self):
+        circuit = Circuit([("bridge", "lac"), ("CF", "blue", "anticlockwise"), ("bridge", "lac"),
+                           ("CF", "red", "anticlockwise"), ("tetA", "clockwise")], environments=[("lac", 0)])
+        circuit.setup()
+        # check correct number of supercoil regions
+        self.assertEqual(4, len(circuit.local.supercoil_regions), "Incorrect number of supercoiling regions created")
+        # check correct environments
+        self.assertEqual(sorted(["lac", "red", "blue"]), sorted(circuit.local.get_keys()),
+                         "Incorrect Environment setup")
+        self.assertEqual(13, len(circuit.circuit_components), "Incorrect component list")
+
+    def test_run_flipped(self):
+        circuit0 = Circuit([("bridge", "lac"), ("CF", "blue", "anticlockwise"), ("bridge", "lac"),
+                            ("CF", "red", "anticlockwise"), ("tetA", "clockwise")], environments=[("lac", 0)])
+        circuit0.setup()
+        circuit0.run(10)
+        # check visible correct
+        self.assertEqual("Undefined", circuit0.visible.colour, "Incorrect output colour, no lac")
+        circuit20 = Circuit([("bridge", "lac"), ("CF", "blue", "anticlockwise"), ("bridge", "lac"),
+                             ("CF", "red", "anticlockwise"), ("tetA", "clockwise")], environments=[("lac", 20)])
+        circuit20.setup()
+        circuit20.run(10)
+        # check correct environments and visible correct
+        self.assertEqual(0, circuit20.visible.rgb[2], "Incorrect output colour, with lac")
+
     def test_create_supercoil(self):
         circuit = Circuit([])
         regions_before = len(circuit.local.supercoil_regions)
@@ -49,6 +74,17 @@ class TestCircuit(TestCase):
         self.assertEqual(ind, components[1].supercoiling_region, "Incorrect current region")
         self.assertEqual("tetA", components[0].label, "Incorrect components returned")
         self.assertFalse(circuit.create_gene("abc", supercoil0), "Generating gene from garbage label")
+
+    def test_create_gene_cw(self):
+        circuit = Circuit([])
+        test_cw = Queue()
+        test_acw = Queue()
+        supercoil0 = Supercoil(test_cw, test_acw, circuit.local)
+        components, cw, acw, ind = circuit.create_gene("tetA", supercoil0, clockwise=True)
+        self.assertEqual(ind, components[1].supercoiling_region, "Incorrect current region")
+        self.assertEqual("tetA", components[0].label, "Incorrect components returned")
+        self.assertFalse(circuit.create_gene("abc", supercoil0), "Generating gene from garbage label")
+        self.assertEqual(True, components[0].clockwise, "Incorrect orientation")
 
     def test_create_environment(self):
         circuit = Circuit([])
@@ -70,6 +106,21 @@ class TestCircuit(TestCase):
         # test CF setup
         components = circuit.create_promoter("CF", "red", 0)
         self.assertEqual(len(components), 2, "Incorrect number of components returned, fluorescent")
+
+    def test_create_promoter_acw(self):
+        # test base promoter setup
+        circuit = Circuit([])
+        components = circuit.create_promoter("P", "lac", 0, clockwise=False)
+        self.assertEqual(len(components), 2, "Incorrect number of components returned, promoter")
+        self.assertFalse(components[1].clockwise, "Incorrect promoter orientation, P")
+        # test supercoil sensitive setup
+        components = circuit.create_promoter("C", "lac", 0, clockwise=False)
+        self.assertEqual(len(components), 1, "Incorrect number of components returned, sc sensitive")
+        self.assertFalse(components[0].clockwise, "Incorrect promoter orientation, C")
+        # test CF setup
+        components = circuit.create_promoter("CF", "red", 0, clockwise=False)
+        self.assertEqual(len(components), 2, "Incorrect number of components returned, fluorescent")
+        self.assertFalse(components[1].clockwise, "Incorrect promoter orientation, CF")
 
     def test_create_barrier_bridge(self):
         # create bridge
