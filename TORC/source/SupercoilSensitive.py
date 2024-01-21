@@ -36,5 +36,4 @@ class SupercoilSensitive(Promoter):
             If the input is correct to produce strong rather than weak output.
         """
         # super(SupercoilSensitive, self).input_check()
-        if self.coil_state < 0:
-            return True
+        return {"supercoiling": self.coil_state}

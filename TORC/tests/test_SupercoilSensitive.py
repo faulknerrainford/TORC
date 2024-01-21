@@ -29,7 +29,7 @@ class TestSupercoilSensitive(TestCase):
         cw_channel_2 = Queue()
         acw_channel_2 = Queue()
         supercoil_2 = Supercoil(cw_channel_2, acw_channel_2, local)
-        gene = GenetetA(cw_channel_2, supercoil_1, supercoil_2, local)
+        gene = GenetetA(cw_channel_2, supercoil_2, supercoil_1, local)
         test_out_queue = Queue()
         promoter = SupercoilSensitive("blue", supercoil_2.supercoiling_region, local, output_channel=test_out_queue)
         circuit = [supercoil_2, gene, promoter]
@@ -55,7 +55,7 @@ class TestSupercoilSensitive(TestCase):
         test_out_queue = Queue()
         ss_promoter = SupercoilSensitive("green", supercoil.supercoiling_region, local, output_channel=test_out_queue)
         self.assertEqual(0, ss_promoter.coil_state, "coil state incorrect")
-        self.assertFalse(ss_promoter.input_check(), "Incorrect check with neutral coil state.")
+        self.assertGreaterEqual(0, ss_promoter.input_check()["supercoiling"], "Incorrect check with neutral coil state.")
         local.set_supercoil(supercoil.supercoiling_region, -1)
         ss_promoter.state_update()
         self.assertEqual(-1, ss_promoter.coil_state, "coil state update failed")

@@ -1,3 +1,7 @@
+import numpy as np
+from scipy.stats import norm
+
+
 class Promoter:
     """
     Promoter class increases the amount of protein in the local environment based on the current state of environmental
@@ -25,6 +29,8 @@ class Promoter:
         Indicated a transcription factor which the promoter responds to by increasing production
     repress         :   Environment
         Indicates a transcription factor which the promoter responds to by decreasing production
+    threshold       :   float
+        Value used for threshold for transcription coiling
     sc_sensitive    :   Boolean
         Indicates if the promoter responds strongly to the supercoiling state
     sc_rate         :   float
@@ -34,14 +40,7 @@ class Promoter:
     """
 
     def __init__(self, label, region, local, weak=0, strong=1, output_channel=None, fluorescent=False, promote=None,
-                 repress=None, sc_sensitive=True, sc_rate=0, clockwise=True):
-        # TODO: modify to work with distribution taking promote level (should be returned from input_check) to provide
-        #  rate of transcription
-        # TODO: remove weak strong for distribution parameters
-        # TODO: modify input check to return value
-        # TODO: add a rate calculation functions between input and output
-        # TODO: modify output to take value as strength
-        # TODO: update tetA and supercoiling and elsewhere based on the changes
+                 repress=None, sc_sensitive=True, sc_rate=0, clockwise=True, threshold=0, rate_dist="threshold"):
         self.label = label
         self.gene = label.split("_")[0]
         self.coil_state = 0
@@ -57,19 +56,20 @@ class Promoter:
         self.local = local
         self.promote = promote
         self.repress = repress
+        self.threshold = threshold
         self.sc_sensitive = sc_sensitive
         self.sc_rate = sc_rate
         self.clockwise = clockwise
+        self.rate_dist = rate_dist
 
     def update(self):
         """
         Updates state of promoter including output to the environment and updating coil-state if changed.
         """
         self.state_update()
-        if self.input_check():
-            self.output_signal("strong")
-        else:
-            self.output_signal("weak")
+        status = self.input_check()
+        output = self.rate_calc(status)
+        self.output_signal(output)
 
     def state_update(self):
         """
@@ -81,20 +81,81 @@ class Promoter:
 
     def input_check(self):
         """
-        Checks coiling signal and updates coil_state if it has changed.
-        Checks if repressor active -> returns false
-        Checks if promoter protein present -> returns true
-        Checks if supercoiling negative and sc_sensitive -> returns true
+        Collects information on current state of transcription factors environments for repression, promotion and the
+        current supercoiling state of the promoter.
+
+        Returns
+        -------
+        dict
+            dict with information on repression, promotion and supercoiling if relevant.
         """
+        status = {}
         if self.repress:
-            if self.local.get_environment(self.repress) > 0:
-                return False
+            status["repress"] = self.local.get_environment(self.repress)
         if self.promote:
-            if self.local.get_environment(self.promote) > 0:
-                return True
-        if self.coil_state < 0 and self.sc_sensitive:
-            return True
-        return False
+            status["promote"] = self.local.get_environment(self.promote)
+        status["supercoiling"] = self.coil_state
+        return status
+
+    def rate_calc(self, status):
+        """
+        Calculate the rate of transcription based on repression, promotion and supercoiling levels.
+
+        Threshold
+        ----------
+        The threshold function acts as a digital switch between the weak and strong signal activated when a promoting
+        transcription factor is above the given threshold and the repressing transcription factor is not. (Unless the
+        promoter is supercoiling sensitive, in which case this is activated when supercoiling is below the threshold.)
+
+        Sigmoid
+        -------
+
+        Normal
+        ------
+
+        Parameters
+        ----------
+        status  :   dict
+            dict with information on repression, promotion and supercoiling if relevant.
+
+        Returns
+        -------
+        float
+            rate of transcription for output signal
+        """
+        # TODO: add options based on mean and dist type and parameter for dist (pos second param needed) for poisson
+        #  dist, negative binomial
+        if self.rate_dist == "threshold":
+            # threshold
+            if self.sc_sensitive and status["supercoiling"] < self.threshold:
+                return self.strong_signal
+            elif "repress" in status.keys() and status["repress"] > self.threshold:
+                return self.weak_signal
+            elif "promote" in status.keys() and status["promote"] > self.threshold:
+                return self.strong_signal
+            else:
+                return self.weak_signal
+        elif self.rate_dist == "sigmoid":
+            # sigmoid function
+            if self.sc_sensitive:
+                x = status["supercoiling"]
+            else:
+                x = status["promote"]
+            x_prime = x-self.threshold
+            y = 1/(1 + np.exp(-x_prime))
+            y_range = self.strong_signal - self.weak_signal
+            y_prime = y*y_range + self.weak_signal
+            return y_prime
+        elif self.rate_dist == "normal":
+            # normal function
+            if self.sc_sensitive:
+                x = status["supercoiling"]
+            else:
+                x = status["promote"]
+            y = norm.pdf(x, self.threshold, 1)*(2.5*(self.strong_signal-self.weak_signal))+self.weak_signal
+            return y
+        else:
+            return self.weak_signal
 
     def output_signal(self, strength=None):
         """
@@ -102,20 +163,19 @@ class Promoter:
 
         Parameters
         ----------
-        strength    :   String
-            indicates if output signal is "weak" or "strong".
+        strength    :   float
+            output strength, rate of transcription, also applied to rate of supercoiling
         """
-        if strength == "weak":
-            self.output_channel.put(self.weak_signal)
-        elif strength == "strong":
-            self.output_channel.put(self.strong_signal)
-            # output + and - sc to region
+        self.output_channel.put(strength)
+        # output + and - sc to region
+        if strength > 0:
+            sc_strength = strength * self.sc_rate
             if self.clockwise:
-                self.local.get_supercoil_cw(self.region).put(self.sc_rate)
-                self.local.get_supercoil_acw(self.region).put(-1*self.sc_rate)
+                self.local.get_supercoil_cw(self.region).put(sc_strength)
+                self.local.get_supercoil_acw(self.region).put(-1*sc_strength)
             else:
-                self.local.get_supercoil_cw(self.region).put(-1*self.sc_rate)
-                self.local.get_supercoil_acw(self.region).put(self.sc_rate)
+                self.local.get_supercoil_cw(self.region).put(-1*sc_strength)
+                self.local.get_supercoil_acw(self.region).put(sc_strength)
 
 
 

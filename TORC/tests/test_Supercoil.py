@@ -24,14 +24,14 @@ class TestSupercoil(TestCase):
         acw_channel_2 = Queue()
         supercoil_1 = Supercoil(cw_channel_1, acw_channel_1, local)
         supercoil_2 = Supercoil(cw_channel_2, acw_channel_2, local)
-        gene = GenetetA(cw_channel_2, supercoil_1, supercoil_2, local)
-        gene2 = GenetetA(acw_channel_2, supercoil_1, supercoil_2, local)
+        gene = GenetetA(cw_channel_2, supercoil_2, supercoil_1, local)
+        gene2 = GenetetA(acw_channel_1, supercoil_2, supercoil_1, local)
         self.assertEqual(0, supercoil_2.get_coil_state(), "Incorrect coil state at start")
         # circuit = [supercoil_2, gene]
-        gene.output_signal("strong")
+        gene.output_signal(1)
         supercoil_2.coil()
         self.assertEqual(-1, supercoil_2.get_coil_state(), "Incorrect coil state after update")
-        gene2.output_signal("strong")
+        gene2.output_signal(1)
         supercoil_2.coil()
         self.assertEqual(-2, supercoil_2.get_coil_state(), "Incorrect updates from combined directional input")
 
@@ -49,7 +49,7 @@ class TestSupercoil(TestCase):
         acw_channel_2 = Queue()
         supercoil_1 = Supercoil(cw_channel_1, acw_channel_1, local)
         supercoil_2 = Supercoil(cw_channel_2, acw_channel_2, local)
-        gene1 = GenetetA(cw_channel_2, supercoil_1, supercoil_2, local)
+        gene1 = GenetetA(cw_channel_2, supercoil_2, supercoil_1, local)
         circuit = [gene1, supercoil_2]
         self.assertEqual(0, supercoil_2.get_coil_state(), "Incorrect coiling state at start")
         supercoil_2.update()

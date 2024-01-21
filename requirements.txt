@@ -3,4 +3,5 @@ numpy==1.23.4
 matplotlib~=3.6.0
 setuptools==60.9.3
 webcolors~=1.12
-TORC~=alpha
+TORC~=0.1.0
+scipy~=1.10.1

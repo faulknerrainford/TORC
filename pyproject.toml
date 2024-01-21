@@ -1,22 +1,21 @@
-[build-system]
-requires = ["setuptools>=61.0"]
-build-backend = "setuptools.build_meta"
-
-[project]
-name = "TORC"
-version = "0.0.1"
-authors = [
-  { name="Penn Faulkner Rainford", email="penn.rainford@york.ac.uk" },
-]
-description = "A package for computational modelling of plasmid circuits including supercoiling mechanisms"
+[tool.poetry]
+name = "torc"
+version = "0.1.0"
+description = "Computational simulation for plasmid supercoiling"
+authors = ["Penn Faulkner Rainford <penn.rainford@york.ac.uk>"]
+license = "GPLv3"
 readme = "README.md"
-requires-python = ">=3.7"
-classifiers = [
-    "Programming Language :: Python :: 3",
-    "License :: OSI Approved :: GLP v3",
-    "Operating System :: OS Independent",
-]
 
-[project.urls]
-"Homepage" = "https://github.com/faulknerrainford/TORC"
-"Bug Tracker" = "https://github.com/faulnerrainford/TORC/issues"
+[tool.poetry.dependencies]
+python = "^3.8"
+Sphinx = "5.3.0"
+numpy = "1.23.4"
+matplotlib = "3.6.0"
+setuptools = "60.9.3"
+webcolors = "1.12"
+scipy = "1.10.1"
+
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"

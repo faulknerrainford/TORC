@@ -42,7 +42,10 @@ class GenetetA(Promoter, Barrier):
         return False
 
     def input_check(self):
-        return True
+        return {"promote": 1}
+
+    def rate_calc(self, status):
+        return self.strong_signal
 
     def output_signal(self, strength=None):
         """
@@ -53,5 +56,4 @@ class GenetetA(Promoter, Barrier):
         SendingError: SignalError
             Indicated the signal was not received and so was cleared from pipe.
         """
-        if strength == "strong":
-            self.output_channel.put(self.sc_strength)
+        self.output_channel.put(self.sc_strength)

@@ -13,8 +13,8 @@ class TestEnvironment(TestCase):
         test_in_queue = Queue()
         promoter = Promoter("leu500", supercoil.supercoiling_region, local, output_channel=test_in_queue)
         environment = Environment("leu500", local, input_queue=test_in_queue)
-        promoter.output_signal("strong")
-        promoter.output_signal("strong")
+        promoter.output_signal(1)
+        promoter.output_signal(1)
         content = environment.content
         environment.read_signal()
         self.assertEqual(content+(promoter.strong_signal*2), environment.content,
@@ -29,8 +29,8 @@ class TestEnvironment(TestCase):
         test_in_queue = Queue()
         promoter = Promoter("leu500", supercoil.supercoiling_region, local, output_channel=test_in_queue)
         environment = Environment("leu500", local, decay_rate=0.5, input_queue=test_in_queue)
-        promoter.output_signal("strong")
-        promoter.output_signal("strong")
+        promoter.output_signal(1)
+        promoter.output_signal(1)
         content = environment.content
         environment.read_signal()
         self.assertEqual(content+(promoter.strong_signal*2)-0.5, environment.content,
@@ -76,7 +76,7 @@ class TestEnvironment(TestCase):
         promoter = Promoter("leu500", supercoil.supercoiling_region, local, output_channel=test_in_queue)
         environment = Environment("leu500", local, input_queue=test_in_queue)
         self.assertEqual(0, environment.content, "Content in initial environment")
-        promoter.output_signal("strong")
+        promoter.output_signal(1)
         environment.update()
         self.assertEqual(1, environment.content, "Incorrect sequential update of content")
 
@@ -102,7 +102,7 @@ class TestEnvironment(TestCase):
 
     def test_update_concurrent_inhibitor(self):
         local = LocalArea()
-        test_queue = Queue()
+        # test_queue = Queue()
         inh_queue = Queue()
         cw_channel = Queue()
         acw_channel = Queue()
