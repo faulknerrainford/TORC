@@ -22,9 +22,10 @@ class SupercoilSensitive(Promoter):
         The channel to send output on to the visible component
     """
 
-    def __init__(self, colour, region, local, weak=0, strong=1, output_channel=None, fluorescent=False, clockwise=True):
+    def __init__(self, colour, region, local, weak=0, strong=1, output_channel=None, fluorescent=False, clockwise=True,
+                 sc_rate=0, threshold=0):
         super(SupercoilSensitive, self).__init__(colour, region, local, weak, strong, output_channel, fluorescent,
-                                                 clockwise=clockwise)
+                                                 clockwise=clockwise, sc_rate=sc_rate, threshold=threshold)
 
     def input_check(self):
         """

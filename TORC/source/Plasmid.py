@@ -18,8 +18,8 @@ class Plasmid(Circuit):
         Local area can be provided to the system with a full start state if needed.
     """
 
-    def __init__(self, components, environments=None, label="circuit1", local=None):
-        super(Plasmid, self).__init__(components, environments, label, local)
+    def __init__(self, components, environments=None, label="circuit1", local=None, relax=1):
+        super(Plasmid, self).__init__(components, environments, label, local, relax)
 
     def setup(self):
         """
