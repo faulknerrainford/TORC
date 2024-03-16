@@ -40,7 +40,8 @@ class Promoter:
     """
 
     def __init__(self, label, region, local, weak=0, strong=1, output_channel=None, fluorescent=False, promote=None,
-                 repress=None, sc_sensitive=True, sc_rate=0, clockwise=True, threshold=0, rate_dist="threshold"):
+                 repress=None, sc_sensitive=True, sc_rate=0, clockwise=True, threshold=0, rate_dist="threshold",
+                 gradient=1):
         self.label = label
         self.gene = label.split("_")[0]
         self.coil_state = 0
@@ -61,6 +62,7 @@ class Promoter:
         self.sc_rate = sc_rate
         self.clockwise = clockwise
         self.rate_dist = rate_dist
+        self.gradient = gradient
 
     def update(self):
         """
@@ -141,7 +143,7 @@ class Promoter:
                 x = status["supercoiling"]
             else:
                 x = status["promote"]
-            x_prime = x-self.threshold
+            x_prime = self.gradient*x-self.threshold
             y = 1/(1 + np.exp(-x_prime))
             y_range = self.strong_signal - self.weak_signal
             y_prime = y*y_range + self.weak_signal
@@ -152,7 +154,7 @@ class Promoter:
                 x = status["supercoiling"]
             else:
                 x = status["promote"]
-            y = norm.pdf(x, self.threshold, 1)*(2.5*(self.strong_signal-self.weak_signal))+self.weak_signal
+            y = norm.pdf(x, self.threshold, self.gradient)*(2.5*(self.strong_signal-self.weak_signal))+self.weak_signal
             return y
         else:
             return self.weak_signal

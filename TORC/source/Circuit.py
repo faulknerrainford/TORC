@@ -196,9 +196,19 @@ class Circuit:
                 response = parameters["response"]
             else:
                 response = 0
+            if "gradient" in parameters.keys():
+                gradient = parameters["gradient"]
+            else:
+                gradient = 1
+            if "rate_dist" in parameters.keys():
+                rate_dist = parameters["rate_dist"]
+            else:
+                rate_dist = "threshold"
         else:
             sc_rate = 0
             response = 0
+            gradient = 1
+            rate_dist = "threshold"
         components = []
         if output not in self.local.get_keys():
             queue = Queue()
@@ -208,17 +218,17 @@ class Circuit:
         if promoter_type == "P":
             promoter = Promoter(output, sc_region, self.local, weak=weak, strong=strong,
                                 output_channel=self.env_queues[output], clockwise=clockwise, sc_rate=sc_rate,
-                                threshold=response)
+                                threshold=response, gradient=gradient, rate_dist=rate_dist)
             components.append(promoter)
         elif promoter_type == "C":
             promoter = SupercoilSensitive(output, sc_region, self.local, weak=weak, strong=strong,
                                           output_channel=self.env_queues[output], clockwise=clockwise, sc_rate=sc_rate,
-                                          threshold=response)
+                                          threshold=response, gradient=gradient, rate_dist=rate_dist)
             components.append(promoter)
         elif promoter_type == "CF":
             promoter = SupercoilSensitive(output, sc_region, self.local, weak=weak, strong=strong,
                                           output_channel=self.env_queues[output], fluorescent=True, clockwise=clockwise,
-                                          sc_rate=sc_rate, threshold=response)
+                                          sc_rate=sc_rate, threshold=response, gradient=gradient, rate_dist=rate_dist)
             components.append(promoter)
         return components
 
