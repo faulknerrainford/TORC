@@ -29,11 +29,11 @@
      inkscape:deskcolor="#d1d1d1"
      inkscape:document-units="pt"
      inkscape:zoom="1.0935973"
-     inkscape:cx="8.2297204"
+     inkscape:cx="568.30791"
      inkscape:cy="432.06032"
-     inkscape:window-width="3440"
+     inkscape:window-width="2560"
      inkscape:window-height="1403"
-     inkscape:window-x="0"
+     inkscape:window-x="1920"
      inkscape:window-y="0"
      inkscape:window-maximized="1"
      inkscape:current-layer="svg174" />
@@ -298,7 +298,7 @@
   </g>
   <g
      id="text_1"
-     transform="matrix(2.5226392,0,0,2.5226392,-110.78482,-140.77429)">
+     transform="matrix(4.6795748,0,0,4.6795748,-598.86464,-546.41626)">
     <!-- $\bf{pBR322}$ -->
     <g
        transform="matrix(0.1,0,0,-0.1,197.25403,195.96593)"
@@ -326,30 +326,18 @@
            d="M 1844,884 H 3897 V 0 H 506 v 884 l 1703,1504 q 229,206 338,403 109,197 109,409 0,328 -220,528 -220,200 -586,200 -281,0 -616,-120 -334,-120 -715,-358 v 1025 q 406,134 803,204 397,71 778,71 838,0 1302,-369 464,-368 464,-1028 0,-381 -197,-711 -197,-329 -828,-883 z"
            transform="scale(0.015625)" />
       </defs>
-      <use
-         xlink:href="#DejaVuSans-Bold-70"
-         transform="translate(0,0.78125)"
-         id="use14" />
-      <use
-         xlink:href="#DejaVuSans-Bold-42"
-         transform="translate(71.582031,0.78125)"
-         id="use15" />
-      <use
-         xlink:href="#DejaVuSans-Bold-52"
-         transform="translate(147.80273,0.78125)"
-         id="use16" />
-      <use
-         xlink:href="#DejaVuSans-Bold-33"
-         transform="translate(224.80469,0.78125)"
-         id="use17" />
-      <use
-         xlink:href="#DejaVuSans-Bold-32"
-         transform="translate(294.38477,0.78125)"
-         id="use18" />
-      <use
-         xlink:href="#DejaVuSans-Bold-32"
-         transform="translate(363.96484,0.78125)"
-         id="use19" />
+      <text
+         xml:space="preserve"
+         style="font-size:119.843px;line-height:1.1;font-family:Sans;-inkscape-font-specification:'Sans, Normal';fill:#000000;stroke-width:3.7104;stroke-opacity:0.7866"
+         x="8.8860502"
+         y="9.9268808"
+         id="text1"
+         transform="scale(1,-1)"><tspan
+           sodipodi:role="line"
+           id="tspan1"
+           style="stroke-width:3.7104"
+           x="8.8860502"
+           y="9.9268808">pTORC10</tspan></text>
     </g>
     <!-- 4370bp -->
     <g
@@ -418,7 +406,7 @@
   </g>
   <g
      id="g178"
-     transform="matrix(4.0435452,0,0,4.0435452,-625.50796,-316.43372)">
+     transform="matrix(7.3000003,0,0,7.3000003,-1778.7882,-733.48636)">
     <use
        xlink:href="#DejaVuSans-74"
        id="use43"
@@ -472,7 +460,7 @@
   </g>
   <g
      id="g181"
-     transform="matrix(5.2922195,0,0,5.2922195,-818.05553,-1086.3283)">
+     transform="matrix(9.3146439,0,0,9.3146439,-1845.2664,-2459.6119)">
     <use
        xlink:href="#DejaVuSans-72"
        id="use59"
@@ -526,7 +514,7 @@
      style="fill:#808080" />
   <g
      id="g180"
-     transform="matrix(3.6750464,0,0,3.6750464,-51.425566,-472.76533)">
+     transform="matrix(6.5006655,0,0,6.5006655,-143.17698,-1239.563)">
     <use
        xlink:href="#DejaVuSans-70"
        id="use76"
@@ -596,27 +584,6 @@
        style="fill:none;stroke:#008000;stroke-width:1.5;stroke-linecap:square;stroke-opacity:0.3"
        id="path97" />
   </g>
-  <g
-     id="g176"
-     transform="matrix(4.3564082,0,0,4.3564082,-38.71889,-545.34242)">
-    <use
-       xlink:href="#DejaVuSans-6c"
-       id="use98"
-       transform="matrix(0.07,0,0,-0.07,17.083175,225.94001)"
-       style="fill:#008000" />
-    <use
-       xlink:href="#DejaVuSans-61"
-       x="27.783203"
-       id="use99"
-       transform="matrix(0.07,0,0,-0.07,17.083175,225.94001)"
-       style="fill:#008000" />
-    <use
-       xlink:href="#DejaVuSans-63"
-       x="89.0625"
-       id="use100"
-       transform="matrix(0.07,0,0,-0.07,17.083175,225.94001)"
-       style="fill:#008000" />
-  </g>
   <use
      xlink:href="#DejaVuSans-20"
      x="144.04297"
@@ -646,7 +613,7 @@
   </g>
   <g
      id="g177"
-     transform="matrix(3.4575141,0,0,3.4575141,-23.674627,-265.19051)">
+     transform="matrix(5.6500094,0,0,5.6500094,-40.853856,-578.1374)">
     <use
        xlink:href="#DejaVuSans-6d"
        id="use115"
@@ -718,7 +685,7 @@
   </g>
   <g
      id="g179"
-     transform="matrix(3.4402161,0,0,3.4402161,-84.73255,-207.34702)">
+     transform="matrix(5.570117,0,0,5.570117,-296.54522,-348.37719)">
     <use
        xlink:href="#DejaVuSans-50"
        id="use136"
@@ -796,24 +763,25 @@
   </g>
   <g
      id="g175"
-     transform="matrix(4.2684029,0,0,4.2684029,-176.85049,-264.26377)">
+     transform="matrix(7.619086,0,0,7.619086,-614.0569,-487.62441)"
+     style="fill:#008000;fill-opacity:1">
     <use
        xlink:href="#DejaVuSans-6c"
        id="use158"
        transform="matrix(0.07,0,0,-0.07,97.554647,70.637122)"
-       style="fill:#008000" />
+       style="fill:#008000;fill-opacity:1" />
     <use
        xlink:href="#DejaVuSans-61"
        x="27.783203"
        id="use159"
        transform="matrix(0.07,0,0,-0.07,97.554647,70.637122)"
-       style="fill:#008000" />
+       style="fill:#008000;fill-opacity:1" />
     <use
        xlink:href="#DejaVuSans-63"
        x="89.0625"
        id="use160"
        transform="matrix(0.07,0,0,-0.07,97.554647,70.637122)"
-       style="fill:#008000" />
+       style="fill:#008000;fill-opacity:1" />
   </g>
   <use
      xlink:href="#DejaVuSans-20"
@@ -845,4 +813,48 @@
          id="rect174" />
     </clipPath>
   </defs>
+  <text
+     xml:space="preserve"
+     style="font-size:53.964px;line-height:1.1;font-family:Sans;-inkscape-font-specification:'Sans, Normal';fill:#008000;fill-opacity:1;stroke-width:1.67076;stroke-opacity:0.7866"
+     x="205.94839"
+     y="52.791813"
+     id="text2"><tspan
+       sodipodi:role="line"
+       id="tspan2"
+       style="fill:#008000;fill-opacity:1;stroke-width:1.67076"
+       x="205.94839"
+       y="52.791813">O1</tspan></text>
+  <g
+     id="g175-7"
+     transform="matrix(6.7136164,0,0,6.7136164,-651.73973,-7.283883)"
+     style="fill:#008000;fill-opacity:1;stroke-linecap:butt;stroke-linejoin:round">
+    <use
+       xlink:href="#DejaVuSans-6c"
+       id="use158-3"
+       transform="matrix(0.07,0,0,-0.07,97.554647,70.637122)"
+       style="fill:#008000;fill-opacity:1;stroke-linecap:butt;stroke-linejoin:round" />
+    <use
+       xlink:href="#DejaVuSans-61"
+       x="27.783203"
+       id="use159-6"
+       transform="matrix(0.07,0,0,-0.07,97.554647,70.637122)"
+       style="fill:#008000;fill-opacity:1;stroke-linecap:butt;stroke-linejoin:round" />
+    <use
+       xlink:href="#DejaVuSans-63"
+       x="89.0625"
+       id="use160-1"
+       transform="matrix(0.07,0,0,-0.07,97.554647,70.637122)"
+       style="fill:#008000;fill-opacity:1;stroke-linecap:butt;stroke-linejoin:round" />
+  </g>
+  <text
+     xml:space="preserve"
+     style="font-size:47.5508px;line-height:1.1;font-family:Sans;-inkscape-font-specification:'Sans, Normal';fill:#008000;fill-opacity:1;stroke-width:1.4722;stroke-linecap:butt;stroke-linejoin:round;stroke-opacity:0.7866"
+     x="70.814247"
+     y="468.90802"
+     id="text2-2"><tspan
+       sodipodi:role="line"
+       id="tspan2-9"
+       style="fill:#008000;fill-opacity:1;stroke-width:1.4722"
+       x="70.814247"
+       y="468.90802">O1</tspan></text>
 </svg>
