@@ -1,4 +1,4 @@
-TORC ALife 2024
+TORC
 =================================================
 
 This package was built to explore plasmid circuits for synthetic biology. Using and abstract model of supercoiling and
@@ -35,21 +35,8 @@ If installing the TORC dependencies will be installed automatically. Otherwise y
 Installation
 ============
 
-The code for TORC-ALife2024 can be found in the TORC GitHub repository:
-https://github.com/faulknerrainford/TORC/tree/TORC-ALife-2024
+The code for TORC can be found in the TORC GitHub repository:
+https://github.com/faulknerrainford/TORC/
 
-Replication
-===========
-
-The random searches used in the Rainford. et al 2024 are implemented in TORC/TORC/source/Parameterisation.
-The RandomSearch.py file will run any of the random searches used in the paper but the limits for parameters or the
-values for fixed parameters need to be edited before running. All values used in paper are available but will need to
-be commented in or out for the appropriate run.
-
-Comparison data from the physics model is provided compressed along with output from the random search in
-TORC/Experiment_Data/Paper Data. In Experiment_Data we also provide the png files for all figures.
-
-Analysis of the data and comparison with TORCPhysics data is done using
-TORC/TORC/source/Parameterisation/RandomSearchAnalysis.py where the full analysis pipline is laid out in main.
 
 
