@@ -1,22 +1,23 @@
 <!DOCTYPE html>
-<html class="writer-html5" lang="en" >
+<html class="writer-html5" lang="en" data-content_root="../">
 <head>
-  <meta charset="utf-8" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Components &mdash; TORC alpha documentation</title>
-      <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
-      <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
+      <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=80d5e7a1" />
+      <link rel="stylesheet" type="text/css" href="../_static/css/theme.css?v=19f00094" />
+
+  
   <!--[if lt IE 9]>
     <script src="../_static/js/html5shiv.min.js"></script>
   <![endif]-->
   
-        <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js"></script>
-        <script src="../_static/jquery.js"></script>
-        <script src="../_static/underscore.js"></script>
-        <script src="../_static/_sphinx_javascript_frameworks_compat.js"></script>
-        <script src="../_static/doctools.js"></script>
-        <script src="../_static/sphinx_highlight.js"></script>
+        <script src="../_static/jquery.js?v=5d32c60e"></script>
+        <script src="../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+        <script src="../_static/documentation_options.js?v=1f169f65"></script>
+        <script src="../_static/doctools.js?v=888ff710"></script>
+        <script src="../_static/sphinx_highlight.js?v=dc90522c"></script>
     <script src="../_static/js/theme.js"></script>
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
@@ -29,11 +30,15 @@
     <nav data-toggle="wy-nav-shift" class="wy-nav-side">
       <div class="wy-side-scroll">
         <div class="wy-side-nav-search" >
-            <a href="../index.html" class="icon icon-home"> TORC
+
+          
+          
+          <a href="../index.html" class="icon icon-home">
+            TORC
           </a>
 <div role="search">
   <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
-    <input type="text" name="q" placeholder="Search docs" />
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
     <input type="hidden" name="check_keywords" value="yes" />
     <input type="hidden" name="area" value="default" />
   </form>
@@ -103,7 +108,7 @@
         <div class="rst-content">
           <div role="navigation" aria-label="Page navigation">
   <ul class="wy-breadcrumbs">
-      <li><a href="../index.html" class="icon icon-home"></a></li>
+      <li><a href="../index.html" class="icon icon-home" aria-label="Home"></a></li>
           <li class="breadcrumb-item"><a href="../Implementation.html">Implementation</a></li>
       <li class="breadcrumb-item active">Components</li>
       <li class="wy-breadcrumbs-aside">
@@ -116,51 +121,102 @@
            <div itemprop="articleBody">
              
   <section id="components">
-<h1>Components<a class="headerlink" href="#components" title="Permalink to this heading"></a></h1>
+<h1>Components<a class="headerlink" href="#components" title="Link to this heading"></a></h1>
 <section id="promoter">
-<h2>Promoter<a class="headerlink" href="#promoter" title="Permalink to this heading"></a></h2>
+<h2>Promoter<a class="headerlink" href="#promoter" title="Link to this heading"></a></h2>
 <dl class="py class">
 <dt class="sig sig-object py" id="TORC.Promoter">
-<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">TORC.</span></span><span class="sig-name descname"><span class="pre">Promoter</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">label</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">region</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">local</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">weak</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">strong</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">output_channel</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">fluorescent</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">promote</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">repress</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">sc_sensitive</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/TORC/source/Promoter.html#Promoter"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#TORC.Promoter" title="Permalink to this definition"></a></dt>
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">TORC.</span></span><span class="sig-name descname"><span class="pre">Promoter</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">label</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">region</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">local</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">weak</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">strong</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">output_channel</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">fluorescent</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">promote</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">repress</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">sc_sensitive</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">sc_rate</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">clockwise</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">threshold</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">rate_dist</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'threshold'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">gradient</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/TORC/source/Promoter.html#Promoter"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#TORC.Promoter" title="Link to this definition"></a></dt>
 <dd><p>Promoter class increases the amount of protein in the local environment based on the current state of environmental
 proteins and supercoiling. This includes the existence of proteins in the environment both promoting and repressing
 expression.</p>
 <dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>label</strong> (<em>String</em>) – Name of the protein being promoted used to ID, in case of multiple promoters of the same type name_i is used
 to number the instances.</p></li>
 <li><p><strong>local</strong> (<a class="reference internal" href="ControlStructures.html#TORC.LocalArea" title="TORC.LocalArea"><em>LocalArea</em></a>) – Tracks the supercoiling and proteins in the circuit</p></li>
 <li><p><strong>region</strong> (<em>Int</em>) – The supercoiling region the promoter belongs to.</p></li>
-<li><p><strong>weak</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.11)"><em>float</em></a>) – The rate of output when neutrally coiled</p></li>
-<li><p><strong>strong</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.11)"><em>float</em></a>) – The rate of output when negatively coiled</p></li>
+<li><p><strong>weak</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.12)"><em>float</em></a>) – The rate of output when neutrally coiled</p></li>
+<li><p><strong>strong</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.12)"><em>float</em></a>) – The rate of output when negatively coiled</p></li>
 <li><p><strong>output_channel</strong> (<em>JoinableQueue</em><em> or </em><em>Channel</em>) – The channel to send output on to the environment component or supercoiling signals</p></li>
+<li><p><strong>fluorescent</strong> (<em>Boolean</em>) – Indicates if the promoters gene produces RNA for a fluorescent protein</p></li>
+<li><p><strong>promote</strong> (<a class="reference internal" href="#TORC.Environment" title="TORC.Environment"><em>Environment</em></a>) – Indicated a transcription factor which the promoter responds to by increasing production</p></li>
+<li><p><strong>repress</strong> (<a class="reference internal" href="#TORC.Environment" title="TORC.Environment"><em>Environment</em></a>) – Indicates a transcription factor which the promoter responds to by decreasing production</p></li>
+<li><p><strong>threshold</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.12)"><em>float</em></a>) – Value used for threshold for transcription coiling</p></li>
+<li><p><strong>sc_sensitive</strong> (<em>Boolean</em>) – Indicates if the promoter responds strongly to the supercoiling state</p></li>
+<li><p><strong>sc_rate</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.12)"><em>float</em></a>) – The rate at which the promoter and gene produce supercoiling (positive downstream, negative upstream)</p></li>
+<li><p><strong>clockwise</strong> (<em>Boolean</em>) – Indicates the orientation of the promoter and gene on a plasmid (right on a genome)</p></li>
 </ul>
 </dd>
 </dl>
 <dl class="py method">
 <dt class="sig sig-object py" id="TORC.Promoter.input_check">
-<span class="sig-name descname"><span class="pre">input_check</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/TORC/source/Promoter.html#Promoter.input_check"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#TORC.Promoter.input_check" title="Permalink to this definition"></a></dt>
-<dd><p>Checks coiling signal and updates coil_state if it has changed.
-Checks if repressor active -&gt; returns false
-Checks if promoter protein present -&gt; returns true
-Checks if supercoiling negative and sc_sensitive -&gt; returns true</p>
-</dd></dl>
-
-<dl class="py method">
-<dt class="sig sig-object py" id="TORC.Promoter.output_signal">
-<span class="sig-name descname"><span class="pre">output_signal</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">strength</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/TORC/source/Promoter.html#Promoter.output_signal"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#TORC.Promoter.output_signal" title="Permalink to this definition"></a></dt>
-<dd><p>Sends correct rate on the output channel</p>
+<span class="sig-name descname"><span class="pre">input_check</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/TORC/source/Promoter.html#Promoter.input_check"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#TORC.Promoter.input_check" title="Link to this definition"></a></dt>
+<dd><p>Collects information on current state of transcription factors environments for repression, promotion and the
+current supercoiling state of the promoter.</p>
 <dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><p><strong>strength</strong> (<em>String</em>) – indicates if output signal is “weak” or “strong”.</p>
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>dict with information on repression, promotion and supercoiling if relevant.</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#dict" title="(in Python v3.12)">dict</a></p>
 </dd>
 </dl>
 </dd></dl>
 
 <dl class="py method">
+<dt class="sig sig-object py" id="TORC.Promoter.output_signal">
+<span class="sig-name descname"><span class="pre">output_signal</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">strength</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/TORC/source/Promoter.html#Promoter.output_signal"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#TORC.Promoter.output_signal" title="Link to this definition"></a></dt>
+<dd><p>Sends correct rate on the output channel</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>strength</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.12)"><em>float</em></a>) – output strength, rate of transcription, also applied to rate of supercoiling</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="TORC.Promoter.rate_calc">
+<span class="sig-name descname"><span class="pre">rate_calc</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">status</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/TORC/source/Promoter.html#Promoter.rate_calc"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#TORC.Promoter.rate_calc" title="Link to this definition"></a></dt>
+<dd><p>Calculate the rate of transcription based on repression, promotion and supercoiling levels.</p>
+<section id="threshold">
+<h3>Threshold<a class="headerlink" href="#threshold" title="Link to this heading"></a></h3>
+<p>The threshold function acts as a digital switch between the weak and strong signal activated when a promoting
+transcription factor is above the given threshold and the repressing transcription factor is not. (Unless the
+promoter is supercoiling sensitive, in which case this is activated when supercoiling is below the threshold.)</p>
+</section>
+<section id="sigmoid">
+<h3>Sigmoid<a class="headerlink" href="#sigmoid" title="Link to this heading"></a></h3>
+</section>
+<section id="normal">
+<h3>Normal<a class="headerlink" href="#normal" title="Link to this heading"></a></h3>
+<dl class="field-list simple">
+<dt class="field-odd">param status<span class="colon">:</span></dt>
+<dd class="field-odd"><p>dict with information on repression, promotion and supercoiling if relevant.</p>
+</dd>
+<dt class="field-even">type status<span class="colon">:</span></dt>
+<dd class="field-even"><p>dict</p>
+</dd>
+<dt class="field-odd">returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>rate of transcription for output signal</p>
+</dd>
+<dt class="field-even">rtype<span class="colon">:</span></dt>
+<dd class="field-even"><p>float</p>
+</dd>
+</dl>
+</section>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="TORC.Promoter.state_update">
+<span class="sig-name descname"><span class="pre">state_update</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/TORC/source/Promoter.html#Promoter.state_update"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#TORC.Promoter.state_update" title="Link to this definition"></a></dt>
+<dd><p>Checks and updates the supercoiling state of the promoter.</p>
+</dd></dl>
+
+<dl class="py method">
 <dt class="sig sig-object py" id="TORC.Promoter.update">
-<span class="sig-name descname"><span class="pre">update</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/TORC/source/Promoter.html#Promoter.update"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#TORC.Promoter.update" title="Permalink to this definition"></a></dt>
+<span class="sig-name descname"><span class="pre">update</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/TORC/source/Promoter.html#Promoter.update"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#TORC.Promoter.update" title="Link to this definition"></a></dt>
 <dd><p>Updates state of promoter including output to the environment and updating coil-state if changed.</p>
 </dd></dl>
 
@@ -168,63 +224,134 @@ Checks if supercoiling negative and sc_sensitive -&gt; returns true</p>
 
 </section>
 <section id="teta">
-<h2>tetA<a class="headerlink" href="#teta" title="Permalink to this heading"></a></h2>
+<h2>tetA<a class="headerlink" href="#teta" title="Link to this heading"></a></h2>
 <dl class="py class">
 <dt class="sig sig-object py" id="TORC.GenetetA">
-<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">TORC.</span></span><span class="sig-name descname"><span class="pre">GenetetA</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">channel</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">supercoil_region</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">local</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/TORC/source/GenetetA.html#GenetetA"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#TORC.GenetetA" title="Permalink to this definition"></a></dt>
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">TORC.</span></span><span class="sig-name descname"><span class="pre">GenetetA</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">channel</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">cw_supercoil_region</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">acw_supercoil_region</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">local</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">sc_strength</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">-1</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">clockwise</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/TORC/source/GenetetA.html#GenetetA"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#TORC.GenetetA" title="Link to this definition"></a></dt>
 <dd><p>Gene component, causes supercoiling for region attached by Channel.</p>
 <dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>channel</strong> (<a class="reference internal" href="ControlStructures.html#TORC.ChannelEnd" title="TORC.ChannelEnd"><em>ChannelEnd</em></a>) – channel and event used to signal the supercoiling region clockwise of the gene. Matching end should be provided
-as the receiving channel to supercoil.</p></li>
-<li><p><strong>supercoil_region</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.11)"><em>int</em></a>) – Region of supercoiling the gene is in, this is the region anti-clockwise of the gene.</p></li>
+<li><p><strong>channel</strong> (<em>Queue</em>) – Queue to output supercoiling</p></li>
+<li><p><strong>cw_supercoil_region</strong> (<a class="reference internal" href="#TORC.Supercoil" title="TORC.Supercoil"><em>Supercoil</em></a>) – Region of supercoiling negative supercoiling is generated in, this is the region clockwise of the gene.</p></li>
+<li><p><strong>acw_supercoil_region</strong> (<a class="reference internal" href="#TORC.Supercoil" title="TORC.Supercoil"><em>Supercoil</em></a>) – Region of supercoiling the gene is in, this is the region anti-clockwise of the gene.</p></li>
 <li><p><strong>local</strong> (<a class="reference internal" href="ControlStructures.html#TORC.LocalArea" title="TORC.LocalArea"><em>LocalArea</em></a>) – Tracks the supercoiling and proteins in the circuit</p></li>
+<li><p><strong>sc_strength</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.12)"><em>int</em></a>) – The amount of supercoiling to generate upstream</p></li>
+<li><p><strong>clockwise</strong> (<em>Boolean</em>) – The orientation of the gene, defaults to anticlockwise, if modified cw and acw sc regions need to be
+the other way around</p></li>
 </ul>
 </dd>
 </dl>
 <dl class="py method">
+<dt class="sig sig-object py" id="TORC.GenetetA.barrier_check">
+<span class="sig-name descname"><span class="pre">barrier_check</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/TORC/source/GenetetA.html#GenetetA.barrier_check"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#TORC.GenetetA.barrier_check" title="Link to this definition"></a></dt>
+<dd><p>Reimplemented in subclasses, dictates if the barrier is open. If true then supercoiling exchange happens
+between the adjacent regions, else if false the barrier stops all supercoiling propagation.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>True return indicates supercoiling propagation, false barrier is active</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p>Boolean</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="TORC.GenetetA.input_check">
+<span class="sig-name descname"><span class="pre">input_check</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/TORC/source/GenetetA.html#GenetetA.input_check"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#TORC.GenetetA.input_check" title="Link to this definition"></a></dt>
+<dd><p>Collects information on current state of transcription factors environments for repression, promotion and the
+current supercoiling state of the promoter.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>dict with information on repression, promotion and supercoiling if relevant.</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#dict" title="(in Python v3.12)">dict</a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
 <dt class="sig sig-object py" id="TORC.GenetetA.output_signal">
-<span class="sig-name descname"><span class="pre">output_signal</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">strength</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/TORC/source/GenetetA.html#GenetetA.output_signal"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#TORC.GenetetA.output_signal" title="Permalink to this definition"></a></dt>
+<span class="sig-name descname"><span class="pre">output_signal</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">strength</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/TORC/source/GenetetA.html#GenetetA.output_signal"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#TORC.GenetetA.output_signal" title="Link to this definition"></a></dt>
 <dd><p>Sends negative signal to supercoil via provided channel. Waits for confirmation of receipt before exit.</p>
 <dl class="field-list simple">
-<dt class="field-odd">Raises</dt>
+<dt class="field-odd">Raises<span class="colon">:</span></dt>
 <dd class="field-odd"><p><a class="reference internal" href="ControlStructures.html#TORC.SendingError" title="TORC.SendingError"><strong>SendingError</strong></a> – SignalError: Indicated the signal was not received and so was cleared from pipe.</p>
 </dd>
 </dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="TORC.GenetetA.rate_calc">
+<span class="sig-name descname"><span class="pre">rate_calc</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">status</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/TORC/source/GenetetA.html#GenetetA.rate_calc"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#TORC.GenetetA.rate_calc" title="Link to this definition"></a></dt>
+<dd><p>Calculate the rate of transcription based on repression, promotion and supercoiling levels.</p>
+<section id="id1">
+<h3>Threshold<a class="headerlink" href="#id1" title="Link to this heading"></a></h3>
+<p>The threshold function acts as a digital switch between the weak and strong signal activated when a promoting
+transcription factor is above the given threshold and the repressing transcription factor is not. (Unless the
+promoter is supercoiling sensitive, in which case this is activated when supercoiling is below the threshold.)</p>
+</section>
+<section id="id2">
+<h3>Sigmoid<a class="headerlink" href="#id2" title="Link to this heading"></a></h3>
+</section>
+<section id="id3">
+<h3>Normal<a class="headerlink" href="#id3" title="Link to this heading"></a></h3>
+<dl class="field-list simple">
+<dt class="field-odd">param status<span class="colon">:</span></dt>
+<dd class="field-odd"><p>dict with information on repression, promotion and supercoiling if relevant.</p>
+</dd>
+<dt class="field-even">type status<span class="colon">:</span></dt>
+<dd class="field-even"><p>dict</p>
+</dd>
+<dt class="field-odd">returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>rate of transcription for output signal</p>
+</dd>
+<dt class="field-even">rtype<span class="colon">:</span></dt>
+<dd class="field-even"><p>float</p>
+</dd>
+</dl>
+</section>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="TORC.GenetetA.update">
+<span class="sig-name descname"><span class="pre">update</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/TORC/source/GenetetA.html#GenetetA.update"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#TORC.GenetetA.update" title="Link to this definition"></a></dt>
+<dd><p>Updates state of promoter including output to the environment and updating coil-state if changed.</p>
 </dd></dl>
 
 </dd></dl>
 
 </section>
 <section id="supercoil-sensitive-promoters">
-<h2>Supercoil Sensitive Promoters<a class="headerlink" href="#supercoil-sensitive-promoters" title="Permalink to this heading"></a></h2>
+<h2>Supercoil Sensitive Promoters<a class="headerlink" href="#supercoil-sensitive-promoters" title="Link to this heading"></a></h2>
 <dl class="py class">
 <dt class="sig sig-object py" id="TORC.SupercoilSensitive">
-<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">TORC.</span></span><span class="sig-name descname"><span class="pre">SupercoilSensitive</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">colour</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">region</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">local</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">weak</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">strong</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">output_channel</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">fluorescent</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/TORC/source/SupercoilSensitive.html#SupercoilSensitive"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#TORC.SupercoilSensitive" title="Permalink to this definition"></a></dt>
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">TORC.</span></span><span class="sig-name descname"><span class="pre">SupercoilSensitive</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">colour</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">region</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">local</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">weak</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">strong</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">output_channel</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">fluorescent</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">clockwise</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">sc_rate</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">threshold</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">gradient</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">rate_dist</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'threshold'</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/TORC/source/SupercoilSensitive.html#SupercoilSensitive"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#TORC.SupercoilSensitive" title="Link to this definition"></a></dt>
 <dd><p>Fluorescent class increases the amount of visible list of a particular colour in the local environment</p>
 <dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>colour</strong> (<em>String</em>) – Name of the colour being produced used to ID, in case of multiple Fluorescent of the same type colour_i is used
 to number the instances.</p></li>
 <li><p><strong>region</strong> (<em>Int</em>) – The supercoiling region the fluorescent belongs to.</p></li>
 <li><p><strong>local</strong> (<a class="reference internal" href="ControlStructures.html#TORC.LocalArea" title="TORC.LocalArea"><em>LocalArea</em></a>) – Tracks the supercoiling and proteins in the circuit</p></li>
-<li><p><strong>weak</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.11)"><em>float</em></a>) – The rate of output when neutrally coiled</p></li>
-<li><p><strong>strong</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.11)"><em>float</em></a>) – The rate of output when negatively coiled</p></li>
+<li><p><strong>weak</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.12)"><em>float</em></a>) – The rate of output when neutrally coiled</p></li>
+<li><p><strong>strong</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.12)"><em>float</em></a>) – The rate of output when negatively coiled</p></li>
 <li><p><strong>output_channel</strong> (<em>JoinableQueue</em>) – The channel to send output on to the visible component</p></li>
 </ul>
 </dd>
 </dl>
 <dl class="py method">
 <dt class="sig sig-object py" id="TORC.SupercoilSensitive.input_check">
-<span class="sig-name descname"><span class="pre">input_check</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/TORC/source/SupercoilSensitive.html#SupercoilSensitive.input_check"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#TORC.SupercoilSensitive.input_check" title="Permalink to this definition"></a></dt>
+<span class="sig-name descname"><span class="pre">input_check</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/TORC/source/SupercoilSensitive.html#SupercoilSensitive.input_check"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#TORC.SupercoilSensitive.input_check" title="Link to this definition"></a></dt>
 <dd><p>Checks coiling signal and updates coil_state if it has changed.</p>
 <dl class="field-list simple">
-<dt class="field-odd">Returns</dt>
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
 <dd class="field-odd"><p>If the input is correct to produce strong rather than weak output.</p>
 </dd>
-<dt class="field-even">Return type</dt>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
 <dd class="field-even"><p>boolean</p>
 </dd>
 </dl>
@@ -234,47 +361,46 @@ to number the instances.</p></li>
 
 </section>
 <section id="supercoiling-region">
-<h2>Supercoiling Region<a class="headerlink" href="#supercoiling-region" title="Permalink to this heading"></a></h2>
+<h2>Supercoiling Region<a class="headerlink" href="#supercoiling-region" title="Link to this heading"></a></h2>
 <dl class="py class">
 <dt class="sig sig-object py" id="TORC.Supercoil">
-<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">TORC.</span></span><span class="sig-name descname"><span class="pre">Supercoil</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">channel</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">local</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/TORC/source/Supercoil.html#Supercoil"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#TORC.Supercoil" title="Permalink to this definition"></a></dt>
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">TORC.</span></span><span class="sig-name descname"><span class="pre">Supercoil</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">cw_channel</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">acw_channel</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">local</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">global_sc</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">relax</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/TORC/source/Supercoil.html#Supercoil"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#TORC.Supercoil" title="Link to this definition"></a></dt>
 <dd><p>Supercoil provides supercoiling regions and globals for their use.</p>
 <dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>channel</strong> (<em>JoinableQueue</em>) – Queue for receiving signals to update the coiling state, normally sent by gene, block or bridge component.</p></li>
+<li><p><strong>cw_channel</strong> (<em>Queue</em>) – Queue for receiving signals to update the clockwise coiling state, spent by all transcribing genes.
+component.</p></li>
+<li><p><strong>acw_channel</strong> (<em>Queue</em>) – Queue for receiving signals to update the anti-clockwise coiling state, spent by all transcribing genes.</p></li>
 <li><p><strong>local</strong> (<a class="reference internal" href="ControlStructures.html#TORC.LocalArea" title="TORC.LocalArea"><em>LocalArea</em></a>) – Tracks the supercoiling and proteins in the circuit</p></li>
+<li><p><strong>global_sc</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.12)"><em>float</em></a>) – global supercoiling of the plasmid, used to set initial supercoiling values</p></li>
+<li><p><strong>relax</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.12)"><em>float</em></a>) – The proportion of relaxation that occurs on update from previous time</p></li>
 </ul>
 </dd>
 </dl>
 <dl class="py method">
 <dt class="sig sig-object py" id="TORC.Supercoil.coil">
-<span class="sig-name descname"><span class="pre">coil</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/TORC/source/Supercoil.html#Supercoil.coil"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#TORC.Supercoil.coil" title="Permalink to this definition"></a></dt>
+<span class="sig-name descname"><span class="pre">coil</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/TORC/source/Supercoil.html#Supercoil.coil"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#TORC.Supercoil.coil" title="Link to this definition"></a></dt>
 <dd><p>Function for listening for a coil signal and updating the supercoiling state of the region in the region list.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Raises</dt>
-<dd class="field-odd"><p><a class="reference internal" href="ControlStructures.html#TORC.ReceivingError" title="TORC.ReceivingError"><strong>ReceivingError</strong></a> – SignalError: Indicates that a signal was listened for but not received.</p>
-</dd>
-</dl>
 </dd></dl>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="TORC.Supercoil.get_coil_state">
-<span class="sig-name descname"><span class="pre">get_coil_state</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/TORC/source/Supercoil.html#Supercoil.get_coil_state"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#TORC.Supercoil.get_coil_state" title="Permalink to this definition"></a></dt>
+<span class="sig-name descname"><span class="pre">get_coil_state</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/TORC/source/Supercoil.html#Supercoil.get_coil_state"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#TORC.Supercoil.get_coil_state" title="Link to this definition"></a></dt>
 <dd><p>Reads current coil state from the list.</p>
 <dl class="field-list simple">
-<dt class="field-odd">Returns</dt>
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
 <dd class="field-odd"><p>Current state of the supercoiling region</p>
 </dd>
-<dt class="field-even">Return type</dt>
-<dd class="field-even"><p>String</p>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p><a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.12)">float</a></p>
 </dd>
 </dl>
 </dd></dl>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="TORC.Supercoil.update">
-<span class="sig-name descname"><span class="pre">update</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/TORC/source/Supercoil.html#Supercoil.update"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#TORC.Supercoil.update" title="Permalink to this definition"></a></dt>
+<span class="sig-name descname"><span class="pre">update</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/TORC/source/Supercoil.html#Supercoil.update"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#TORC.Supercoil.update" title="Link to this definition"></a></dt>
 <dd><p>Updates supercoiling region by listening for a change in coil signal.</p>
 </dd></dl>
 
@@ -282,117 +408,80 @@ to number the instances.</p></li>
 
 </section>
 <section id="bridge">
-<h2>Bridge<a class="headerlink" href="#bridge" title="Permalink to this heading"></a></h2>
+<h2>Bridge<a class="headerlink" href="#bridge" title="Link to this heading"></a></h2>
 <dl class="py class">
 <dt class="sig sig-object py" id="TORC.Bridge">
-<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">TORC.</span></span><span class="sig-name descname"><span class="pre">Bridge</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">label</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">local</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">sc_acw</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">sc_cw</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">channel</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">protein_threshold</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/TORC/source/Bridge.html#Bridge"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#TORC.Bridge" title="Permalink to this definition"></a></dt>
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">TORC.</span></span><span class="sig-name descname"><span class="pre">Bridge</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">label</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">local</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">cw_sc_region</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">acw_sc_region</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">protein_threshold</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/TORC/source/Bridge.html#Bridge"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#TORC.Bridge" title="Link to this definition"></a></dt>
 <dd><p>Bridge class provides the bridge end components and their functions for checking for environment proteins, other
 bridge components and transmitting supercoiling between supercoiling regions.</p>
 <dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>label</strong> (<em>String</em>) – name of protein it looks for in the environment</p></li>
 <li><p><strong>local</strong> (<a class="reference internal" href="ControlStructures.html#TORC.LocalArea" title="TORC.LocalArea"><em>LocalArea</em></a>) – container tracking supercoiling and protein production within the circuit.</p></li>
-<li><p><strong>sc_acw</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.11)"><em>int</em></a>) – anti-clockwise supercoiling regions index</p></li>
-<li><p><strong>sc_cw</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.11)"><em>int</em></a>) – clockwise supercoiling regions index (should share the queue with this bridge)</p></li>
-<li><p><strong>protein_threshold</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.11)"><em>float</em></a>) – Required amount of protein in the environment for bridge to be active.</p></li>
-<li><p><strong>channel</strong> (<em>Channel</em>) – Same channel as held by clockwise supercoiling region used to transmit supercoiling from anti-clockwise to
-clockwise regions</p></li>
+<li><p><strong>cw_sc_region</strong> (<a class="reference internal" href="#TORC.Supercoil" title="TORC.Supercoil"><em>Supercoil</em></a>) – anti-clockwise supercoiling regions index</p></li>
+<li><p><strong>acw_sc_region</strong> (<a class="reference internal" href="#TORC.Supercoil" title="TORC.Supercoil"><em>Supercoil</em></a>) – clockwise supercoiling regions index (should share the queue with this bridge)</p></li>
+<li><p><strong>protein_threshold</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.12)"><em>float</em></a>) – Required amount of protein in the environment for bridge to be active.</p></li>
 </ul>
 </dd>
 </dl>
 <dl class="py method">
-<dt class="sig sig-object py" id="TORC.Bridge.check_state">
-<span class="sig-name descname"><span class="pre">check_state</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/TORC/source/Bridge.html#Bridge.check_state"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#TORC.Bridge.check_state" title="Permalink to this definition"></a></dt>
+<dt class="sig sig-object py" id="TORC.Bridge.barrier_check">
+<span class="sig-name descname"><span class="pre">barrier_check</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/TORC/source/Bridge.html#Bridge.barrier_check"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#TORC.Bridge.barrier_check" title="Link to this definition"></a></dt>
 <dd><p>Checks the other bridge exists (not None) and has same trigger protein and trigger protein in environment. If
 bridge component correct and protein present return true if not return false.</p>
 <dl class="field-list simple">
-<dt class="field-odd">Returns</dt>
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
 <dd class="field-odd"><p>True if bridge closed/active, False otherwise.</p>
 </dd>
-<dt class="field-even">Return type</dt>
-<dd class="field-even"><p>boolean</p>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="py method">
-<dt class="sig sig-object py" id="TORC.Bridge.coil_in">
-<span class="sig-name descname"><span class="pre">coil_in</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/TORC/source/Bridge.html#Bridge.coil_in"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#TORC.Bridge.coil_in" title="Permalink to this definition"></a></dt>
-<dd><p>Reads and returns the state of the supercoiling regions</p>
-<dl class="field-list simple">
-<dt class="field-odd">Returns</dt>
-<dd class="field-odd"><p>State of the supercoiling region</p>
-</dd>
-<dt class="field-even">Return type</dt>
-<dd class="field-even"><p>String</p>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="py method">
-<dt class="sig sig-object py" id="TORC.Bridge.coil_out">
-<span class="sig-name descname"><span class="pre">coil_out</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">signal</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/TORC/source/Bridge.html#Bridge.coil_out"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#TORC.Bridge.coil_out" title="Permalink to this definition"></a></dt>
-<dd><p>Sends the coil signal to the next clockwise supercoiling region.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><p><strong>signal</strong> (<em>String</em>) – State to update the supercoiling region to.</p>
-</dd>
-<dt class="field-even">Raises</dt>
-<dd class="field-even"><p><a class="reference internal" href="ControlStructures.html#TORC.SendingError" title="TORC.SendingError"><strong>SendingError</strong></a> – Failed to send signal</p>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p>Boolean</p>
 </dd>
 </dl>
 </dd></dl>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="TORC.Bridge.set_bridge_check">
-<span class="sig-name descname"><span class="pre">set_bridge_check</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">bridge</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/TORC/source/Bridge.html#Bridge.set_bridge_check"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#TORC.Bridge.set_bridge_check" title="Permalink to this definition"></a></dt>
+<span class="sig-name descname"><span class="pre">set_bridge_check</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">bridge</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/TORC/source/Bridge.html#Bridge.set_bridge_check"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#TORC.Bridge.set_bridge_check" title="Link to this definition"></a></dt>
 <dd><p>Set the bridge check variable to point to the other end of bridge</p>
 <dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><p><strong>bridge</strong> (<a class="reference internal" href="#TORC.Bridge" title="TORC.Bridge"><em>Bridge</em></a>) – Other end of bridge</p>
 </dd>
 </dl>
-</dd></dl>
-
-<dl class="py method">
-<dt class="sig sig-object py" id="TORC.Bridge.update">
-<span class="sig-name descname"><span class="pre">update</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/TORC/source/Bridge.html#Bridge.update"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#TORC.Bridge.update" title="Permalink to this definition"></a></dt>
-<dd><p>Checks if the bridge is open and if it is transmits the supercoiling state between the supercoiling regions
-either side.</p>
 </dd></dl>
 
 </dd></dl>
 
 </section>
 <section id="inhibitor">
-<h2>Inhibitor<a class="headerlink" href="#inhibitor" title="Permalink to this heading"></a></h2>
+<h2>Inhibitor<a class="headerlink" href="#inhibitor" title="Link to this heading"></a></h2>
 <dl class="py class">
 <dt class="sig sig-object py" id="TORC.Inhibitor">
-<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">TORC.</span></span><span class="sig-name descname"><span class="pre">Inhibitor</span></span><a class="reference internal" href="../_modules/TORC/source/Inhibitor.html#Inhibitor"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#TORC.Inhibitor" title="Permalink to this definition"></a></dt>
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">TORC.</span></span><span class="sig-name descname"><span class="pre">Inhibitor</span></span><a class="reference internal" href="../_modules/TORC/source/Inhibitor.html#Inhibitor"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#TORC.Inhibitor" title="Link to this definition"></a></dt>
 <dd><p>Manages communication for between two environments to provide the ability to inhibit a protein in the
 environment</p>
 <dl class="py method">
 <dt class="sig sig-object py" id="TORC.Inhibitor.get">
-<span class="sig-name descname"><span class="pre">get</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/TORC/source/Inhibitor.html#Inhibitor.get"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#TORC.Inhibitor.get" title="Permalink to this definition"></a></dt>
+<span class="sig-name descname"><span class="pre">get</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/TORC/source/Inhibitor.html#Inhibitor.get"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#TORC.Inhibitor.get" title="Link to this definition"></a></dt>
 <dd><p>Returns the amount to reduce both environments by due to annihilation.</p>
 <dl class="field-list simple">
-<dt class="field-odd">Returns</dt>
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
 <dd class="field-odd"><p>amount to reduce environment by, can not be more than the environments current content.</p>
 </dd>
-<dt class="field-even">Return type</dt>
-<dd class="field-even"><p><a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.11)">int</a></p>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p><a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.12)">int</a></p>
 </dd>
 </dl>
 </dd></dl>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="TORC.Inhibitor.send">
-<span class="sig-name descname"><span class="pre">send</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">u</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/TORC/source/Inhibitor.html#Inhibitor.send"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#TORC.Inhibitor.send" title="Permalink to this definition"></a></dt>
+<span class="sig-name descname"><span class="pre">send</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">u</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/TORC/source/Inhibitor.html#Inhibitor.send"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#TORC.Inhibitor.send" title="Link to this definition"></a></dt>
 <dd><p>Sends a value to the inhibitor, if it is still waiting on the second value nothing happens otherwise the result
 is calculated and returns using the queue</p>
 <section id="parameter">
-<h3>Parameter<a class="headerlink" href="#parameter" title="Permalink to this heading"></a></h3>
+<h3>Parameter<a class="headerlink" href="#parameter" title="Link to this heading"></a></h3>
 <dl class="simple">
 <dt>u<span class="classifier">int</span></dt><dd><p>current value of one of the environments</p>
 </dd>
@@ -404,74 +493,80 @@ is calculated and returns using the queue</p>
 
 </section>
 <section id="origin">
-<h2>Origin<a class="headerlink" href="#origin" title="Permalink to this heading"></a></h2>
+<h2>Origin<a class="headerlink" href="#origin" title="Link to this heading"></a></h2>
 <dl class="py class">
 <dt class="sig sig-object py" id="TORC.Origin">
-<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">TORC.</span></span><span class="sig-name descname"><span class="pre">Origin</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">label</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">local</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">sc_cw</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">sc_acw</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">init_coil</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/TORC/source/Origin.html#Origin"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#TORC.Origin" title="Permalink to this definition"></a></dt>
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">TORC.</span></span><span class="sig-name descname"><span class="pre">Origin</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">label</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">local</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">sc_cw</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">sc_acw</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/TORC/source/Origin.html#Origin"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#TORC.Origin" title="Link to this definition"></a></dt>
 <dd><p>Class for the origin of replication supercoiling barrier in plasmids. Acts as a solid barrier with no transmission
 of supercoiling. Checks that both given supercoiling regions exist.</p>
 <dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>label</strong> (<em>String</em>) – Name of the origin of replication, can be place holder to label which origin of replication is being used.</p></li>
 <li><p><strong>local</strong> (<a class="reference internal" href="ControlStructures.html#TORC.LocalArea" title="TORC.LocalArea"><em>LocalArea</em></a>) – The local area object holds information on local environments and supercoiling regions for a single circuit.</p></li>
 <li><p><strong>sc_cw</strong> (<em>Int</em>) – The index of the clockwise supercoiling region, should be the first supercoiling region in the plasmid.</p></li>
 <li><p><strong>sc_acw</strong> (<em>Int</em>) – The index of the anti-clockwise supercoiling region, should be the last supercoiling region in the plasmid.</p></li>
-<li><p><strong>init_coil</strong> (<em>Channel</em>) – The Channel for feeding coiling information to the clockwise (initial) supercoiling region. Is not currently
-used.</p></li>
 </ul>
 </dd>
 </dl>
 <dl class="py method">
-<dt class="sig sig-object py" id="TORC.Origin.update">
-<span class="sig-name descname"><span class="pre">update</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/TORC/source/Origin.html#Origin.update"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#TORC.Origin.update" title="Permalink to this definition"></a></dt>
-<dd><p>Currently the origin of replication performs no action other than defining a barrier between supercoiling
-regions. Its update therefore does nothing.</p>
+<dt class="sig sig-object py" id="TORC.Origin.barrier_check">
+<span class="sig-name descname"><span class="pre">barrier_check</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/TORC/source/Origin.html#Origin.barrier_check"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#TORC.Origin.barrier_check" title="Link to this definition"></a></dt>
+<dd><p>Reimplemented in subclasses, dictates if the barrier is open. If true then supercoiling exchange happens
+between the adjacent regions, else if false the barrier stops all supercoiling propagation.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>True return indicates supercoiling propagation, false barrier is active</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p>Boolean</p>
+</dd>
+</dl>
 </dd></dl>
 
 </dd></dl>
 
 </section>
 <section id="environment">
-<h2>Environment<a class="headerlink" href="#environment" title="Permalink to this heading"></a></h2>
+<h2>Environment<a class="headerlink" href="#environment" title="Link to this heading"></a></h2>
 <dl class="py class">
 <dt class="sig sig-object py" id="TORC.Environment">
-<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">TORC.</span></span><span class="sig-name descname"><span class="pre">Environment</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">label</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">local</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">content</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0.0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">decay_rate</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">input_queue</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">fluorescent</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">inhibitors</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/TORC/source/Environment.html#Environment"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#TORC.Environment" title="Permalink to this definition"></a></dt>
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">TORC.</span></span><span class="sig-name descname"><span class="pre">Environment</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">label</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">local</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">content</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0.0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">decay_rate</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">input_queue</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">fluorescent</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">inhibitors</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/TORC/source/Environment.html#Environment"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#TORC.Environment" title="Link to this definition"></a></dt>
 <dd><p>Environment class tracks presence of a protein in the environment. It signals out the current state of the protein
 in the environment and then updates the contents based on output from other components.</p>
 <dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>label</strong> (<em>String</em>) – The name of the protein being tracked.</p></li>
 <li><p><strong>local</strong> (<a class="reference internal" href="ControlStructures.html#TORC.LocalArea" title="TORC.LocalArea"><em>LocalArea</em></a>) – Tracks the supercoiling and proteins in the circuit</p></li>
-<li><p><strong>content</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.11)"><em>float</em></a>) – The current amount of protein in the environment.</p></li>
-<li><p><strong>decay_rate</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.11)"><em>float</em></a>) – The linear decay rate of the protein in the environment</p></li>
+<li><p><strong>content</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.12)"><em>float</em></a>) – The current amount of protein in the environment.</p></li>
+<li><p><strong>decay_rate</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.12)"><em>float</em></a>) – The linear decay rate of the protein in the environment</p></li>
 <li><p><strong>input_queue</strong> (<em>Queue</em>) – The signal channel for receiving additions of protein to the environment</p></li>
 </ul>
 </dd>
 </dl>
 <dl class="py method">
 <dt class="sig sig-object py" id="TORC.Environment.inhibit">
-<span class="sig-name descname"><span class="pre">inhibit</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/TORC/source/Environment.html#Environment.inhibit"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#TORC.Environment.inhibit" title="Permalink to this definition"></a></dt>
+<span class="sig-name descname"><span class="pre">inhibit</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/TORC/source/Environment.html#Environment.inhibit"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#TORC.Environment.inhibit" title="Link to this definition"></a></dt>
 <dd><p>Updates levels of proteins based on annihilation with an inhibitor.</p>
 </dd></dl>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="TORC.Environment.read_signal">
-<span class="sig-name descname"><span class="pre">read_signal</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/TORC/source/Environment.html#Environment.read_signal"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#TORC.Environment.read_signal" title="Permalink to this definition"></a></dt>
+<span class="sig-name descname"><span class="pre">read_signal</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/TORC/source/Environment.html#Environment.read_signal"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#TORC.Environment.read_signal" title="Link to this definition"></a></dt>
 <dd><p>Reads in any signals on the input queue to add to the current levels and then decays with a catch to prevent
 levels below 0.</p>
 </dd></dl>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="TORC.Environment.send_signal">
-<span class="sig-name descname"><span class="pre">send_signal</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/TORC/source/Environment.html#Environment.send_signal"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#TORC.Environment.send_signal" title="Permalink to this definition"></a></dt>
+<span class="sig-name descname"><span class="pre">send_signal</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/TORC/source/Environment.html#Environment.send_signal"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#TORC.Environment.send_signal" title="Link to this definition"></a></dt>
 <dd><p>Updates levels of proteins in the environment using the environment dictionary.</p>
 </dd></dl>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="TORC.Environment.update">
-<span class="sig-name descname"><span class="pre">update</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/TORC/source/Environment.html#Environment.update"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#TORC.Environment.update" title="Permalink to this definition"></a></dt>
+<span class="sig-name descname"><span class="pre">update</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/TORC/source/Environment.html#Environment.update"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#TORC.Environment.update" title="Link to this definition"></a></dt>
 <dd><p>Updates content of the environment by first sending the current state out and then by reading in new input to
 the environment.</p>
 </dd></dl>
@@ -480,33 +575,34 @@ the environment.</p>
 
 </section>
 <section id="visible">
-<h2>Visible<a class="headerlink" href="#visible" title="Permalink to this heading"></a></h2>
+<h2>Visible<a class="headerlink" href="#visible" title="Link to this heading"></a></h2>
 <dl class="py class">
 <dt class="sig sig-object py" id="TORC.Visible">
-<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">TORC.</span></span><span class="sig-name descname"><span class="pre">Visible</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">local</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/TORC/source/Visible.html#Visible"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#TORC.Visible" title="Permalink to this definition"></a></dt>
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">TORC.</span></span><span class="sig-name descname"><span class="pre">Visible</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">local</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/TORC/source/Visible.html#Visible"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#TORC.Visible" title="Link to this definition"></a></dt>
 <dd><p>Class provides component which tracks the colour of the visual output from any fluorescent proteins produced by the
 system.</p>
 <dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><p><strong>local</strong> (<a class="reference internal" href="ControlStructures.html#TORC.LocalArea" title="TORC.LocalArea"><em>LocalArea</em></a>) – Tracks the supercoiling and proteins in the circuit</p>
 </dd>
 </dl>
 <dl class="py method">
 <dt class="sig sig-object py" id="TORC.Visible.check_colour">
-<span class="sig-name descname"><span class="pre">check_colour</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/TORC/source/Visible.html#Visible.check_colour"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#TORC.Visible.check_colour" title="Permalink to this definition"></a></dt>
-<dd><p>Converts the rgb list created in read_signal to a string name of a colour.</p>
+<span class="sig-name descname"><span class="pre">check_colour</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/TORC/source/Visible.html#Visible.check_colour"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#TORC.Visible.check_colour" title="Link to this definition"></a></dt>
+<dd><p>Converts the rgb list created in read_signal to a string name of a colour. If it can’t match to a named colour
+it will set colour as “Undefined”</p>
 </dd></dl>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="TORC.Visible.read_signal">
-<span class="sig-name descname"><span class="pre">read_signal</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/TORC/source/Visible.html#Visible.read_signal"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#TORC.Visible.read_signal" title="Permalink to this definition"></a></dt>
+<span class="sig-name descname"><span class="pre">read_signal</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/TORC/source/Visible.html#Visible.read_signal"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#TORC.Visible.read_signal" title="Link to this definition"></a></dt>
 <dd><p>Reads in the signals from the 6 main colour components: red, blue, green, yellow, cyan, magenta. These are then
 combined for use.</p>
 </dd></dl>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="TORC.Visible.update">
-<span class="sig-name descname"><span class="pre">update</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/TORC/source/Visible.html#Visible.update"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#TORC.Visible.update" title="Permalink to this definition"></a></dt>
+<span class="sig-name descname"><span class="pre">update</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/TORC/source/Visible.html#Visible.update"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#TORC.Visible.update" title="Link to this definition"></a></dt>
 <dd><p>Read in signals from environment and updates colour name.</p>
 </dd></dl>
 

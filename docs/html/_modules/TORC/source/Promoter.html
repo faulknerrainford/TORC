@@ -1,21 +1,22 @@
 <!DOCTYPE html>
-<html class="writer-html5" lang="en" >
+<html class="writer-html5" lang="en" data-content_root="../../../">
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>TORC.source.Promoter &mdash; TORC alpha documentation</title>
-      <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
-      <link rel="stylesheet" href="../../../_static/css/theme.css" type="text/css" />
+      <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css?v=80d5e7a1" />
+      <link rel="stylesheet" type="text/css" href="../../../_static/css/theme.css?v=19f00094" />
+
+  
   <!--[if lt IE 9]>
     <script src="../../../_static/js/html5shiv.min.js"></script>
   <![endif]-->
   
-        <script data-url_root="../../../" id="documentation_options" src="../../../_static/documentation_options.js"></script>
-        <script src="../../../_static/jquery.js"></script>
-        <script src="../../../_static/underscore.js"></script>
-        <script src="../../../_static/_sphinx_javascript_frameworks_compat.js"></script>
-        <script src="../../../_static/doctools.js"></script>
-        <script src="../../../_static/sphinx_highlight.js"></script>
+        <script src="../../../_static/jquery.js?v=5d32c60e"></script>
+        <script src="../../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+        <script src="../../../_static/documentation_options.js?v=1f169f65"></script>
+        <script src="../../../_static/doctools.js?v=888ff710"></script>
+        <script src="../../../_static/sphinx_highlight.js?v=dc90522c"></script>
     <script src="../../../_static/js/theme.js"></script>
     <link rel="index" title="Index" href="../../../genindex.html" />
     <link rel="search" title="Search" href="../../../search.html" /> 
@@ -26,11 +27,15 @@
     <nav data-toggle="wy-nav-shift" class="wy-nav-side">
       <div class="wy-side-scroll">
         <div class="wy-side-nav-search" >
-            <a href="../../../index.html" class="icon icon-home"> TORC
+
+          
+          
+          <a href="../../../index.html" class="icon icon-home">
+            TORC
           </a>
 <div role="search">
   <form id="rtd-search-form" class="wy-form" action="../../../search.html" method="get">
-    <input type="text" name="q" placeholder="Search docs" />
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
     <input type="hidden" name="check_keywords" value="yes" />
     <input type="hidden" name="area" value="default" />
   </form>
@@ -57,7 +62,7 @@
         <div class="rst-content">
           <div role="navigation" aria-label="Page navigation">
   <ul class="wy-breadcrumbs">
-      <li><a href="../../../index.html" class="icon icon-home"></a></li>
+      <li><a href="../../../index.html" class="icon icon-home" aria-label="Home"></a></li>
           <li class="breadcrumb-item"><a href="../../index.html">Module code</a></li>
       <li class="breadcrumb-item active">TORC.source.Promoter</li>
       <li class="wy-breadcrumbs-aside">
@@ -69,8 +74,14 @@
            <div itemprop="articleBody">
              
   <h1>Source code for TORC.source.Promoter</h1><div class="highlight"><pre>
-<div class="viewcode-block" id="Promoter"><a class="viewcode-back" href="../../../code/Components.html#TORC.Promoter">[docs]</a><span></span><span class="k">class</span> <span class="nc">Promoter</span><span class="p">:</span>
-    <span class="sd">&quot;&quot;&quot;</span>
+<span></span><span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+<span class="kn">from</span> <span class="nn">scipy.stats</span> <span class="kn">import</span> <span class="n">norm</span>
+
+
+<div class="viewcode-block" id="Promoter">
+<a class="viewcode-back" href="../../../code/Components.html#TORC.Promoter">[docs]</a>
+<span class="k">class</span> <span class="nc">Promoter</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Promoter class increases the amount of protein in the local environment based on the current state of environmental</span>
 <span class="sd">    proteins and supercoiling. This includes the existence of proteins in the environment both promoting and repressing</span>
 <span class="sd">    expression.</span>
@@ -80,23 +91,38 @@
 <span class="sd">    label           :   String</span>
 <span class="sd">        Name of the protein being promoted used to ID, in case of multiple promoters of the same type name_i is used</span>
 <span class="sd">        to number the instances.</span>
-<span class="sd">    local       :   LocalArea</span>
+<span class="sd">    local           :   LocalArea</span>
 <span class="sd">        Tracks the supercoiling and proteins in the circuit</span>
 <span class="sd">    region          :   Int</span>
 <span class="sd">        The supercoiling region the promoter belongs to.</span>
-<span class="sd">    weak    :   float</span>
+<span class="sd">    weak            :   float</span>
 <span class="sd">        The rate of output when neutrally coiled</span>
 <span class="sd">    strong          :   float</span>
 <span class="sd">        The rate of output when negatively coiled</span>
-<span class="sd">    output_channel    :   JoinableQueue or Channel</span>
+<span class="sd">    output_channel  :   JoinableQueue or Channel</span>
 <span class="sd">        The channel to send output on to the environment component or supercoiling signals</span>
+<span class="sd">    fluorescent     :   Boolean</span>
+<span class="sd">        Indicates if the promoters gene produces RNA for a fluorescent protein</span>
+<span class="sd">    promote         :   Environment</span>
+<span class="sd">        Indicated a transcription factor which the promoter responds to by increasing production</span>
+<span class="sd">    repress         :   Environment</span>
+<span class="sd">        Indicates a transcription factor which the promoter responds to by decreasing production</span>
+<span class="sd">    threshold       :   float</span>
+<span class="sd">        Value used for threshold for transcription coiling</span>
+<span class="sd">    sc_sensitive    :   Boolean</span>
+<span class="sd">        Indicates if the promoter responds strongly to the supercoiling state</span>
+<span class="sd">    sc_rate         :   float</span>
+<span class="sd">        The rate at which the promoter and gene produce supercoiling (positive downstream, negative upstream)</span>
+<span class="sd">    clockwise       :   Boolean</span>
+<span class="sd">        Indicates the orientation of the promoter and gene on a plasmid (right on a genome)</span>
 <span class="sd">    &quot;&quot;&quot;</span>
 
     <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">label</span><span class="p">,</span> <span class="n">region</span><span class="p">,</span> <span class="n">local</span><span class="p">,</span> <span class="n">weak</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">strong</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">output_channel</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">fluorescent</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">promote</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
-                 <span class="n">repress</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">sc_sensitive</span><span class="o">=</span><span class="kc">True</span><span class="p">):</span>
+                 <span class="n">repress</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">sc_sensitive</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">sc_rate</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">clockwise</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">threshold</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">rate_dist</span><span class="o">=</span><span class="s2">&quot;threshold&quot;</span><span class="p">,</span>
+                 <span class="n">gradient</span><span class="o">=</span><span class="mi">1</span><span class="p">):</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">label</span> <span class="o">=</span> <span class="n">label</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">gene</span> <span class="o">=</span> <span class="n">label</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s2">&quot;_&quot;</span><span class="p">)[</span><span class="mi">0</span><span class="p">]</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">coil_state</span> <span class="o">=</span> <span class="s2">&quot;neutral&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">coil_state</span> <span class="o">=</span> <span class="mi">0</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">weak_signal</span> <span class="o">=</span> <span class="n">weak</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">strong_signal</span> <span class="o">=</span> <span class="n">strong</span>
         <span class="k">if</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">region</span><span class="p">,</span> <span class="nb">int</span><span class="p">):</span>
@@ -109,55 +135,146 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">local</span> <span class="o">=</span> <span class="n">local</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">promote</span> <span class="o">=</span> <span class="n">promote</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">repress</span> <span class="o">=</span> <span class="n">repress</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">threshold</span> <span class="o">=</span> <span class="n">threshold</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">sc_sensitive</span> <span class="o">=</span> <span class="n">sc_sensitive</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">sc_rate</span> <span class="o">=</span> <span class="n">sc_rate</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">clockwise</span> <span class="o">=</span> <span class="n">clockwise</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">rate_dist</span> <span class="o">=</span> <span class="n">rate_dist</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">gradient</span> <span class="o">=</span> <span class="n">gradient</span>
 
-<div class="viewcode-block" id="Promoter.update"><a class="viewcode-back" href="../../../code/Components.html#TORC.Promoter.update">[docs]</a>    <span class="k">def</span> <span class="nf">update</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;</span>
+<div class="viewcode-block" id="Promoter.update">
+<a class="viewcode-back" href="../../../code/Components.html#TORC.Promoter.update">[docs]</a>
+    <span class="k">def</span> <span class="nf">update</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Updates state of promoter including output to the environment and updating coil-state if changed.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">input_check</span><span class="p">()</span>
-        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">input_check</span><span class="p">():</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">output_signal</span><span class="p">(</span><span class="s2">&quot;strong&quot;</span><span class="p">)</span>
-        <span class="k">else</span><span class="p">:</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">output_signal</span><span class="p">(</span><span class="s2">&quot;weak&quot;</span><span class="p">)</span>
-            <span class="k">pass</span></div>
+        <span class="bp">self</span><span class="o">.</span><span class="n">state_update</span><span class="p">()</span>
+        <span class="n">status</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">input_check</span><span class="p">()</span>
+        <span class="n">output</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">rate_calc</span><span class="p">(</span><span class="n">status</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">output_signal</span><span class="p">(</span><span class="n">output</span><span class="p">)</span></div>
 
-<div class="viewcode-block" id="Promoter.input_check"><a class="viewcode-back" href="../../../code/Components.html#TORC.Promoter.input_check">[docs]</a>    <span class="k">def</span> <span class="nf">input_check</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">        Checks coiling signal and updates coil_state if it has changed.</span>
-<span class="sd">        Checks if repressor active -&gt; returns false</span>
-<span class="sd">        Checks if promoter protein present -&gt; returns true</span>
-<span class="sd">        Checks if supercoiling negative and sc_sensitive -&gt; returns true</span>
+
+<div class="viewcode-block" id="Promoter.state_update">
+<a class="viewcode-back" href="../../../code/Components.html#TORC.Promoter.state_update">[docs]</a>
+    <span class="k">def</span> <span class="nf">state_update</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Checks and updates the supercoiling state of the promoter.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="n">current_sc_state</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">local</span><span class="o">.</span><span class="n">get_supercoil</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">region</span><span class="p">)</span>
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">coil_state</span> <span class="o">!=</span> <span class="n">current_sc_state</span><span class="p">:</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">coil_state</span> <span class="o">=</span> <span class="n">current_sc_state</span>
-        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">repress</span><span class="p">:</span>
-            <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">local</span><span class="o">.</span><span class="n">get_environment</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">repress</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
-                <span class="k">return</span> <span class="kc">False</span>
-        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">promote</span><span class="p">:</span>
-            <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">local</span><span class="o">.</span><span class="n">get_environment</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">promote</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
-                <span class="k">return</span> <span class="kc">True</span>
-        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">coil_state</span> <span class="o">==</span> <span class="s2">&quot;negative&quot;</span><span class="p">:</span>
-            <span class="k">return</span> <span class="kc">True</span>
-        <span class="k">return</span> <span class="kc">False</span></div>
+            <span class="bp">self</span><span class="o">.</span><span class="n">coil_state</span> <span class="o">=</span> <span class="n">current_sc_state</span></div>
 
-<div class="viewcode-block" id="Promoter.output_signal"><a class="viewcode-back" href="../../../code/Components.html#TORC.Promoter.output_signal">[docs]</a>    <span class="k">def</span> <span class="nf">output_signal</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">strength</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;</span>
+
+<div class="viewcode-block" id="Promoter.input_check">
+<a class="viewcode-back" href="../../../code/Components.html#TORC.Promoter.input_check">[docs]</a>
+    <span class="k">def</span> <span class="nf">input_check</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Collects information on current state of transcription factors environments for repression, promotion and the</span>
+<span class="sd">        current supercoiling state of the promoter.</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        dict</span>
+<span class="sd">            dict with information on repression, promotion and supercoiling if relevant.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">status</span> <span class="o">=</span> <span class="p">{}</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">repress</span><span class="p">:</span>
+            <span class="n">status</span><span class="p">[</span><span class="s2">&quot;repress&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">local</span><span class="o">.</span><span class="n">get_environment</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">repress</span><span class="p">)</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">promote</span><span class="p">:</span>
+            <span class="n">status</span><span class="p">[</span><span class="s2">&quot;promote&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">local</span><span class="o">.</span><span class="n">get_environment</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">promote</span><span class="p">)</span>
+        <span class="n">status</span><span class="p">[</span><span class="s2">&quot;supercoiling&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">coil_state</span>
+        <span class="k">return</span> <span class="n">status</span></div>
+
+
+<div class="viewcode-block" id="Promoter.rate_calc">
+<a class="viewcode-back" href="../../../code/Components.html#TORC.Promoter.rate_calc">[docs]</a>
+    <span class="k">def</span> <span class="nf">rate_calc</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">status</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Calculate the rate of transcription based on repression, promotion and supercoiling levels.</span>
+
+<span class="sd">        Threshold</span>
+<span class="sd">        ----------</span>
+<span class="sd">        The threshold function acts as a digital switch between the weak and strong signal activated when a promoting</span>
+<span class="sd">        transcription factor is above the given threshold and the repressing transcription factor is not. (Unless the</span>
+<span class="sd">        promoter is supercoiling sensitive, in which case this is activated when supercoiling is below the threshold.)</span>
+
+<span class="sd">        Sigmoid</span>
+<span class="sd">        -------</span>
+
+<span class="sd">        Normal</span>
+<span class="sd">        ------</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        status  :   dict</span>
+<span class="sd">            dict with information on repression, promotion and supercoiling if relevant.</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        float</span>
+<span class="sd">            rate of transcription for output signal</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="c1"># TODO: add options based on mean and dist type and parameter for dist (pos second param needed) for poisson</span>
+        <span class="c1">#  dist, negative binomial</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">rate_dist</span> <span class="o">==</span> <span class="s2">&quot;threshold&quot;</span><span class="p">:</span>
+            <span class="c1"># threshold</span>
+            <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">sc_sensitive</span> <span class="ow">and</span> <span class="n">status</span><span class="p">[</span><span class="s2">&quot;supercoiling&quot;</span><span class="p">]</span> <span class="o">&lt;</span> <span class="bp">self</span><span class="o">.</span><span class="n">threshold</span><span class="p">:</span>
+                <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">strong_signal</span>
+            <span class="k">elif</span> <span class="s2">&quot;repress&quot;</span> <span class="ow">in</span> <span class="n">status</span><span class="o">.</span><span class="n">keys</span><span class="p">()</span> <span class="ow">and</span> <span class="n">status</span><span class="p">[</span><span class="s2">&quot;repress&quot;</span><span class="p">]</span> <span class="o">&gt;</span> <span class="bp">self</span><span class="o">.</span><span class="n">threshold</span><span class="p">:</span>
+                <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">weak_signal</span>
+            <span class="k">elif</span> <span class="s2">&quot;promote&quot;</span> <span class="ow">in</span> <span class="n">status</span><span class="o">.</span><span class="n">keys</span><span class="p">()</span> <span class="ow">and</span> <span class="n">status</span><span class="p">[</span><span class="s2">&quot;promote&quot;</span><span class="p">]</span> <span class="o">&gt;</span> <span class="bp">self</span><span class="o">.</span><span class="n">threshold</span><span class="p">:</span>
+                <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">strong_signal</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">weak_signal</span>
+        <span class="k">elif</span> <span class="bp">self</span><span class="o">.</span><span class="n">rate_dist</span> <span class="o">==</span> <span class="s2">&quot;sigmoid&quot;</span><span class="p">:</span>
+            <span class="c1"># sigmoid function</span>
+            <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">sc_sensitive</span><span class="p">:</span>
+                <span class="n">x</span> <span class="o">=</span> <span class="n">status</span><span class="p">[</span><span class="s2">&quot;supercoiling&quot;</span><span class="p">]</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="n">x</span> <span class="o">=</span> <span class="n">status</span><span class="p">[</span><span class="s2">&quot;promote&quot;</span><span class="p">]</span>
+            <span class="n">x_prime</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">gradient</span><span class="o">*</span><span class="n">x</span><span class="o">-</span><span class="bp">self</span><span class="o">.</span><span class="n">threshold</span>
+            <span class="n">y</span> <span class="o">=</span> <span class="mi">1</span><span class="o">/</span><span class="p">(</span><span class="mi">1</span> <span class="o">+</span> <span class="n">np</span><span class="o">.</span><span class="n">exp</span><span class="p">(</span><span class="o">-</span><span class="n">x_prime</span><span class="p">))</span>
+            <span class="n">y_range</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">strong_signal</span> <span class="o">-</span> <span class="bp">self</span><span class="o">.</span><span class="n">weak_signal</span>
+            <span class="n">y_prime</span> <span class="o">=</span> <span class="n">y</span><span class="o">*</span><span class="n">y_range</span> <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">weak_signal</span>
+            <span class="k">return</span> <span class="n">y_prime</span>
+        <span class="k">elif</span> <span class="bp">self</span><span class="o">.</span><span class="n">rate_dist</span> <span class="o">==</span> <span class="s2">&quot;normal&quot;</span><span class="p">:</span>
+            <span class="c1"># normal function</span>
+            <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">sc_sensitive</span><span class="p">:</span>
+                <span class="n">x</span> <span class="o">=</span> <span class="n">status</span><span class="p">[</span><span class="s2">&quot;supercoiling&quot;</span><span class="p">]</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="n">x</span> <span class="o">=</span> <span class="n">status</span><span class="p">[</span><span class="s2">&quot;promote&quot;</span><span class="p">]</span>
+            <span class="n">y</span> <span class="o">=</span> <span class="n">norm</span><span class="o">.</span><span class="n">pdf</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">threshold</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">gradient</span><span class="p">)</span><span class="o">*</span><span class="p">(</span><span class="mf">2.5</span><span class="o">*</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">strong_signal</span><span class="o">-</span><span class="bp">self</span><span class="o">.</span><span class="n">weak_signal</span><span class="p">))</span><span class="o">+</span><span class="bp">self</span><span class="o">.</span><span class="n">weak_signal</span>
+            <span class="k">return</span> <span class="n">y</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">weak_signal</span></div>
+
+
+<div class="viewcode-block" id="Promoter.output_signal">
+<a class="viewcode-back" href="../../../code/Components.html#TORC.Promoter.output_signal">[docs]</a>
+    <span class="k">def</span> <span class="nf">output_signal</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">strength</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Sends correct rate on the output channel</span>
 
 <span class="sd">        Parameters</span>
 <span class="sd">        ----------</span>
-<span class="sd">        strength    :   String</span>
-<span class="sd">            indicates if output signal is &quot;weak&quot; or &quot;strong&quot;.</span>
+<span class="sd">        strength    :   float</span>
+<span class="sd">            output strength, rate of transcription, also applied to rate of supercoiling</span>
 <span class="sd">        &quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">output_channel</span><span class="o">.</span><span class="n">put</span><span class="p">(</span><span class="n">strength</span><span class="p">)</span>
+        <span class="c1"># output + and - sc to region</span>
+        <span class="k">if</span> <span class="n">strength</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
+            <span class="n">sc_strength</span> <span class="o">=</span> <span class="n">strength</span> <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">sc_rate</span>
+            <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">clockwise</span><span class="p">:</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">local</span><span class="o">.</span><span class="n">get_supercoil_cw</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">region</span><span class="p">)</span><span class="o">.</span><span class="n">put</span><span class="p">(</span><span class="n">sc_strength</span><span class="p">)</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">local</span><span class="o">.</span><span class="n">get_supercoil_acw</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">region</span><span class="p">)</span><span class="o">.</span><span class="n">put</span><span class="p">(</span><span class="o">-</span><span class="mi">1</span><span class="o">*</span><span class="n">sc_strength</span><span class="p">)</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">local</span><span class="o">.</span><span class="n">get_supercoil_cw</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">region</span><span class="p">)</span><span class="o">.</span><span class="n">put</span><span class="p">(</span><span class="o">-</span><span class="mi">1</span><span class="o">*</span><span class="n">sc_strength</span><span class="p">)</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">local</span><span class="o">.</span><span class="n">get_supercoil_acw</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">region</span><span class="p">)</span><span class="o">.</span><span class="n">put</span><span class="p">(</span><span class="n">sc_strength</span><span class="p">)</span></div>
+</div>
 
-        <span class="k">if</span> <span class="n">strength</span> <span class="o">==</span> <span class="s2">&quot;weak&quot;</span><span class="p">:</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">output_channel</span><span class="o">.</span><span class="n">put</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">weak_signal</span><span class="p">)</span>
-        <span class="k">elif</span> <span class="n">strength</span> <span class="o">==</span> <span class="s2">&quot;strong&quot;</span><span class="p">:</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">output_channel</span><span class="o">.</span><span class="n">put</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">strong_signal</span><span class="p">)</span>
-        <span class="k">else</span><span class="p">:</span>
-            <span class="k">pass</span></div></div>
+
+
+
 </pre></div>
 
            </div>

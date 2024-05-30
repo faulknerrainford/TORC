@@ -1,21 +1,22 @@
 <!DOCTYPE html>
-<html class="writer-html5" lang="en" >
+<html class="writer-html5" lang="en" data-content_root="../../../">
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>TORC.source.LocalArea &mdash; TORC alpha documentation</title>
-      <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
-      <link rel="stylesheet" href="../../../_static/css/theme.css" type="text/css" />
+      <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css?v=80d5e7a1" />
+      <link rel="stylesheet" type="text/css" href="../../../_static/css/theme.css?v=19f00094" />
+
+  
   <!--[if lt IE 9]>
     <script src="../../../_static/js/html5shiv.min.js"></script>
   <![endif]-->
   
-        <script data-url_root="../../../" id="documentation_options" src="../../../_static/documentation_options.js"></script>
-        <script src="../../../_static/jquery.js"></script>
-        <script src="../../../_static/underscore.js"></script>
-        <script src="../../../_static/_sphinx_javascript_frameworks_compat.js"></script>
-        <script src="../../../_static/doctools.js"></script>
-        <script src="../../../_static/sphinx_highlight.js"></script>
+        <script src="../../../_static/jquery.js?v=5d32c60e"></script>
+        <script src="../../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+        <script src="../../../_static/documentation_options.js?v=1f169f65"></script>
+        <script src="../../../_static/doctools.js?v=888ff710"></script>
+        <script src="../../../_static/sphinx_highlight.js?v=dc90522c"></script>
     <script src="../../../_static/js/theme.js"></script>
     <link rel="index" title="Index" href="../../../genindex.html" />
     <link rel="search" title="Search" href="../../../search.html" /> 
@@ -26,11 +27,15 @@
     <nav data-toggle="wy-nav-shift" class="wy-nav-side">
       <div class="wy-side-scroll">
         <div class="wy-side-nav-search" >
-            <a href="../../../index.html" class="icon icon-home"> TORC
+
+          
+          
+          <a href="../../../index.html" class="icon icon-home">
+            TORC
           </a>
 <div role="search">
   <form id="rtd-search-form" class="wy-form" action="../../../search.html" method="get">
-    <input type="text" name="q" placeholder="Search docs" />
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
     <input type="hidden" name="check_keywords" value="yes" />
     <input type="hidden" name="area" value="default" />
   </form>
@@ -57,7 +62,7 @@
         <div class="rst-content">
           <div role="navigation" aria-label="Page navigation">
   <ul class="wy-breadcrumbs">
-      <li><a href="../../../index.html" class="icon icon-home"></a></li>
+      <li><a href="../../../index.html" class="icon icon-home" aria-label="Home"></a></li>
           <li class="breadcrumb-item"><a href="../../index.html">Module code</a></li>
       <li class="breadcrumb-item active">TORC.source.LocalArea</li>
       <li class="wy-breadcrumbs-aside">
@@ -70,29 +75,47 @@
              
   <h1>Source code for TORC.source.LocalArea</h1><div class="highlight"><pre>
 <span></span>
-<div class="viewcode-block" id="LocalArea"><a class="viewcode-back" href="../../../code/ControlStructures.html#TORC.LocalArea">[docs]</a><span class="k">class</span> <span class="nc">LocalArea</span><span class="p">:</span>
-    <span class="sd">&quot;&quot;&quot;</span>
+<div class="viewcode-block" id="LocalArea">
+<a class="viewcode-back" href="../../../code/ControlStructures.html#TORC.LocalArea">[docs]</a>
+<span class="k">class</span> <span class="nc">LocalArea</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Container for tracking supercoiling and environmental proteins in a plasmid circuit.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
 
     <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">supercoil_regions</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">clockwise_channels</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">anticlockwise_channels</span> <span class="o">=</span> <span class="p">[]</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">environments</span> <span class="o">=</span> <span class="p">{}</span>
 
-<div class="viewcode-block" id="LocalArea.add_supercoil"><a class="viewcode-back" href="../../../code/ControlStructures.html#TORC.LocalArea.add_supercoil">[docs]</a>    <span class="k">def</span> <span class="nf">add_supercoil</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;</span>
+<div class="viewcode-block" id="LocalArea.add_supercoil">
+<a class="viewcode-back" href="../../../code/ControlStructures.html#TORC.LocalArea.add_supercoil">[docs]</a>
+    <span class="k">def</span> <span class="nf">add_supercoil</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">cw_channel</span><span class="p">,</span> <span class="n">acw_channel</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Adds a new supercoiling region tracker to the circuit</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        cw_channel  :   Queue</span>
+<span class="sd">            queue for sending cw supercoiling signals to the new supercoiling region</span>
+<span class="sd">        acw_channel :   Queue</span>
+<span class="sd">            queue for sending acw supercoiling signals to the new supercoiling region</span>
 
 <span class="sd">        Returns</span>
 <span class="sd">        --------</span>
 <span class="sd">        ind</span>
 <span class="sd">            Index of the new supercoiling region.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">supercoil_regions</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">supercoil_regions</span> <span class="o">+</span> <span class="p">[</span><span class="s2">&quot;neutral&quot;</span><span class="p">]</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">supercoil_regions</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">supercoil_regions</span> <span class="o">+</span> <span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">clockwise_channels</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">clockwise_channels</span> <span class="o">+</span> <span class="p">[</span><span class="n">cw_channel</span><span class="p">]</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">anticlockwise_channels</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">anticlockwise_channels</span> <span class="o">+</span> <span class="p">[</span><span class="n">acw_channel</span><span class="p">]</span>
         <span class="k">return</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">supercoil_regions</span><span class="p">)</span><span class="o">-</span><span class="mi">1</span></div>
 
-<div class="viewcode-block" id="LocalArea.add_environment"><a class="viewcode-back" href="../../../code/ControlStructures.html#TORC.LocalArea.add_environment">[docs]</a>    <span class="k">def</span> <span class="nf">add_environment</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">label</span><span class="p">,</span> <span class="n">value</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;</span>
+
+<div class="viewcode-block" id="LocalArea.add_environment">
+<a class="viewcode-back" href="../../../code/ControlStructures.html#TORC.LocalArea.add_environment">[docs]</a>
+    <span class="k">def</span> <span class="nf">add_environment</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">label</span><span class="p">,</span> <span class="n">value</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Adds a new protein tracker to the circuit.</span>
 
 <span class="sd">        Parameters</span>
@@ -104,8 +127,11 @@
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">environments</span><span class="p">[</span><span class="n">label</span><span class="p">]</span> <span class="o">=</span> <span class="n">value</span></div>
 
-<div class="viewcode-block" id="LocalArea.set_supercoil"><a class="viewcode-back" href="../../../code/ControlStructures.html#TORC.LocalArea.set_supercoil">[docs]</a>    <span class="k">def</span> <span class="nf">set_supercoil</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">ind</span><span class="p">,</span> <span class="n">value</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;</span>
+
+<div class="viewcode-block" id="LocalArea.set_supercoil">
+<a class="viewcode-back" href="../../../code/ControlStructures.html#TORC.LocalArea.set_supercoil">[docs]</a>
+    <span class="k">def</span> <span class="nf">set_supercoil</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">ind</span><span class="p">,</span> <span class="n">value</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Update the state of a supercoil region</span>
 
 <span class="sd">        Parameters</span>
@@ -117,24 +143,68 @@
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">supercoil_regions</span><span class="p">[</span><span class="n">ind</span><span class="p">]</span> <span class="o">=</span> <span class="n">value</span></div>
 
-<div class="viewcode-block" id="LocalArea.get_supercoil"><a class="viewcode-back" href="../../../code/ControlStructures.html#TORC.LocalArea.get_supercoil">[docs]</a>    <span class="k">def</span> <span class="nf">get_supercoil</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">ind</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;</span>
+
+<div class="viewcode-block" id="LocalArea.get_supercoil">
+<a class="viewcode-back" href="../../../code/ControlStructures.html#TORC.LocalArea.get_supercoil">[docs]</a>
+    <span class="k">def</span> <span class="nf">get_supercoil</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">ind</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Get the current state of a supercoiling region</span>
 
 <span class="sd">        Parameters</span>
 <span class="sd">        ----------</span>
 <span class="sd">        ind     : int</span>
-<span class="sd">            Index of teh supercoiling region wanted</span>
+<span class="sd">            Index of the supercoiling region wanted</span>
 
 <span class="sd">        Returns</span>
 <span class="sd">        -------</span>
-<span class="sd">        String</span>
+<span class="sd">        float</span>
 <span class="sd">            Current state of supercoiling in the system</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">supercoil_regions</span><span class="p">[</span><span class="n">ind</span><span class="p">]</span></div>
 
-<div class="viewcode-block" id="LocalArea.set_environment"><a class="viewcode-back" href="../../../code/ControlStructures.html#TORC.LocalArea.set_environment">[docs]</a>    <span class="k">def</span> <span class="nf">set_environment</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">label</span><span class="p">,</span> <span class="n">value</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;</span>
+
+<div class="viewcode-block" id="LocalArea.get_supercoil_cw">
+<a class="viewcode-back" href="../../../code/ControlStructures.html#TORC.LocalArea.get_supercoil_cw">[docs]</a>
+    <span class="k">def</span> <span class="nf">get_supercoil_cw</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">ind</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Get the cw channel of the supercoiling region</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        ind : int</span>
+<span class="sd">            Index of the supercoiling region wanted</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        Queue</span>
+<span class="sd">            The queue for updating clockwise supercoiling for the requested region</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">clockwise_channels</span><span class="p">[</span><span class="n">ind</span><span class="p">]</span></div>
+
+
+<div class="viewcode-block" id="LocalArea.get_supercoil_acw">
+<a class="viewcode-back" href="../../../code/ControlStructures.html#TORC.LocalArea.get_supercoil_acw">[docs]</a>
+    <span class="k">def</span> <span class="nf">get_supercoil_acw</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">ind</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Get the acw channel of the supercoiling region</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        ind : int</span>
+<span class="sd">            Index of the supercoiling region wanted</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        Queue</span>
+<span class="sd">            The queue for updating anticlockwise supercoiling for the requested region</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">anticlockwise_channels</span><span class="p">[</span><span class="n">ind</span><span class="p">]</span></div>
+
+
+<div class="viewcode-block" id="LocalArea.set_environment">
+<a class="viewcode-back" href="../../../code/ControlStructures.html#TORC.LocalArea.set_environment">[docs]</a>
+    <span class="k">def</span> <span class="nf">set_environment</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">label</span><span class="p">,</span> <span class="n">value</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Update the state of a protein</span>
 
 <span class="sd">        Parameters</span>
@@ -146,8 +216,11 @@
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">environments</span><span class="p">[</span><span class="n">label</span><span class="p">]</span> <span class="o">=</span> <span class="n">value</span></div>
 
-<div class="viewcode-block" id="LocalArea.get_environment"><a class="viewcode-back" href="../../../code/ControlStructures.html#TORC.LocalArea.get_environment">[docs]</a>    <span class="k">def</span> <span class="nf">get_environment</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">label</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;</span>
+
+<div class="viewcode-block" id="LocalArea.get_environment">
+<a class="viewcode-back" href="../../../code/ControlStructures.html#TORC.LocalArea.get_environment">[docs]</a>
+    <span class="k">def</span> <span class="nf">get_environment</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">label</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Get the current level of protein in the environment</span>
 
 <span class="sd">        Parameters</span>
@@ -162,8 +235,11 @@
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">environments</span><span class="p">[</span><span class="n">label</span><span class="p">]</span></div>
 
-<div class="viewcode-block" id="LocalArea.get_keys"><a class="viewcode-back" href="../../../code/ControlStructures.html#TORC.LocalArea.get_keys">[docs]</a>    <span class="k">def</span> <span class="nf">get_keys</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;</span>
+
+<div class="viewcode-block" id="LocalArea.get_keys">
+<a class="viewcode-back" href="../../../code/ControlStructures.html#TORC.LocalArea.get_keys">[docs]</a>
+    <span class="k">def</span> <span class="nf">get_keys</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Gets list of proteins currently being tracked by the environment</span>
 
 <span class="sd">        Returns</span>
@@ -171,7 +247,9 @@
 <span class="sd">        List&lt;String&gt;</span>
 <span class="sd">            The names of all proteins currently tracked in the environment.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
-        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">environments</span><span class="o">.</span><span class="n">keys</span><span class="p">()</span></div></div>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">environments</span><span class="o">.</span><span class="n">keys</span><span class="p">()</span></div>
+</div>
+
 </pre></div>
 
            </div>

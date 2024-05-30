@@ -1,21 +1,22 @@
 <!DOCTYPE html>
-<html class="writer-html5" lang="en" >
+<html class="writer-html5" lang="en" data-content_root="../../../">
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>TORC.source.GenetetA &mdash; TORC alpha documentation</title>
-      <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
-      <link rel="stylesheet" href="../../../_static/css/theme.css" type="text/css" />
+      <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css?v=80d5e7a1" />
+      <link rel="stylesheet" type="text/css" href="../../../_static/css/theme.css?v=19f00094" />
+
+  
   <!--[if lt IE 9]>
     <script src="../../../_static/js/html5shiv.min.js"></script>
   <![endif]-->
   
-        <script data-url_root="../../../" id="documentation_options" src="../../../_static/documentation_options.js"></script>
-        <script src="../../../_static/jquery.js"></script>
-        <script src="../../../_static/underscore.js"></script>
-        <script src="../../../_static/_sphinx_javascript_frameworks_compat.js"></script>
-        <script src="../../../_static/doctools.js"></script>
-        <script src="../../../_static/sphinx_highlight.js"></script>
+        <script src="../../../_static/jquery.js?v=5d32c60e"></script>
+        <script src="../../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+        <script src="../../../_static/documentation_options.js?v=1f169f65"></script>
+        <script src="../../../_static/doctools.js?v=888ff710"></script>
+        <script src="../../../_static/sphinx_highlight.js?v=dc90522c"></script>
     <script src="../../../_static/js/theme.js"></script>
     <link rel="index" title="Index" href="../../../genindex.html" />
     <link rel="search" title="Search" href="../../../search.html" /> 
@@ -26,11 +27,15 @@
     <nav data-toggle="wy-nav-shift" class="wy-nav-side">
       <div class="wy-side-scroll">
         <div class="wy-side-nav-search" >
-            <a href="../../../index.html" class="icon icon-home"> TORC
+
+          
+          
+          <a href="../../../index.html" class="icon icon-home">
+            TORC
           </a>
 <div role="search">
   <form id="rtd-search-form" class="wy-form" action="../../../search.html" method="get">
-    <input type="text" name="q" placeholder="Search docs" />
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
     <input type="hidden" name="check_keywords" value="yes" />
     <input type="hidden" name="area" value="default" />
   </form>
@@ -57,7 +62,7 @@
         <div class="rst-content">
           <div role="navigation" aria-label="Page navigation">
   <ul class="wy-breadcrumbs">
-      <li><a href="../../../index.html" class="icon icon-home"></a></li>
+      <li><a href="../../../index.html" class="icon icon-home" aria-label="Home"></a></li>
           <li class="breadcrumb-item"><a href="../../index.html">Module code</a></li>
       <li class="breadcrumb-item active">TORC.source.GenetetA</li>
       <li class="wy-breadcrumbs-aside">
@@ -69,31 +74,73 @@
            <div itemprop="articleBody">
              
   <h1>Source code for TORC.source.GenetetA</h1><div class="highlight"><pre>
-<span></span><span class="kn">from</span> <span class="nn">TORC</span> <span class="kn">import</span> <span class="n">SignalError</span><span class="p">,</span> <span class="n">SendingError</span><span class="p">,</span> <span class="n">Promoter</span>
+<span></span><span class="kn">from</span> <span class="nn">TORC</span> <span class="kn">import</span> <span class="n">Promoter</span><span class="p">,</span> <span class="n">Barrier</span>
 
 
-<div class="viewcode-block" id="GenetetA"><a class="viewcode-back" href="../../../code/Components.html#TORC.GenetetA">[docs]</a><span class="k">class</span> <span class="nc">GenetetA</span><span class="p">(</span><span class="n">Promoter</span><span class="p">):</span>
-    <span class="sd">&quot;&quot;&quot;</span>
+<div class="viewcode-block" id="GenetetA">
+<a class="viewcode-back" href="../../../code/Components.html#TORC.GenetetA">[docs]</a>
+<span class="k">class</span> <span class="nc">GenetetA</span><span class="p">(</span><span class="n">Promoter</span><span class="p">,</span> <span class="n">Barrier</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Gene component, causes supercoiling for region attached by Channel.</span>
 
 <span class="sd">    Parameters</span>
 <span class="sd">    ----------</span>
-<span class="sd">    channel: ChannelEnd</span>
-<span class="sd">        channel and event used to signal the supercoiling region clockwise of the gene. Matching end should be provided</span>
-<span class="sd">        as the receiving channel to supercoil.</span>
-<span class="sd">    supercoil_region: int</span>
+<span class="sd">    channel                 :   Queue</span>
+<span class="sd">        Queue to output supercoiling</span>
+<span class="sd">    cw_supercoil_region     :   Supercoil</span>
+<span class="sd">        Region of supercoiling negative supercoiling is generated in, this is the region clockwise of the gene.</span>
+<span class="sd">    acw_supercoil_region    :   Supercoil</span>
 <span class="sd">        Region of supercoiling the gene is in, this is the region anti-clockwise of the gene.</span>
-<span class="sd">    local       :   LocalArea</span>
+<span class="sd">    local                   :   LocalArea</span>
 <span class="sd">        Tracks the supercoiling and proteins in the circuit</span>
+<span class="sd">    sc_strength             :   int</span>
+<span class="sd">        The amount of supercoiling to generate upstream</span>
+<span class="sd">    clockwise               :   Boolean</span>
+<span class="sd">        The orientation of the gene, defaults to anticlockwise, if modified cw and acw sc regions need to be</span>
+<span class="sd">        the other way around</span>
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="n">gene_instance_count</span> <span class="o">=</span> <span class="mi">0</span>
 
-    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">channel</span><span class="p">,</span> <span class="n">supercoil_region</span><span class="p">,</span> <span class="n">local</span><span class="p">):</span>
-        <span class="nb">super</span><span class="p">(</span><span class="n">GenetetA</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="s2">&quot;tetA&quot;</span><span class="p">,</span> <span class="n">supercoil_region</span><span class="p">,</span> <span class="n">local</span><span class="p">,</span> <span class="n">output_channel</span><span class="o">=</span><span class="n">channel</span><span class="p">)</span>
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">channel</span><span class="p">,</span> <span class="n">cw_supercoil_region</span><span class="p">,</span> <span class="n">acw_supercoil_region</span><span class="p">,</span> <span class="n">local</span><span class="p">,</span> <span class="n">sc_strength</span><span class="o">=-</span><span class="mi">1</span><span class="p">,</span> <span class="n">clockwise</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
+        <span class="k">if</span> <span class="n">clockwise</span><span class="p">:</span>
+            <span class="n">Promoter</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="s2">&quot;tetA&quot;</span><span class="p">,</span> <span class="n">cw_supercoil_region</span><span class="o">.</span><span class="n">supercoiling_region</span><span class="p">,</span> <span class="n">local</span><span class="p">,</span> <span class="n">clockwise</span><span class="o">=</span><span class="n">clockwise</span><span class="p">,</span>
+                              <span class="n">output_channel</span><span class="o">=</span><span class="n">local</span><span class="o">.</span><span class="n">get_supercoil_acw</span><span class="p">(</span><span class="n">acw_supercoil_region</span><span class="o">.</span><span class="n">supercoiling_region</span><span class="p">))</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">Promoter</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="s2">&quot;tetA&quot;</span><span class="p">,</span> <span class="n">acw_supercoil_region</span><span class="o">.</span><span class="n">supercoiling_region</span><span class="p">,</span> <span class="n">local</span><span class="p">,</span> <span class="n">clockwise</span><span class="o">=</span><span class="n">clockwise</span><span class="p">,</span>
+                              <span class="n">output_channel</span><span class="o">=</span><span class="n">local</span><span class="o">.</span><span class="n">get_supercoil_cw</span><span class="p">(</span><span class="n">cw_supercoil_region</span><span class="o">.</span><span class="n">supercoiling_region</span><span class="p">))</span>
+        <span class="n">Barrier</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">local</span><span class="p">,</span> <span class="n">cw_sc_region</span><span class="o">=</span><span class="n">cw_supercoil_region</span><span class="p">,</span> <span class="n">acw_sc_region</span><span class="o">=</span><span class="n">acw_supercoil_region</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">id</span> <span class="o">=</span> <span class="s2">&quot;Gene_&quot;</span> <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">label</span> <span class="o">+</span> <span class="s2">&quot;_&quot;</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="n">GenetetA</span><span class="o">.</span><span class="n">gene_instance_count</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">sc_strength</span> <span class="o">=</span> <span class="n">sc_strength</span>
 
-<div class="viewcode-block" id="GenetetA.output_signal"><a class="viewcode-back" href="../../../code/Components.html#TORC.GenetetA.output_signal">[docs]</a>    <span class="k">def</span> <span class="nf">output_signal</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">strength</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;</span>
+<div class="viewcode-block" id="GenetetA.update">
+<a class="viewcode-back" href="../../../code/Components.html#TORC.GenetetA.update">[docs]</a>
+    <span class="k">def</span> <span class="nf">update</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="n">Promoter</span><span class="o">.</span><span class="n">update</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span>
+        <span class="n">Barrier</span><span class="o">.</span><span class="n">update</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="GenetetA.barrier_check">
+<a class="viewcode-back" href="../../../code/Components.html#TORC.GenetetA.barrier_check">[docs]</a>
+    <span class="k">def</span> <span class="nf">barrier_check</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="kc">False</span></div>
+
+
+<div class="viewcode-block" id="GenetetA.input_check">
+<a class="viewcode-back" href="../../../code/Components.html#TORC.GenetetA.input_check">[docs]</a>
+    <span class="k">def</span> <span class="nf">input_check</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="p">{</span><span class="s2">&quot;promote&quot;</span><span class="p">:</span> <span class="mi">1</span><span class="p">}</span></div>
+
+
+<div class="viewcode-block" id="GenetetA.rate_calc">
+<a class="viewcode-back" href="../../../code/Components.html#TORC.GenetetA.rate_calc">[docs]</a>
+    <span class="k">def</span> <span class="nf">rate_calc</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">status</span><span class="p">):</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">strong_signal</span></div>
+
+
+<div class="viewcode-block" id="GenetetA.output_signal">
+<a class="viewcode-back" href="../../../code/Components.html#TORC.GenetetA.output_signal">[docs]</a>
+    <span class="k">def</span> <span class="nf">output_signal</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">strength</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Sends negative signal to supercoil via provided channel. Waits for confirmation of receipt before exit.</span>
 
 <span class="sd">        Raises</span>
@@ -101,10 +148,9 @@
 <span class="sd">        SendingError: SignalError</span>
 <span class="sd">            Indicated the signal was not received and so was cleared from pipe.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
-        <span class="k">try</span><span class="p">:</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">output_channel</span><span class="o">.</span><span class="n">send</span><span class="p">(</span><span class="s2">&quot;negative&quot;</span><span class="p">)</span>
-        <span class="k">except</span> <span class="n">SignalError</span><span class="p">:</span>
-            <span class="k">raise</span> <span class="n">SendingError</span></div></div>
+        <span class="bp">self</span><span class="o">.</span><span class="n">output_channel</span><span class="o">.</span><span class="n">put</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">sc_strength</span><span class="p">)</span></div>
+</div>
+
 </pre></div>
 
            </div>

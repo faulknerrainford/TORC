@@ -2,12 +2,27 @@
 Replication
 ################
 
-For all publications we provide details on the replication of the results and their anaylsis.
-Distribuitions for each publication are listed by the relavant version of TORC for pip install.
+For all publications we provide details on the replication of the results and their analysis.
+Distributions for each publication are listed by the relevant version of TORC for pip install or via git.
 
-#### TABLE OF PAPERS AND VERSIONS #####
+.. list-table:: Papers
+   :widths: 25 25 50
+   :header-rows: 1
 
-The detailed replicatoion instructions are given:
+   * - Paper
+     - Git Branch
+     - Pip Install?
+   * - Alife 2024
+     - TORC-ALife-2024
+     - N
 
-##### CONTENTS LIST LINKING SEPARATE PAGES FOR REPLICATION OF EACH PAPER ########
+The detailed replication instructions are given:
+
+.. toctree::
+   :maxdepth: 2
+   :caption: Replication:
+
+   replication/ALife2024
+
+
 
