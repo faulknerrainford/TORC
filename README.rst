@@ -1,4 +1,4 @@
-RandomBooleanCircuits
+TORC ALife 2024
 =================================================
 
 This package was built to explore plasmid circuits for synthetic biology. Using and abstract model of supercoiling and
