@@ -37,11 +37,14 @@ class Promoter:
         The rate at which the promoter and gene produce supercoiling (positive downstream, negative upstream)
     clockwise       :   Boolean
         Indicates the orientation of the promoter and gene on a plasmid (right on a genome)
+    terminator      :   Boolean or String
+        Indicates if the gene connected to the promoter has a terminator, if string provides the label of the barrier to
+        be checked
     """
 
     def __init__(self, label, region, local, weak=0, strong=1, output_channel=None, fluorescent=False, promote=None,
                  repress=None, sc_sensitive=True, sc_rate=0, clockwise=True, threshold=0, rate_dist="threshold",
-                 gradient=1):
+                 gradient=1, terminator=True):
         self.label = label
         self.gene = label.split("_")[0]
         self.coil_state = 0
@@ -63,6 +66,14 @@ class Promoter:
         self.clockwise = clockwise
         self.rate_dist = rate_dist
         self.gradient = gradient
+        self.terminator = terminator
+        # TODO: if no terminator set up read_through buffer
+        if not self.terminator:
+            self.output_read_through = None  # TODO: IMPORTANT
+        else:
+            self.output_read_through = None
+        self.input_read_through = None
+        # TODO: add repressor channel check
 
     def update(self):
         """
@@ -77,6 +88,7 @@ class Promoter:
         """
         Checks and updates the supercoiling state of the promoter.
         """
+
         current_sc_state = self.local.get_supercoil(self.region)
         if self.coil_state != current_sc_state:
             self.coil_state = current_sc_state
@@ -89,11 +101,12 @@ class Promoter:
         Returns
         -------
         dict
-            dict with information on repression, promotion and supercoiling if relevant.
+            Dictionary with information on repression, promotion and supercoiling if relevant.
         """
         status = {}
         if self.repress:
             status["repress"] = self.local.get_environment(self.repress)
+        # TODO: add read through check and read through status
         if self.promote:
             status["promote"] = self.local.get_environment(self.promote)
         status["supercoiling"] = self.coil_state
@@ -118,7 +131,7 @@ class Promoter:
         Parameters
         ----------
         status  :   dict
-            dict with information on repression, promotion and supercoiling if relevant.
+            Dictionary with information on repression, promotion and supercoiling if relevant.
 
         Returns
         -------
@@ -127,6 +140,11 @@ class Promoter:
         """
         # TODO: add options based on mean and dist type and parameter for dist (pos second param needed) for poisson
         #  dist, negative binomial
+        # TODO: update repress/promote and signalling based on read through
+        # TODO: check read through
+        #  if read through clear queue
+        #  if not repress return no signal
+        #  else see rest of function
         if self.rate_dist == "threshold":
             # threshold
             if self.sc_sensitive and status["supercoiling"] < self.threshold:
@@ -172,6 +190,7 @@ class Promoter:
         # output + and - sc to region
         if strength > 0:
             sc_strength = strength * self.sc_rate
+            # TODO: output read through buffer, with checks for terminators and barriers
             if self.clockwise:
                 self.local.get_supercoil_cw(self.region).put(sc_strength)
                 self.local.get_supercoil_acw(self.region).put(-1*sc_strength)
@@ -179,5 +198,6 @@ class Promoter:
                 self.local.get_supercoil_cw(self.region).put(-1*sc_strength)
                 self.local.get_supercoil_acw(self.region).put(sc_strength)
 
-
-
+        def add_read_through_check(self, buffer):
+            # TODO: add ability to add a buffer for promoter to check for read through interrupts from other promoter.
+            pass

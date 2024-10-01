@@ -3,7 +3,7 @@ from TORC import Supercoil
 
 
 class Barrier:
-    def __init__(self, local, cw_sc_region, acw_sc_region):
+    def __init__(self, local, cw_sc_region, acw_sc_region, label=None):
         """
         Barriers are components that can stop the propagation of supercoiling.
 
@@ -15,6 +15,8 @@ class Barrier:
             The integer index of the supercoiling region clockwise(right) of the barrier
         acw_sc_region   :   Supercoil
             The integer index of the supercoiling region anticlockwise(left) of the barrier
+        label            :   String
+            The label of the barrier for listing in the local region.
         """
         if not isinstance(cw_sc_region, Supercoil):
             raise TypeError("clockwise region not a supercoil")
@@ -23,6 +25,7 @@ class Barrier:
         self.cw_region = cw_sc_region
         self.acw_region = acw_sc_region
         self.local = local
+        # TODO: add barrier to local and set barrier check
 
     def update(self):
         """
@@ -31,6 +34,7 @@ class Barrier:
         """
         if self.barrier_check():
             self.sc_exchange()
+            # TODO: update barrier listing in local
             pass
 
     @abc.abstractmethod

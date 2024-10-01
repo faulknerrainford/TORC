@@ -9,6 +9,7 @@ class LocalArea:
         self.clockwise_channels = []
         self.anticlockwise_channels = []
         self.environments = {}
+        self.barriers = {}
 
     def add_supercoil(self, cw_channel, acw_channel):
         """

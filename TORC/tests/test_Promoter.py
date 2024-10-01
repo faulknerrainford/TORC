@@ -67,7 +67,7 @@ class TestPromoter(TestCase):
         test_out_queue = Queue()
         promoter = Promoter("leu500", supercoil.supercoiling_region, local, output_channel=test_out_queue,
                             promote="protein", sc_sensitive=False)
-        protein = Environment("protein", local, content=10)
+        Environment("protein", local, content=10)
         ret = promoter.input_check()
         self.assertEqual(10, ret["promote"], "protein promoter check failed")
 
@@ -80,7 +80,7 @@ class TestPromoter(TestCase):
         promoter = Promoter("leu500", supercoil.supercoiling_region, local, output_channel=test_out_queue,
                             promote="protein", repress="repressor", sc_sensitive=False)
         repressor = Environment("repressor", local, content=10)
-        protein = Environment("protein", local, content=10)
+        Environment("protein", local, content=10)
         ret = promoter.input_check()
         self.assertEqual(10, ret["repress"], "repressor check failed with content")
         repressor.content = 0
@@ -161,9 +161,23 @@ class TestPromoter(TestCase):
                             rate_dist="normal", threshold=0.5, sc_sensitive=False)
         self.assertLess(promoter.rate_calc({"promote": 0}), 1, "Incorrect for below mean, normal")
         self.assertLess(promoter.rate_calc({"promote": 1}), 1, "Incorrect for above mean, normal")
-        self.assertAlmostEqual(1, promoter.rate_calc({"promote": 0.5}), 1, "Incorrect for at mean, normal")
+        # noinspection PyTypeChecker
+        self.assertAlmostEqual(1, promoter.rate_calc({"promote": 0.5}), 1,
+                               "Incorrect for at mean, normal")
         promoter = Promoter("red", supercoil.supercoiling_region, local, weak=0.2, strong=0.8,
                             output_channel=test_out_queue, rate_dist="normal", threshold=0.5, sc_sensitive=False)
         self.assertLess(promoter.rate_calc({"promote": 0}), 0.8, "Incorrect for below mean, scaled normal")
         self.assertLess(promoter.rate_calc({"promote": 1}), 0.8, "Incorrect for above mean, scaled normal")
         self.assertAlmostEqual(0.8, promoter.rate_calc({"promote": 0.5}), 2, "Incorrect for at mean, scaled normal")
+
+    def test_read_through_setup(self):
+        self.fail()
+
+    def test_add_read_through_check(self):
+        self.fail()
+
+    def test_read_though_output(self):
+        self.fail()
+
+    def test_read_through_check(self):
+        self.fail()
