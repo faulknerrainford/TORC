@@ -135,7 +135,7 @@ class LocalArea:
         """
         return self.environments[label]
 
-    def get_keys(self):
+    def get_environment_keys(self):
         """
         Gets list of proteins currently being tracked by the environment
 
@@ -145,3 +145,45 @@ class LocalArea:
             The names of all proteins currently tracked in the environment.
         """
         return self.environments.keys()
+
+    def set_barrier(self, label, state):
+        """
+        Update the state of a barrier
+
+        Parameters
+        ----------
+        label   :   String
+            Name of barrier
+        state   :   String
+            Value of protein in the environment
+        """
+        self.barriers[label] = state
+
+    def get_barrier(self, label):
+        """
+        Get the current level of protein in the environment
+
+        Parameters
+        ----------
+        label   :   String
+            Nome of protein or colour of protein
+
+        Returns
+        ---------
+        String
+            Current state of barrier
+        """
+        return self.barriers[label]
+
+    def get_keys(self):
+        """
+        Gets list of barriers currently being tracked
+
+        Returns
+        --------
+        List<String>
+            The names of all barriers currently tracked.
+        """
+        return self.environments.keys()
+
+

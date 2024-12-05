@@ -25,7 +25,8 @@ class Barrier:
         self.cw_region = cw_sc_region
         self.acw_region = acw_sc_region
         self.local = local
-        # TODO: add barrier to local and set barrier check
+        self.label = label
+        local.barriers[self.label] = False
 
     def update(self):
         """
@@ -34,8 +35,12 @@ class Barrier:
         """
         if self.barrier_check():
             self.sc_exchange()
-            # TODO: update barrier listing in local
-            pass
+            # update barrier listing in local
+            if self.label:
+                self.local.barriers[self.label] = False
+        else:
+            if self.label:
+                self.local.barriers[self.label] = True
 
     @abc.abstractmethod
     def barrier_check(self):
@@ -49,6 +54,7 @@ class Barrier:
             True return indicates supercoiling propagation, false barrier is active
 
         """
+        self.local.barriers[self.label] = False
         return False
 
     def sc_exchange(self):

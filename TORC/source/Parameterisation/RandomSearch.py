@@ -33,6 +33,8 @@ def partial_circuit(duration, parameters, output_file=None, promoter_curve="thre
 
     Returns
     -------
+    dataframe
+        Log data from the run with the time, parameters, current supercoiling and current environment values.
 
     """
     cols = ["time", "tetA_sc_rate", "Blue_sc_rate", "Blue_response", "Blue_gradient", "Blue_strong", "Blue_weak",
@@ -106,6 +108,140 @@ def full_circuit(duration, parameters, output_file=None, promoter_curve="thresho
     return df
 
 
+def process_circuit(duration, parameters, output_file=None, output_file_comb=None, promoter_curve="sigmoid"):
+    """
+    Generates a circuit including tetA, mhYFP, and PleuWT promoter. It runs the circuit for the given
+    duration and writes the results after each timestep to a dataframe. At the end of the run this is appeneded to
+    the output_file. The output includes the parameter settings and the supercoiling in the promoters region and
+    environment value of yellow fluorescence. This is the circuit used to parameterise our process testing plasmid.
+
+    Parameters
+    ----------
+    duration        :   int
+        Number of timesteps to run circuit for.
+    parameters      :   List<float>
+        List of parameter values for the circuit:
+            +   tetA supercoiling production rate
+            +   mhYFP supercoiling production rate
+            +   PleuWT supercoiling response threshold
+            +   mhYFP max output
+            +   mhYFP min output
+            +   rate of supercoiling relaxation due to topoisomerases
+    output_file     :   String
+        Filename to append dataframe to.
+    output_file_comb:   String
+        Filename to append combined dataframe to.
+    promoter_curve  :   String
+        Type of curve used to determine rate in promoter
+
+
+    Returns
+    -------
+    dataframe
+        Log data from the run with the time, parameters, current supercoiling and current environment values.
+
+    """
+    cols = ["time", "tetA_sc_rate", "Yellow_sc_rate", "Yellow_response", "Yellow_gradient", "Yellow_strong",
+            "Yellow_weak", "SC_relax", "Yellow_value", "Yellow_sc_region", "Strain"]
+    cols_comp = ["tetA_sc_rate", "Yellow_sc_rate", "Yellow_response", "Yellow_gradient", "Yellow_strong",
+                 "Yellow_weak", "SC_relax_WT", "SC_relax_DTA", "Yellow_value_WT", "Yellow_value_DTA", "Ratio"]
+    df = pd.DataFrame(columns=cols)
+    comb_df = pd.DataFrame(columns=cols_comp)
+    # sort parameters and declare circuit
+    CF_response, gradient, CF_strong, CF_weak, relax_WT, relax_DTA, tetA_sc_rate, CF_sc_rate, anti_tet_sc_rate \
+        = parameters
+
+    # WT strain circuit
+    circuit_WT = Plasmid([("tetA", {"sc_rate": tetA_sc_rate}),
+                          ("CF", "Yellow", "anticlockwise", {"strong": CF_strong, "weak": CF_weak,
+                                                             "sc_rate": CF_sc_rate, "response": CF_response,
+                                                             "gradient": gradient, "rate_dist": promoter_curve})],
+                         relax=relax_WT)
+    circuit_WT.setup()
+    for i in range(duration):
+        circuit_WT.run(1)
+        # save to dataframe at each timestep
+        new_row = np.array([i, tetA_sc_rate, CF_sc_rate, CF_response, gradient, CF_strong, CF_weak, relax_WT,
+                            circuit_WT.local.environments["Yellow"], circuit_WT.local.supercoil_regions[1], "WT"])
+        df.loc[len(df.index)] = new_row
+
+    # delta topA strain circuit
+    circuit_DTA = Plasmid([("tetA", {"sc_rate": tetA_sc_rate}),
+                          ("CF", "Yellow", "anticlockwise", {"strong": CF_strong, "weak": CF_weak,
+                                                             "sc_rate": CF_sc_rate, "response": CF_response,
+                                                             "gradient": gradient, "rate_dist": promoter_curve})],
+                          relax=relax_DTA)
+    circuit_DTA.setup()
+    for i in range(duration):
+        circuit_DTA.run(1)
+        # save to dataframe at each timestep
+        new_row = np.array([i, tetA_sc_rate, CF_sc_rate, CF_response, gradient, CF_strong, CF_weak, relax_DTA,
+                            circuit_DTA.local.environments["Yellow"], circuit_DTA.local.supercoil_regions[1], "DTA"])
+        df.loc[len(df.index)] = new_row
+
+    comp_row = np.array([tetA_sc_rate, CF_sc_rate, CF_response, gradient, CF_strong, CF_weak, relax_WT, relax_DTA,
+                         circuit_WT.local.environments["Yellow"], circuit_DTA.local.environments["Yellow"],
+                         circuit_WT.local.environments["Yellow"]/circuit_DTA.local.environments["Yellow"]])
+    comb_df.loc[len(comb_df.index)] = comp_row
+
+    if output_file:
+        df.to_csv(output_file, mode='a', index=False, header=False)
+        comb_df.to_csv(output_file_comb, mode='a', index=False, header=False)
+    return df, comp_row
+
+
+def process_circuit_random_parameters(count):
+    """
+    Generates random parameter sets for the partial circuit.
+
+    Parameters
+    ----------
+    count   :   int
+        The number of parameters sets to generate
+
+    Returns
+    -------
+    List<float>
+        List of parameter values for the circuit:
+            +   pleuWT_sigmoid  - The midpoint of the sigmoid function for the promoter to respond to supercoiling
+            +   gradient        - The gradient of the sigmoid function for the promoter to respond to supercoiling
+            +   mhYFP_max       - The maximum output of the Yellow reporter gene
+            +   mhYFP_min       - The minimum output of the Yellow reporter gene
+            +   relax_WT        - The relaxation rate for supercoils in the WT strain bacteria (proxy for topoisomerase
+                                  activity)
+            +   relax_DTA       - The relaxation rate for supercoils in the delta topA strain bacteria (proxy for
+                                  topoisomerase activity)
+            +   tetA_sc         - The supercoiling output from tetA
+            +   mhYFP_sc        - The supercoiling output from mhYFP
+            +   anti_tetA       - The supercoiling output from the anti-tetA promoter
+    """
+    params = []
+    for i in range(count):
+        #  Sigmoid values
+        # pleuWT_sigmoid = random.uniform(-0.12, -0.11)
+        pleuWT_sigmoid = -0.1749656277
+        # gradient = random.uniform(0.74, 0.75)
+        gradient = 0.7509601833
+        #  Output
+        mhYFP_min = random.uniform(6.2, 6.4)
+        # mhYFP_min = 6.653695493
+        mhYFP_max = random.uniform(41.6, 41.9)
+        # mhYFP_max = 48.8376008
+        #  Topo effects
+        # relax_WT = random.uniform(0.934, 0.935)
+        relax_WT = 0.93494294
+        # relax_DTA = random.uniform(0.1745, 0.175)
+        relax_DTA = 0.174762688
+        # Supercoiling values
+        tetA_sc = -0.05
+        # mhYFP_sc = random.uniform(0, 0.005)
+        mhYFP_sc = 0.003724793623
+        anti_tetA = random.uniform(0, 0.001)
+        params.append([pleuWT_sigmoid, gradient, mhYFP_max, mhYFP_min, relax_WT, relax_DTA, tetA_sc, mhYFP_sc,
+                       anti_tetA])
+    return params
+
+
 # generate random set of parameters for circuit
 def partial_circuit_random_parameters(count):
     """
@@ -168,17 +304,22 @@ def random_search(repeats, duration, output_file=None):
     """
     seed = datetime.now().timestamp()
     if not output_file:
-        output_file = "Partial_Circuit_Data_SCLim_Normal_FixedResponse_FixedBlue" + str(seed) + ".csv"
-    cols = ["time", "tetA_sc_rate", "Blue_sc_rate", "Blue_response", "Blue_gradient", "Blue_strong", "Blue_weak",
-            "sc_relax", "Blue_value", "Blue_sc_region"]
+        output_file = ("Process_Circuit_Data_Dual_Strain_Min_Promoter_Salmonella") + str(seed) + ".csv"
+    cols = ["time", "tetA_sc_rate", "Yellow_sc_rate", "Yellow_response", "Yellow_gradient", "Yellow_strong",
+            "Yellow_weak", "SC_relax", "Yellow_value", "Yellow_sc_region", "Strain"]
+    cols_comp = ["tetA_sc_rate", "Yellow_sc_rate", "Yellow_response", "Yellow_gradient", "Yellow_strong",
+                 "Yellow_weak", "SC_relax_WT", "SC_relax_DTA", "Yellow_value_WT", "Yellow_value_DTA", "Ratio"]
     df = pd.DataFrame(columns=cols)
+    comp_df = pd.DataFrame(columns=cols_comp)
     df.to_csv(output_file, index=False, header=True)
-    params = partial_circuit_random_parameters(repeats)
+    comp_df.to_csv("Combined_Data_"+output_file, index=False, header=True)
+    params = process_circuit_random_parameters(repeats)
     # run multiple circuits with threading
-    partial_circuit(duration, params[0], output_file, "normal")
+    # process_circuit(duration, params[0], output_file, "sigmoid")
     with concurrent.futures.ThreadPoolExecutor(max_workers=repeats) as executor:
-        executor.map(partial_circuit, [duration for _ in range(repeats)], params,
-                     [output_file for _ in range(repeats)], ["normal" for _ in range(repeats)])
+        executor.map(process_circuit, [duration for _ in range(repeats)], params,
+                     [output_file for _ in range(repeats)], ["Combined_Data_" + output_file for _ in range(repeats)],
+                     ["sigmoid" for _ in range(repeats)])
 
 
 def hill_climbing_random_parameters(res_file, phys_file, rounds, duration, step=0.1, output_file=None):
@@ -200,14 +341,14 @@ def hill_climbing_random_parameters(res_file, phys_file, rounds, duration, step=
     # get binding from results data, findable from phys_file name
     bindings = pd.read_csv(phys_file)["av_binding"]
     # compress to cumulative average over each ten timesteps
-    bind_rate = bindings.groupby(np.arange(len(bindings)) // 10).sum()/22
+    bind_rate = bindings.groupby(np.arange(len(bindings)) // 10).sum() / 22
     # start step at 0.1 and make smaller each step in duration
     standing = params
     for i in range(rounds):
-        print("Round " + str(i+1) + "/" + str(rounds))
+        print("Round " + str(i + 1) + "/" + str(rounds))
         # check step in both directions on circuit for resultant match
-        stepA = standing[:3] + [standing[3]+step] + standing[4:]
-        stepB = standing[:3] + [standing[3]-step] + standing[4:]
+        stepA = standing[:3] + [standing[3] + step] + standing[4:]
+        stepB = standing[:3] + [standing[3] - step] + standing[4:]
         print("A max: " + str(stepA[3]))
         print("B max: " + str(stepB[3]))
         stepA_df = partial_circuit(duration, stepA, output_file)
@@ -235,7 +376,7 @@ def hill_climbing_random_parameters(res_file, phys_file, rounds, duration, step=
 if __name__ == "__main__":
     # params = partial_circuit_random_parameters(1)
     # df = partial_circuit(1000, params[0])
-    random_search(1000, 1000)
+    random_search(300, 1000)
     # hill_climbing_random_parameters(
     #     "/Experiment_Data/Parameter_Setting/Partial_Circuit_Data_SCLim_Sigmoid_1710162510.300931.csv",
     #                                 "/home/psmr500/PycharmProjects/TORC/Experiment_Data/Parameter_Setting"

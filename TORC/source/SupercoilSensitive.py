@@ -23,10 +23,11 @@ class SupercoilSensitive(Promoter):
     """
 
     def __init__(self, colour, region, local, weak=0, strong=1, output_channel=None, fluorescent=False, clockwise=True,
-                 sc_rate=0, threshold=0, gradient=1, rate_dist="threshold"):
+                 sc_rate=0, threshold=0, gradient=1, rate_dist="threshold", repress=None, terminator=True):
         super(SupercoilSensitive, self).__init__(colour, region, local, weak, strong, output_channel, fluorescent,
                                                  clockwise=clockwise, sc_rate=sc_rate, threshold=threshold,
-                                                 gradient=gradient, rate_dist=rate_dist)
+                                                 gradient=gradient, rate_dist=rate_dist, repress=repress,
+                                                 terminator=terminator)
 
     def input_check(self):
         """
@@ -37,5 +38,5 @@ class SupercoilSensitive(Promoter):
         boolean
             If the input is correct to produce strong rather than weak output.
         """
-        # super(SupercoilSensitive, self).input_check()
-        return {"supercoiling": self.coil_state}
+        return super(SupercoilSensitive, self).input_check()
+        # return {"supercoiling": self.coil_state}

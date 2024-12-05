@@ -10,7 +10,7 @@ class TestGenome(TestCase):
         # check correct number of supercoil regions
         self.assertEqual(4, len(circuit.local.supercoil_regions), "Incorrect number of supercoiling regions created")
         # check correct environments
-        self.assertEqual(sorted(["lac", "red", "blue"]), sorted(circuit.local.get_keys()),
+        self.assertEqual(sorted(["lac", "red", "blue"]), sorted(circuit.local.get_environment_keys()),
                          "Incorrect Environment setup")
         self.assertEqual(13, len(circuit.circuit_components), "Incorrect component list")
 

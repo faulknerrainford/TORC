@@ -28,7 +28,7 @@ class Environment:
         else:
             self.inhibitors = inhibitors
         self.local = local
-        if self.label not in local.get_keys():
+        if self.label not in local.get_environment_keys():
             local.add_environment(self.label, self.content)
         else:
             local.set_environment(self.label, self.content)

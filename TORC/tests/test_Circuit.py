@@ -15,7 +15,7 @@ class TestCircuit(TestCase):
         # check correct number of supercoil regions
         self.assertEqual(4, len(circuit.local.supercoil_regions), "Incorrect number of supercoiling regions created")
         # check correct environments
-        self.assertEqual(sorted(["lac", "red", "blue"]), sorted(circuit.local.get_keys()),
+        self.assertEqual(sorted(["lac", "red", "blue"]), sorted(circuit.local.get_environment_keys()),
                          "Incorrect Environment setup")
         self.assertEqual(13, len(circuit.circuit_components), "Incorrect component list")
 
@@ -40,7 +40,7 @@ class TestCircuit(TestCase):
         # check correct number of supercoil regions
         self.assertEqual(4, len(circuit.local.supercoil_regions), "Incorrect number of supercoiling regions created")
         # check correct environments
-        self.assertEqual(sorted(["lac", "red", "blue"]), sorted(circuit.local.get_keys()),
+        self.assertEqual(sorted(["lac", "red", "blue"]), sorted(circuit.local.get_environment_keys()),
                          "Incorrect Environment setup")
         self.assertEqual(13, len(circuit.circuit_components), "Incorrect component list")
 
@@ -90,7 +90,7 @@ class TestCircuit(TestCase):
         circuit = Circuit([])
         queue = Queue()
         env = circuit.create_environment("test", queue)
-        self.assertIn(env.label, circuit.local.get_keys(), "Environment not added")
+        self.assertIn(env.label, circuit.local.get_environment_keys(), "Environment not added")
         self.assertEqual(0.0, circuit.local.get_environment(env.label), "Environment content not correctly initialised")
         env = circuit.create_environment("content", queue, 10)
         self.assertEqual(env.content, circuit.local.get_environment("content"), "Incorrect initial content")
@@ -130,7 +130,7 @@ class TestCircuit(TestCase):
         supercoil0 = Supercoil(test_cw, test_acw, circuit.local)
         components, cw, acw, sc_ind = circuit.create_barrier("bridge", "lac", supercoil0)
         # check creation of env
-        self.assertIn("lac", circuit.local.get_keys(), "lac environ not created")
+        self.assertIn("lac", circuit.local.get_environment_keys(), "lac environ not created")
         # check bridge has correct label
         self.assertEqual("lac", components[2].label, "Incorrect bridge created")
         # check bridge has different regions
@@ -181,3 +181,6 @@ class TestCircuit(TestCase):
                          "First bridge end not set")
         self.assertEqual(circuit2.circuit_components[4], circuit2.circuit_components[2].bridge_check,
                          "Second bridge end not set")
+
+    def test_read_through_check(self):
+        self.fail()

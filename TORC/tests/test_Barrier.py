@@ -3,6 +3,8 @@ from TORC import Barrier, Supercoil, LocalArea
 from queue import Queue
 from threading import Thread
 
+# TODO: Add checks for barrier status update and adding barrier to local list
+
 
 class TestBarrier(TestCase):
     def test_update(self):

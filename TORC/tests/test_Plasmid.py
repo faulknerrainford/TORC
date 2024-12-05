@@ -10,7 +10,7 @@ class TestPlasmid(TestCase):
         # check correct number of supercoil regions
         self.assertEqual(4, len(circuit.local.supercoil_regions), "Incorrect number of supercoiling regions created")
         # check correct environments
-        self.assertEqual(sorted(["lac", "red", "blue"]), sorted(circuit.local.get_keys()),
+        self.assertEqual(sorted(["lac", "red", "blue"]), sorted(circuit.local.get_environment_keys()),
                          "Incorrect Environment setup")
         self.assertEqual(14, len(circuit.circuit_components), "Incorrect component list")
 
@@ -27,3 +27,15 @@ class TestPlasmid(TestCase):
         circuit20.run(10)
         # check correct environments and visible correct
         self.assertEqual("red", circuit20.visible.colour, "Incorrect output colour, with lac")
+
+    def test_partial(self):
+        # test partial version of circuit used in Process identification
+        circuit = Plasmid([("tetA"), ("bridge", "lac"), ("CF", "red"), ("bridge", "lac")],
+                          environments=[("lac", 0)])
+        circuit.setup()
+        # check correct number of supercoiling regions
+        self.assertEqual(4, len(circuit.local.supercoil_regions), "Incorrect number of components created")
+        # check correct environments
+        self.assertEqual(sorted(["lac", "red"]), sorted(circuit.local.get_environment_keys()),
+                         "Incorrect Environment setup")
+        self.assertEqual(12, len(circuit.circuit_components), "Incorrect component list")

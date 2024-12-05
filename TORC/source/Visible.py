@@ -25,19 +25,19 @@ class Visible:
         combined for use.
         """
         # read from red, blue, green, yellow, magenta, cyan environments.
-        if "red" in self.local.get_keys():
+        if "red" in self.local.get_environment_keys():
             self.rgb[0] = self.local.get_environment("red")
-        if "green" in self.local.get_keys():
+        if "green" in self.local.get_environment_keys():
             self.rgb[1] = self.local.get_environment("green")
-        if "blue" in self.local.get_keys():
+        if "blue" in self.local.get_environment_keys():
             self.rgb[2] = self.local.get_environment("blue")
-        if "magenta" in self.local.get_keys():
+        if "magenta" in self.local.get_environment_keys():
             self.rgb[0] = self.rgb[0] + self.local.get_environment("magenta")*0.5
             self.rgb[2] = self.rgb[2] + self.local.get_environment("magenta")*0.5
-        if "yellow" in self.local.get_keys():
+        if "yellow" in self.local.get_environment_keys():
             self.rgb[0] = self.rgb[0] + self.local.get_environment("yellow")*0.5
             self.rgb[1] = self.rgb[2] + self.local.get_environment("yellow")*0.5
-        if "cyan" in self.local.get_keys():
+        if "cyan" in self.local.get_environment_keys():
             self.rgb[1] = self.rgb[0] + self.local.get_environment("cyan")*0.5
             self.rgb[2] = self.rgb[2] + self.local.get_environment("cyan")*0.5
         # Sum to get an RGB colour and normalize

@@ -65,6 +65,7 @@ class TestBridge(TestCase):
         [x.start() for x in threads]
         [x.join() for x in threads]
         self.assertEqual(0, sc_2.get_coil_state(), "Updated supercoiling with full environment")
+        self.assertTrue(local.barriers["lac"], "Incorrect barrier state")
         local.set_environment("lac", 0)
         threads = [Thread(target=x.update) for x in circuit]
         [x.start() for x in threads]
@@ -73,3 +74,4 @@ class TestBridge(TestCase):
         [x.start() for x in threads]
         [x.join() for x in threads]
         self.assertEqual(-1, sc_2.get_coil_state(), "Updated supercoiling with empty environment failed")
+        self.assertFalse(local.barriers["lac"], "Incorrect barrier state")

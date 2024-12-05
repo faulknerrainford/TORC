@@ -1,5 +1,5 @@
 from unittest import TestCase
-from TORC import GenetetA, SignalError, Supercoil, Promoter, LocalArea, Environment
+from TORC import GenetetA, SignalError, Supercoil, Promoter, LocalArea, Environment, Barrier
 from queue import Queue
 from threading import Thread
 
@@ -171,13 +171,84 @@ class TestPromoter(TestCase):
         self.assertAlmostEqual(0.8, promoter.rate_calc({"promote": 0.5}), 2, "Incorrect for at mean, scaled normal")
 
     def test_read_through_setup(self):
-        self.fail()
+        local = LocalArea()
+        cw_channel = Queue()
+        acw_channel = Queue()
+        test_out_queue = Queue()
+        supercoil = Supercoil(cw_channel, acw_channel, local)
+        promoter = Promoter("red", supercoil.supercoiling_region, local, output_channel=test_out_queue,
+                            rate_dist="normal", threshold=0.5, sc_sensitive=True, terminator=False)
+        self.assertIsInstance(promoter.output_read_through, Queue, "No output_read_through queue made")
 
     def test_add_read_through_check(self):
-        self.fail()
+        local = LocalArea()
+        cw_channel = Queue()
+        acw_channel = Queue()
+        test_out_queue = Queue()
+        supercoil = Supercoil(cw_channel, acw_channel, local)
+        barrier = Barrier(local, supercoil, supercoil, "Lac")
+        promoterA = Promoter("red", supercoil.supercoiling_region, local, output_channel=test_out_queue,
+                             rate_dist="normal", threshold=0.5, sc_sensitive=True, terminator=False)
+        promoterB = Promoter("red", supercoil.supercoiling_region, local, output_channel=test_out_queue,
+                             rate_dist="normal", threshold=0.5, sc_sensitive=True, terminator=False)
+        promoterC = Promoter("red", supercoil.supercoiling_region, local, output_channel=test_out_queue,
+                             rate_dist="normal", threshold=0.5, sc_sensitive=True, terminator=True)
+        promoterB.add_read_through_check(promoterC)
+        self.assertIsNone(promoterB.input_read_through, "read through queue acquired from terminated promoter")
+        promoterB.add_read_through_check(promoterA, [barrier])
+        self.assertIsNotNone(promoterB.input_read_through, "No input_read_through channel picked up")
+        self.assertIsInstance(promoterB.input_read_through, Queue, "Incorrect input_read_through, must be queue")
+        self.assertEqual(promoterB.input_read_through, promoterA.output_read_through, "Incorrect queue acquired")
+        self.assertIsInstance(promoterB.read_through_barriers, list, "Barriers not added")
 
     def test_read_though_output(self):
-        self.fail()
+        local = LocalArea()
+        cw_channel = Queue()
+        acw_channel = Queue()
+        test_out_queue = Queue()
+        supercoil = Supercoil(cw_channel, acw_channel, local)
+        promoterA = Promoter("red", supercoil.supercoiling_region, local, output_channel=test_out_queue,
+                             rate_dist="normal", threshold=0.5, sc_sensitive=True, terminator=False)
+        promoterA.output_signal(1)
+        # check queue
+        self.assertIsNotNone(promoterA.output_read_through.get(), "No read_through_output sent")
+        promoterA.output_signal(0)
+        self.assertTrue(promoterA.output_read_through.empty(), "read_through_output sent with no output")
+        promoterA.terminator = True
+        promoterA.output_signal(1)
+        self.assertTrue(promoterA.output_read_through.empty(), "Read through output sent from terminated promoter")
 
     def test_read_through_check(self):
-        self.fail()
+        local = LocalArea()
+        cw_channel = Queue()
+        acw_channel = Queue()
+        test_out_queue = Queue()
+        supercoil = Supercoil(cw_channel, acw_channel, local)
+        promoterA = Promoter("red", supercoil.supercoiling_region, local, output_channel=test_out_queue,
+                             rate_dist="normal", threshold=0.5, sc_sensitive=True, terminator=False)
+        promoterB = Promoter("red", supercoil.supercoiling_region, local,
+                             output_channel=test_out_queue, rate_dist="normal", threshold=0.5, sc_sensitive=True,
+                             terminator=False)
+        barrier = Barrier(local, supercoil, supercoil, "Lac")
+        local.barriers[barrier.label] = False
+        promoterB.add_read_through_check(promoterA, [barrier.label])
+        status = promoterB.input_check()
+        self.assertNotIn("read_through", status.keys(), "Read through status set with no input from queue")
+        promoterB.input_read_through.put(1)
+        status = promoterB.input_check()
+        self.assertTrue(status["read_through"], "Incorrect read through status with input and no barriers")
+        # check for active barrier
+        local.barriers[barrier.label] = True
+        promoterB.input_read_through.put(1)
+        status = promoterB.input_check()
+        self.assertNotIn("read_through", status.keys(), "Read through status set with barriers")
+        # check queue cleared
+        self.assertTrue(promoterB.input_read_through.empty(), "Read through queue not cleared with barrier")
+        # check for repression working
+        local.barriers[barrier.label] = False
+        promoterB.repress = "red"
+        local.environments["red"] = 1
+        promoterB.input_read_through.put(1)
+        status = promoterB.input_check()
+        self.assertNotIn("read_through", status.keys(), "Read through status set with repression")
+        self.assertTrue(promoterB.input_read_through.empty(), "Read through queue not cleared with repression")

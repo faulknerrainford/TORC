@@ -20,8 +20,7 @@ class Bridge(Barrier):
         Required amount of protein in the environment for bridge to be active.
     """
     def __init__(self, label, local, cw_sc_region, acw_sc_region, protein_threshold=0):
-        super(Bridge, self).__init__(local, cw_sc_region, acw_sc_region)
-        self.label = label
+        super(Bridge, self).__init__(local, cw_sc_region, acw_sc_region, label)
         self.threshold = protein_threshold
         self.bridge_check = None
 

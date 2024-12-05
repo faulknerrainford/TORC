@@ -1,5 +1,6 @@
 import numpy as np
 from scipy.stats import norm
+from queue import Queue
 
 
 class Promoter:
@@ -67,13 +68,13 @@ class Promoter:
         self.rate_dist = rate_dist
         self.gradient = gradient
         self.terminator = terminator
-        # TODO: if no terminator set up read_through buffer
+        # if no terminator set up read_through buffer
         if not self.terminator:
-            self.output_read_through = None  # TODO: IMPORTANT
+            self.output_read_through = Queue()
         else:
             self.output_read_through = None
         self.input_read_through = None
-        # TODO: add repressor channel check
+        self.read_through_barriers = None
 
     def update(self):
         """
@@ -95,8 +96,8 @@ class Promoter:
 
     def input_check(self):
         """
-        Collects information on current state of transcription factors environments for repression, promotion and the
-        current supercoiling state of the promoter.
+        Collects information on current state of transcription factors environments for repression, promotion, read
+        through and the current supercoiling state of the promoter.
 
         Returns
         -------
@@ -106,10 +107,16 @@ class Promoter:
         status = {}
         if self.repress:
             status["repress"] = self.local.get_environment(self.repress)
-        # TODO: add read through check and read through status
         if self.promote:
             status["promote"] = self.local.get_environment(self.promote)
         status["supercoiling"] = self.coil_state
+        # check for repression, barriers and a read through queue
+        if self.input_read_through and not self.input_read_through.empty():
+            self.input_read_through.get()
+            if ("repress" not in status.keys()
+                    and self.input_read_through
+                    and not any([self.local.barriers[x.label] for x in self.read_through_barriers])):
+                status["read_through"] = True
         return status
 
     def rate_calc(self, status):
@@ -156,12 +163,14 @@ class Promoter:
             else:
                 return self.weak_signal
         elif self.rate_dist == "sigmoid":
+            if "repress" in status.keys() and status["repress"] > self.threshold:
+                return self.weak_signal
             # sigmoid function
             if self.sc_sensitive:
                 x = status["supercoiling"]
             else:
                 x = status["promote"]
-            x_prime = self.gradient*x-self.threshold
+            x_prime = self.gradient*(x-self.threshold)
             y = 1/(1 + np.exp(-x_prime))
             y_range = self.strong_signal - self.weak_signal
             y_prime = y*y_range + self.weak_signal
@@ -179,7 +188,7 @@ class Promoter:
 
     def output_signal(self, strength=None):
         """
-        Sends correct rate on the output channel
+        Sends correct rate on the output channel, also sends read through signal if not terminated.
 
         Parameters
         ----------
@@ -188,9 +197,11 @@ class Promoter:
         """
         self.output_channel.put(strength)
         # output + and - sc to region
-        if strength > 0:
+        if abs(strength) > 0:
             sc_strength = strength * self.sc_rate
-            # TODO: output read through buffer, with checks for terminators and barriers
+            # output read through buffer, if not terminated and outputting anything
+            if not self.terminator:
+                self.output_read_through.put(1)
             if self.clockwise:
                 self.local.get_supercoil_cw(self.region).put(sc_strength)
                 self.local.get_supercoil_acw(self.region).put(-1*sc_strength)
@@ -198,6 +209,8 @@ class Promoter:
                 self.local.get_supercoil_cw(self.region).put(-1*sc_strength)
                 self.local.get_supercoil_acw(self.region).put(sc_strength)
 
-        def add_read_through_check(self, buffer):
-            # TODO: add ability to add a buffer for promoter to check for read through interrupts from other promoter.
-            pass
+    def add_read_through_check(self, promoter, barriers=None):
+        # add a buffer for promoter to check for read through interrupts from other promoter.
+        if isinstance(promoter.output_read_through, Queue):
+            self.input_read_through = promoter.output_read_through
+        self.read_through_barriers = barriers

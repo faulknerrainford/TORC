@@ -1,5 +1,5 @@
-from TORC import Environment, Channel, Supercoil, GenetetA, SupercoilSensitive, Promoter, Bridge, Visible, LocalArea, \
-    BridgeError, Origin
+from TORC import Environment, Supercoil, GenetetA, SupercoilSensitive, Promoter, Bridge, Visible, LocalArea, \
+    BridgeError, Origin, Barrier
 from queue import Queue
 from threading import Thread
 
@@ -20,7 +20,7 @@ class Circuit:
         Local area can be provided to the system with a full start state if needed.
     """
 
-    def __init__(self, components, environments=None, label="circuit1", local=None, relax=1):
+    def __init__(self, components, environments=None, label="circuit1", local=None, relax=1, read_through=None):
         if environments is None:
             environments = []
         self.component_list = components
@@ -36,6 +36,7 @@ class Circuit:
         self.init_cw = None
         self.init_acw = None
         self.relax = relax
+        self.read_through = read_through
 
     # noinspection PyTypeChecker
     def setup(self):
@@ -74,17 +75,14 @@ class Circuit:
                                                                                     comp[-1])
                 else:
                     components, temp_cw, temp_acw, temp_sc_index = self.create_gene("tetA", current_sc, orientation)
-                if temp_cw is not None:
-                    cw = temp_cw
-                    acw = temp_acw
                 if sc_index is not None:
                     sc_index = temp_sc_index
                 self.circuit_components = self.circuit_components + components
             elif comp[0] in ["C", "CF", "P"]:
                 if len(comp) > 2 and comp[2] == "anticlockwise":
-                    orientation = True
-                else:
                     orientation = False
+                else:
+                    orientation = True
                 if isinstance(comp[-1], dict):
                     self.circuit_components = self.circuit_components \
                                               + self.create_promoter(comp[0], comp[1], sc_index,
@@ -100,6 +98,9 @@ class Circuit:
         self.circuit_components = self.circuit_components + [self.create_visible()]
         # pair up bridges
         self.pair_bridges()
+        self.add_read_through_pairs()
+        # TODO: add terminator and read through check between promoters (including checks for permanent barriers vs.
+        #  variable)
         # set up visible output
         self.visible = self.circuit_components[-1]
 
@@ -204,13 +205,23 @@ class Circuit:
                 rate_dist = parameters["rate_dist"]
             else:
                 rate_dist = "threshold"
+            if "repress" in parameters.keys():
+                repress = parameters["repress"]
+            else:
+                repress = None
+            if "terminator" in parameters.keys():
+                terminator = parameters["terminator"]
+            else:
+                terminator = True
         else:
             sc_rate = 0
             response = 0
             gradient = 1
             rate_dist = "threshold"
+            repress = None
+            terminator = True
         components = []
-        if output not in self.local.get_keys():
+        if output not in self.local.get_environment_keys():
             queue = Queue()
             env = self.create_environment(output, queue)
             self.env_queues[output] = queue
@@ -218,17 +229,20 @@ class Circuit:
         if promoter_type == "P":
             promoter = Promoter(output, sc_region, self.local, weak=weak, strong=strong,
                                 output_channel=self.env_queues[output], clockwise=clockwise, sc_rate=sc_rate,
-                                threshold=response, gradient=gradient, rate_dist=rate_dist)
+                                threshold=response, gradient=gradient, rate_dist=rate_dist, repress=repress,
+                                terminator=terminator)
             components.append(promoter)
         elif promoter_type == "C":
             promoter = SupercoilSensitive(output, sc_region, self.local, weak=weak, strong=strong,
                                           output_channel=self.env_queues[output], clockwise=clockwise, sc_rate=sc_rate,
-                                          threshold=response, gradient=gradient, rate_dist=rate_dist)
+                                          threshold=response, gradient=gradient, rate_dist=rate_dist, repress=repress,
+                                          terminator=terminator)
             components.append(promoter)
         elif promoter_type == "CF":
             promoter = SupercoilSensitive(output, sc_region, self.local, weak=weak, strong=strong,
                                           output_channel=self.env_queues[output], fluorescent=True, clockwise=clockwise,
-                                          sc_rate=sc_rate, threshold=response, gradient=gradient, rate_dist=rate_dist)
+                                          sc_rate=sc_rate, threshold=response, gradient=gradient, rate_dist=rate_dist,
+                                          repress=repress, terminator=terminator)
             components.append(promoter)
         return components
 
@@ -267,7 +281,7 @@ class Circuit:
             cw = self.local.get_supercoil_cw(sc_ind)
             acw = self.local.get_supercoil_acw(sc_ind)
         components.append(sc)
-        if sensor_input and sensor_input not in self.local.get_keys():
+        if sensor_input and sensor_input not in self.local.get_environment_keys():
             queue = Queue()
             env = self.create_environment(sensor_input, queue)
             self.env_queues[sensor_input] = queue
@@ -362,3 +376,23 @@ class Circuit:
                 raise BridgeError("Too many bridge points of same type")
             else:
                 raise BridgeError("No bridge point pair found")
+
+    def add_read_through_pairs(self):
+        # take list of read through tuples (first reads through second)
+        # Find first component, get read_through queue and set it in the second
+        # TODO: Redo to detect read through potential and barriers from organisation.
+        if self.read_through:
+            barriers = []
+            input_comp = None
+            output_comp = None
+            for interaction in self.read_through:
+                for comp in self.circuit_components:
+                    if isinstance(comp, Promoter) or isinstance(comp, Barrier):
+                        if comp.label == interaction[0]:
+                            output_comp = comp
+                        if isinstance(comp, Promoter) and comp.label == interaction[1]:
+                            input_comp = comp
+                        if comp.label == interaction[2]:
+                            barriers.append(comp)
+            if input_comp and output_comp:
+                input_comp.add_read_through_check(output_comp, barriers=[barriers[0]])
