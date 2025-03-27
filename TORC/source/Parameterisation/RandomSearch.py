@@ -219,23 +219,23 @@ def process_circuit_random_parameters(count):
     for i in range(count):
         #  Sigmoid values
         # pleuWT_sigmoid = random.uniform(-0.12, -0.11)
-        pleuWT_sigmoid = -0.1749656277
-        # gradient = random.uniform(0.74, 0.75)
-        gradient = 0.7509601833
+        pleuWT_sigmoid = -0.114657413
+        # gradient = random.uniform(0.705, 0.715)
+        gradient = 0.7267593004
         #  Output
-        mhYFP_min = random.uniform(6.2, 6.4)
+        mhYFP_min = random.uniform(0, 0.008)
         # mhYFP_min = 6.653695493
-        mhYFP_max = random.uniform(41.6, 41.9)
+        mhYFP_max = random.uniform(48.1, 48.5)
         # mhYFP_max = 48.8376008
         #  Topo effects
-        # relax_WT = random.uniform(0.934, 0.935)
-        relax_WT = 0.93494294
-        # relax_DTA = random.uniform(0.1745, 0.175)
-        relax_DTA = 0.174762688
+        # relax_WT = random.uniform(0.9, 0.92)
+        relax_WT = 0.9060040144
+        # relax_DTA = random.uniform(0, 0.01)
+        relax_DTA = 0.00066505304
         # Supercoiling values
         tetA_sc = -0.05
-        # mhYFP_sc = random.uniform(0, 0.005)
-        mhYFP_sc = 0.003724793623
+        # mhYFP_sc = random.uniform(0.003511, 0.003515)
+        mhYFP_sc = 0.003512001343
         anti_tetA = random.uniform(0, 0.001)
         params.append([pleuWT_sigmoid, gradient, mhYFP_max, mhYFP_min, relax_WT, relax_DTA, tetA_sc, mhYFP_sc,
                        anti_tetA])
@@ -304,7 +304,7 @@ def random_search(repeats, duration, output_file=None):
     """
     seed = datetime.now().timestamp()
     if not output_file:
-        output_file = ("Process_Circuit_Data_Dual_Strain_Min_Promoter_Salmonella") + str(seed) + ".csv"
+        output_file = ("Process_Circuit_Data_Dual_Strain_Full_Promoter_Ecoli") + str(seed) + ".csv"
     cols = ["time", "tetA_sc_rate", "Yellow_sc_rate", "Yellow_response", "Yellow_gradient", "Yellow_strong",
             "Yellow_weak", "SC_relax", "Yellow_value", "Yellow_sc_region", "Strain"]
     cols_comp = ["tetA_sc_rate", "Yellow_sc_rate", "Yellow_response", "Yellow_gradient", "Yellow_strong",
@@ -376,7 +376,7 @@ def hill_climbing_random_parameters(res_file, phys_file, rounds, duration, step=
 if __name__ == "__main__":
     # params = partial_circuit_random_parameters(1)
     # df = partial_circuit(1000, params[0])
-    random_search(300, 1000)
+    random_search(50, 1000)
     # hill_climbing_random_parameters(
     #     "/Experiment_Data/Parameter_Setting/Partial_Circuit_Data_SCLim_Sigmoid_1710162510.300931.csv",
     #                                 "/home/psmr500/PycharmProjects/TORC/Experiment_Data/Parameter_Setting"
