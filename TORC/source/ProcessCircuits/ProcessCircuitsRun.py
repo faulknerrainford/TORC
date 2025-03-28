@@ -288,8 +288,8 @@ def fp_dist_df(df):
 
 
 def comp_process_frequency(df):
-    # TODO: take dist df and separate into df columns based on relevance to comps
-    # TODO: Start with top A knockout salmonella comparison and work up graph then attempt to generate for all
+    # take dist df and separate into df columns based on relevance to comps
+    # Start with top A knockout salmonella comparison and work up graph then attempt to generate for all
     #  comparison
     Bacteria = ["Salmonella", "Ecoli"]
     Bacteria_indexes = [(21, 17, 13), (20, 16, 12)]
@@ -310,6 +310,7 @@ def comp_process_frequency(df):
             print(matched[B+'_Min_Process'].unique())
             print(small_error[B+'_Min_Process'].unique())
             print(big_error[B+'_Min_Process'].unique())
+    # Repeat print outs with Promoter instead of the bacteria
     Promoter = ['Full', 'Min']
     Promoter_indexes = [(23, 19, 15), (22, 18, 14)]
     for (P, inds) in zip(Promoter, Promoter_indexes):
@@ -328,6 +329,21 @@ def comp_process_frequency(df):
             print(matched["Ecoli_" + P + '_Process'].unique())
             print(small_error["Ecoli_" + P + '_Process'].unique())
             print(big_error["Ecoli_" + P + '_Process'].unique())
+    # TODO: Same again for individual strains
+    Strain = ['Salmonella_Min', 'Salmonella_Full', 'Ecoli_Min', 'Ecoli_Full']
+    Strain_indexes = [(9, 10, 11), (3, 4, 5), (6, 7, 8), (0, 1, 2)]
+    Strain_comps = ['WT_NTANL', 'WT_NTA', 'NTA_NTANL']
+    for (S, inds) in zip(Strain, Strain_indexes):
+        comp_df = df[[S+'_Process', 'fp_dist_vector']].copy()
+        for (i, comp) in zip(inds, Strain_comps):
+            comp_df[comp] = [row[i] for row in df['fp_dist_vector']]
+            matched = comp_df[comp_df[comp] == 0]
+            small_error = comp_df[comp_df[comp] == 1]
+            big_error = comp_df[comp_df[comp] == 2]
+            print(comp + '_' + S)
+            print(matched[S + '_Process'].unique())
+            print(small_error[S + '_Process'].unique())
+            print(big_error[S + '_Process'].unique())
 
 
 # finger print generator
