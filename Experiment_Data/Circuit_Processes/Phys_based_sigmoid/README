@@ -1,0 +1,14 @@
+Contents:
+* block-full-trackingON-dist_op_TORC_plasmid_st3.3_02_df.pkl
+  Contains organized raw data resulted from TORCPhysics.
+  This pickle file is dictionary, with each entry corresponding to the simulations of a particular system,
+  e.g., EColi WT, Salmonella dtopA, etc...
+
+* get_supercoiling_at_promoter.py
+  This script loads the pickle file and extracts the superhelical values at the promoter when is active.
+  That is when RNAPs bind and form either the closed or open complex.
+  It also plots these distributions per promoter/gene
+  This scripts outputs superhelicity_at_promoter.pkl
+
+ * superhelicity_at_promoter.pkl
+   It is a dictionary, with each entry corresponding to the superhelical values at each promoter.
