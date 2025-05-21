@@ -190,7 +190,7 @@ def process_circuit(duration, parameters, output_file=None, output_file_comb=Non
     return df, comp_row
 
 
-def process_circuit_random_parameters(count):
+def process_circuit_random_parameters(count, fixed_values=None):
     """
     Generates random parameter sets for the partial circuit.
 
@@ -198,6 +198,8 @@ def process_circuit_random_parameters(count):
     ----------
     count   :   int
         The number of parameters sets to generate
+    fixed_values    :   dict
+        A dictionary of values that will be fixed in the parameter set.
 
     Returns
     -------
@@ -218,25 +220,45 @@ def process_circuit_random_parameters(count):
     params = []
     for i in range(count):
         #  Sigmoid values
-        # pleuWT_sigmoid = random.uniform(-0.12, -0.11)
-        pleuWT_sigmoid = -0.114657413
-        # gradient = random.uniform(0.705, 0.715)
-        gradient = 0.7267593004
+        if "pleuWT_sigmoid" in fixed_values.keys():
+            pleuWT_sigmoid = fixed_values["pleuWT_sigmoid"]
+        else:
+            pleuWT_sigmoid = random.uniform(-0.2, 0)
+        if "gradient" in fixed_values.keys():
+            gradient = fixed_values["gradient"]
+        else:
+            gradient = random.uniform(0, 1)
         #  Output
-        mhYFP_min = random.uniform(0, 0.008)
-        # mhYFP_min = 6.653695493
-        mhYFP_max = random.uniform(48.1, 48.5)
-        # mhYFP_max = 48.8376008
+        if "mhYFP_min" in fixed_values.keys():
+            mhYFP_min = fixed_values["mhYFP_min"]
+        else:
+            mhYFP_min = random.uniform(0, 20)
+        if "mhYFP_max" in fixed_values.keys():
+            mhYFP_max = fixed_values["mhYFP_max"]
+        else:
+            mhYFP_max = random.uniform(mhYFP_min, 80)
         #  Topo effects
-        # relax_WT = random.uniform(0.9, 0.92)
-        relax_WT = 0.9060040144
-        # relax_DTA = random.uniform(0, 0.01)
-        relax_DTA = 0.00066505304
+        if "relax_WT" in fixed_values.keys():
+            relax_WT = fixed_values["relax_WT"]
+        else:
+            relax_WT = random.uniform(0.8, 0.99)
+        if "relax_DTA" in fixed_values.keys():
+            relax_DTA = fixed_values["relax_DTA"]
+        else:
+            relax_DTA = random.uniform(0, 0.2)
         # Supercoiling values
-        tetA_sc = -0.05
-        # mhYFP_sc = random.uniform(0.003511, 0.003515)
-        mhYFP_sc = 0.003512001343
-        anti_tetA = random.uniform(0, 0.001)
+        if "tetA_sc" in fixed_values.keys():
+            tetA_sc = fixed_values["tetA_sc"]
+        else:
+            tetA_sc = -0.05
+        if "mhYFP_sc" in fixed_values.keys():
+            mhYFP_sc = fixed_values["mhYFP_sc"]
+        else:
+            mhYFP_sc = random.uniform(0, 0.01)
+        if "anti_tetA_sc" in fixed_values.keys():
+            anti_tetA = fixed_values["anti_tetA_sc"]
+        else:
+            anti_tetA = random.uniform(0, 0.001)
         params.append([pleuWT_sigmoid, gradient, mhYFP_max, mhYFP_min, relax_WT, relax_DTA, tetA_sc, mhYFP_sc,
                        anti_tetA])
     return params
@@ -287,7 +309,7 @@ def partial_circuit_random_parameters(count):
     return params
 
 
-def random_search(repeats, duration, output_file=None):
+def random_search(repeats, duration, output_file=None, fixed_values=None):
     """
     Generates a set of random parameters for the partial circuit and then runs each as a circuit in with threading.
 
@@ -313,7 +335,7 @@ def random_search(repeats, duration, output_file=None):
     comp_df = pd.DataFrame(columns=cols_comp)
     df.to_csv(output_file, index=False, header=True)
     comp_df.to_csv("Combined_Data_"+output_file, index=False, header=True)
-    params = process_circuit_random_parameters(repeats)
+    params = process_circuit_random_parameters(repeats, fixed_values)
     # run multiple circuits with threading
     # process_circuit(duration, params[0], output_file, "sigmoid")
     with concurrent.futures.ThreadPoolExecutor(max_workers=repeats) as executor:

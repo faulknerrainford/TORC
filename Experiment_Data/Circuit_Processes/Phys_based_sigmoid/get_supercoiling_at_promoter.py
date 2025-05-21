@@ -19,7 +19,7 @@ import pickle
 
 # Model & simulation conditions
 # ----------------------------------------------------------------------------------------------------------------------
-input_file = 'block-full-trackingON-dist_op_TORC_plasmid_st3.3_02_df.pkl'
+input_file = 'Salmonella_Full_Only_Depricated/block-full-trackingON-dist_op_TORC_plasmid_st3.3_02_df.pkl'
 output_file = 'superhelicity_at_promoter'
 
 # Plotting params
