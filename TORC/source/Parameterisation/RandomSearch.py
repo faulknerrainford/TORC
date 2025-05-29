@@ -178,9 +178,10 @@ def process_circuit(duration, parameters, output_file=None, output_file_comb=Non
         new_row = np.array([i, tetA_sc_rate, CF_sc_rate, CF_response, gradient, CF_strong, CF_weak, relax_DTA,
                             circuit_DTA.local.environments["Yellow"], circuit_DTA.local.supercoil_regions[1], "DTA"])
         df.loc[len(df.index)] = new_row
-
+    # TODO: sort divide my zero error
     comp_row = np.array([tetA_sc_rate, CF_sc_rate, CF_response, gradient, CF_strong, CF_weak, relax_WT, relax_DTA,
                          circuit_WT.local.environments["Yellow"], circuit_DTA.local.environments["Yellow"],
+                         1 if circuit_DTA.local.environments["Yellow"] <= 0 else
                          circuit_WT.local.environments["Yellow"]/circuit_DTA.local.environments["Yellow"]])
     comb_df.loc[len(comb_df.index)] = comp_row
 
@@ -192,14 +193,16 @@ def process_circuit(duration, parameters, output_file=None, output_file_comb=Non
 
 def process_circuit_random_parameters(count, fixed_values=None):
     """
-    Generates random parameter sets for the partial circuit.
+    Generates random parameter sets for the partial circuit. Fixed values are set and the rest are generated within
+    biologically plausible ranges.
 
     Parameters
     ----------
     count   :   int
         The number of parameters sets to generate
     fixed_values    :   dict
-        A dictionary of values that will be fixed in the parameter set.
+        A dictionary of values that will be fixed in the parameter set. Keywords match the parameters in the output and
+        have values assigned to them
 
     Returns
     -------
@@ -309,7 +312,7 @@ def partial_circuit_random_parameters(count):
     return params
 
 
-def random_search(repeats, duration, output_file=None, fixed_values=None):
+def random_search(repeats, duration, output_file=None, fixed_values=None, rate_dist="sigmoid"):
     """
     Generates a set of random parameters for the partial circuit and then runs each as a circuit in with threading.
 
@@ -319,9 +322,11 @@ def random_search(repeats, duration, output_file=None, fixed_values=None):
     repeats     :   int
         Number of random circuits to run
     duration    :   int
-        Number of timesteps to run for each circuit
+        Number of time steps to run for each circuit
     output_file :   String
         File name to save the data out to
+    fixed_values:   dict
+        Dictionary provide parameters and values for those parameters which will not be varried in the random search
 
     """
     seed = datetime.now().timestamp()
@@ -341,7 +346,7 @@ def random_search(repeats, duration, output_file=None, fixed_values=None):
     with concurrent.futures.ThreadPoolExecutor(max_workers=repeats) as executor:
         executor.map(process_circuit, [duration for _ in range(repeats)], params,
                      [output_file for _ in range(repeats)], ["Combined_Data_" + output_file for _ in range(repeats)],
-                     ["sigmoid" for _ in range(repeats)])
+                     [rate_dist for _ in range(repeats)])
 
 
 def hill_climbing_random_parameters(res_file, phys_file, rounds, duration, step=0.1, output_file=None):

@@ -9,26 +9,26 @@ from TORC import CircuitSetups as cs
 # Set up parameter sets for each of 12 strains as a list
 # (alternative parameters available in Salmonella_Parameters file)
 # Salmonella Topo effects
-relax_WT_Salmonella = 0.9532908145
-relax_DTA_Salmonella = 0.1768535622
+relax_WT_Salmonella = 0.7152736182204096  # 0.9532908145
+relax_DTA_Salmonella = 0.2196310757689402  # 0.1768535622
 
 # Supercoiling values
 tetA_sc = -0.05
-mhYFP_sc = 0.003512001343
+mhYFP_sc = 0.0030446120261538  # 0.003512001343
 
 # Full promoter
-pleuWT_sigmoid_full = -0.114657413
-gradient_full = 0.7267593004
+pleuWT_sigmoid_full = -0.0730438758968655  # -0.114657413
+gradient_full = 0.0818199620246661  # 0.7267593004
 # Output Salmonella
-mhYFP_min_pfull_s = 0.1999758818
-mhYFP_max_pfull_s = 60.40914739
+mhYFP_min_pfull_s = 19.937824715727697  # 0.1999758818
+mhYFP_max_pfull_s = 23.6265774724979  # 60.40914739
 
 # Min promoter
-pleuWT_sigmoid_min = -0.1113355055
-gradient_min = 0.7438187636
+pleuWT_sigmoid_min = -0.0871953987185861  # -0.1113355055
+gradient_min = 0.1284585318724667  # 0.7438187636
 # Output Salmonella
-mhYFP_min_pmin_s = 2.372331873
-mhYFP_max_pmin_s = 58.71513799
+mhYFP_min_pmin_s = 18.496844452749595  # 2.372331873
+mhYFP_max_pmin_s = 21.765110326714744  # 58.71513799
 
 # Topo effects E.coli
 relax_WT_ecoli = 0.9060040144
@@ -97,14 +97,15 @@ process_split = {"Lac Loop": [[0, 2, 4, 6, 8, 10, 12, 14], [1, 3, 5, 7, 9, 11, 1
 
 # Median based fingerprint
 bio_finger_print = [1, 1, 0, -1, -1, 0, -1, 1, 1, -1, 0, 1, -1, 0, -1, 0, 1, 0, -1, -1, -1, -1, -1, -1]
+salmonella_bio_finger_print = [-1, -1, 0, -1, 0, 1, 0, 0, -1]
 
 # Strain only fingerprints
 # (ecoli_full + salmonella_full + ecoli_min + salmonella_min + WT_comps + No_topA_No_Lac_comps +
 #                         No_topA_Lac_comps)
 salmonella_full_only_fp = bio_finger_print[3:6]
-salmonella_min_only_fp = bio_finger_print[6:9]
+salmonella_min_only_fp = bio_finger_print[9:12]
 ecoli_full_only_fp = bio_finger_print[0:3]
-ecoli_min_only_fp = bio_finger_print[9:12]
+ecoli_min_only_fp = bio_finger_print[6:9]
 
 # Strain focused fingerprints
 salmonella_full_focus_fp = (bio_finger_print[3:6] + [bio_finger_print[13], bio_finger_print[15], bio_finger_print[17],
@@ -115,13 +116,17 @@ ecoli_full_focus_fp = (bio_finger_print[0:3] + [bio_finger_print[12], bio_finger
                        bio_finger_print[19], bio_finger_print[20], bio_finger_print[23]])
 ecoli_min_focus_fp = (bio_finger_print[9:12] + [bio_finger_print[12], bio_finger_print[14], bio_finger_print[16],
                       bio_finger_print[18], bio_finger_print[20], bio_finger_print[22]])
+salmonella_full_focus_fp_no_ecoli = (bio_finger_print[3:6] + [bio_finger_print[13], bio_finger_print[17], bio_finger_print[21]])
+salmonella_min_focus_fp_no_ecoli = (bio_finger_print[9:12] + [bio_finger_print[13], bio_finger_print[17], bio_finger_print[21]])
 
 bio_finger_prints = [salmonella_full_only_fp, salmonella_min_only_fp, ecoli_full_only_fp, ecoli_min_only_fp,
                      salmonella_full_focus_fp, salmonella_min_focus_fp, ecoli_full_focus_fp, ecoli_min_focus_fp]
+salmonella_bio_finger_prints = [[salmonella_full_only_fp, salmonella_min_only_fp,
+                                 salmonella_full_focus_fp_no_ecoli, salmonella_min_focus_fp_no_ecoli]]
 
 
 # function that runs all strains for each process
-def run_process(process, process_tag):
+def run_process(process, process_tag, skip_ecoli=False, promoter_type="sigmoid"):
     #   3. Ecoli - Full - DTA
     #   4. Ecoli - Min - WT
     #   5. Ecoli - Min - DTA/DL
@@ -138,9 +143,18 @@ def run_process(process, process_tag):
     #         "Salmonella_Full_WT", "Salmonella_Full_DTA", "Salmonella_Full_DTA/IL",
     #         "Salmonella_Min_WT", "Salmonella_Min_DTA", "Salmonella_Min_DTA/IL"]
     # Make the data frame and start the row with the process markers
-    row = [process_tag, process_tag, process_tag, process_tag]
-    for i in range(12):
-        circuit = process(strains[i])
+    if skip_ecoli:
+        row = [process_tag, process_tag]
+    else:
+        row = [process_tag, process_tag, process_tag, process_tag]
+    set_size = 6 if skip_ecoli else 12
+    for i in range(set_size):
+        if skip_ecoli:
+            strain = strains[i+6] + [promoter_type]
+            circuit = process(strain)
+        else:
+            strain = strains[i] + [promoter_type]
+            circuit = process(strain)
         circuit.run(1000)
         # add the end value to the row
         row.append(circuit.local.environments["Yellow"])
@@ -151,20 +165,25 @@ def run_process(process, process_tag):
 
 
 # loop to run through all process sets and form a single data frame and save to file
-def process_set_run(outputfile=""):
+def process_set_run(outputfile="", skip_ecoli=False, promoter_type="sigmoid"):
     processes = [cs.RT_LL_circuit, cs.RT_CR_circuit, cs.RT_LL_CR_circuit, cs.RT_circuit,
                  cs.SC_LL_circuit, cs.SC_CR_circuit, cs.SC_LL_CR_circuit, cs.SC_circuit,
                  cs.RT_SC_LL_circuit, cs.RT_SC_CR_circuit, cs.RT_SC_LL_CR_circuit, cs.RT_SC_circuit,
                  cs.LL_circuit, cs.CR_circuit, cs.LL_CR_circuit, cs.None_circuit]
-    cols = ["Ecoli_Full_Process", "Ecoli_Min_Process", "Salmonella_Full_Process", "Salmonella_Min_Process",
-            "Ecoli_Full_WT", "Ecoli_Full_DTA/DL", "Ecoli_Full_DTA",
-            "Ecoli_Min_WT", "Ecoli_Min_DTA/DL", "Ecoli_Min_DTA",
-            "Salmonella_Full_WT", "Salmonella_Full_DTA", "Salmonella_Full_DTA/IL",
-            "Salmonella_Min_WT", "Salmonella_Min_DTA", "Salmonella_Min_DTA/IL"]
+    if skip_ecoli:
+        cols = ["Salmonella_Full_Process", "Salmonella_Min_Process",
+                "Salmonella_Full_WT", "Salmonella_Full_DTA", "Salmonella_Full_DTA/IL",
+                "Salmonella_Min_WT", "Salmonella_Min_DTA", "Salmonella_Min_DTA/IL"]
+    else:
+        cols = ["Ecoli_Full_Process", "Ecoli_Min_Process", "Salmonella_Full_Process", "Salmonella_Min_Process",
+                "Ecoli_Full_WT", "Ecoli_Full_DTA/DL", "Ecoli_Full_DTA",
+                "Ecoli_Min_WT", "Ecoli_Min_DTA/DL", "Ecoli_Min_DTA",
+                "Salmonella_Full_WT", "Salmonella_Full_DTA", "Salmonella_Full_DTA/IL",
+                "Salmonella_Min_WT", "Salmonella_Min_DTA", "Salmonella_Min_DTA/IL"]
     # Make the data frame
     df = pd.DataFrame(columns=cols)
     for i in range(len(processes)):
-        new_row = run_process(processes[i], i)
+        new_row = run_process(processes[i], i, skip_ecoli, promoter_type)
         df.loc[len(df.index)] = new_row
     df.to_csv(outputfile + "Median_Process_Circuits_Run.csv", index=False)
 
@@ -196,14 +215,20 @@ def compare(a, b):
 # finger print generator
 def finger_print(row):
     # Ecoli min
-    ecoli_min = [compare(row["Ecoli_Min_WT"], row["Ecoli_Min_DTA/DL"]),
-                 compare(row["Ecoli_Min_WT"], row["Ecoli_Min_DTA"]),
-                 compare(row["Ecoli_Min_DTA/DL"], row["Ecoli_Min_DTA"])]
+    if "Ecoli_Min_WT" in row.index:
+        ecoli_min = [compare(row["Ecoli_Min_WT"], row["Ecoli_Min_DTA/DL"]),
+                     compare(row["Ecoli_Min_WT"], row["Ecoli_Min_DTA"]),
+                     compare(row["Ecoli_Min_DTA/DL"], row["Ecoli_Min_DTA"])]
+    else:
+        ecoli_min = None
 
     # Ecoli full
-    ecoli_full = [compare(row["Ecoli_Full_WT"], row["Ecoli_Full_DTA/DL"]),
-                  compare(row["Ecoli_Full_WT"], row["Ecoli_Full_DTA"]),
-                  compare(row["Ecoli_Full_DTA/DL"], row["Ecoli_Full_DTA"])]
+    if "Ecoli_Full_WT" in row.index:
+        ecoli_full = [compare(row["Ecoli_Full_WT"], row["Ecoli_Full_DTA/DL"]),
+                      compare(row["Ecoli_Full_WT"], row["Ecoli_Full_DTA"]),
+                      compare(row["Ecoli_Full_DTA/DL"], row["Ecoli_Full_DTA"])]
+    else:
+        ecoli_full = None
 
     # Salmonella min
     salmonella_min = [compare(row["Salmonella_Min_WT"], row["Salmonella_Min_DTA"]),
@@ -216,26 +241,38 @@ def finger_print(row):
                        compare(row["Salmonella_Full_DTA"], row["Salmonella_Full_DTA/IL"])]
 
     # WT Comparison (same bacteria or same promoter)
-    WT_comps = [compare(row["Ecoli_Min_WT"], row["Ecoli_Full_WT"]),
-                compare(row["Salmonella_Min_WT"], row["Salmonella_Full_WT"]),
-                compare(row["Ecoli_Min_WT"], row["Salmonella_Min_WT"]),
-                compare(row["Ecoli_Full_WT"], row["Salmonella_Full_WT"])]
+    if "Ecoli_Full_WT" in row.index:
+        WT_comps = [compare(row["Ecoli_Min_WT"], row["Ecoli_Full_WT"]),
+                    compare(row["Salmonella_Min_WT"], row["Salmonella_Full_WT"]),
+                    compare(row["Ecoli_Min_WT"], row["Salmonella_Min_WT"]),
+                    compare(row["Ecoli_Full_WT"], row["Salmonella_Full_WT"])]
+    else:
+        WT_comps = [compare(row["Salmonella_Min_WT"], row["Salmonella_Full_WT"])]
 
     # No topA and No Lac Comparison (same bacteria or same promoter)
-    No_topA_No_Lac_comps = [compare(row["Ecoli_Min_DTA/DL"], row["Ecoli_Full_DTA/DL"]),
-                            compare(row["Salmonella_Min_DTA"], row["Salmonella_Full_DTA"]),
-                            compare(row["Ecoli_Min_DTA/DL"], row["Salmonella_Min_DTA"]),
-                            compare(row["Ecoli_Full_DTA/DL"], row["Salmonella_Full_DTA"])]
+    if "Ecoli_Min_DTA/DL" in row.index:
+        No_topA_No_Lac_comps = [compare(row["Ecoli_Min_DTA/DL"], row["Ecoli_Full_DTA/DL"]),
+                                compare(row["Salmonella_Min_DTA"], row["Salmonella_Full_DTA"]),
+                                compare(row["Ecoli_Min_DTA/DL"], row["Salmonella_Min_DTA"]),
+                                compare(row["Ecoli_Full_DTA/DL"], row["Salmonella_Full_DTA"])]
+    else:
+        No_topA_No_Lac_comps = [compare(row["Salmonella_Min_DTA"], row["Salmonella_Full_DTA"])]
 
     # No topA and Lac Comparison (same bacteria or same promoter)
-    No_topA_Lac_comps = [compare(row["Ecoli_Min_DTA"], row["Ecoli_Full_DTA"]),
-                         compare(row["Salmonella_Min_DTA/IL"], row["Salmonella_Full_DTA/IL"]),
-                         compare(row["Ecoli_Min_DTA"], row["Salmonella_Min_DTA/IL"]),
-                         compare(row["Ecoli_Full_DTA"], row["Salmonella_Full_DTA/IL"])]
+    if "Ecoli_Min_DTA" in row.index:
+        No_topA_Lac_comps = [compare(row["Ecoli_Min_DTA"], row["Ecoli_Full_DTA"]),
+                             compare(row["Salmonella_Min_DTA/IL"], row["Salmonella_Full_DTA/IL"]),
+                             compare(row["Ecoli_Min_DTA"], row["Salmonella_Min_DTA/IL"]),
+                             compare(row["Ecoli_Full_DTA"], row["Salmonella_Full_DTA/IL"])]
+    else:
+        No_topA_Lac_comps = [compare(row["Salmonella_Min_DTA/IL"], row["Salmonella_Full_DTA/IL"])]
 
     # Form "fingerprints"
-    row_finger_print = (ecoli_full + salmonella_full + ecoli_min + salmonella_min + WT_comps + No_topA_No_Lac_comps +
-                        No_topA_Lac_comps)
+    if "Ecoli_Full_WT" in row.index:
+        row_finger_print = (ecoli_full + salmonella_full + ecoli_min + salmonella_min + WT_comps + No_topA_No_Lac_comps +
+                            No_topA_Lac_comps)
+    else:
+        row_finger_print = (salmonella_full + salmonella_min + WT_comps + No_topA_No_Lac_comps + No_topA_Lac_comps)
     return row_finger_print
 
 
@@ -243,7 +280,12 @@ def finger_print(row):
 def finger_print_distance_vector(row):
     dist = []
     fp = finger_print(row)
-    for (bio, comp) in zip(bio_finger_print, fp):
+    if len(fp) < len(bio_finger_print):
+        bio_fp = salmonella_bio_finger_print
+    else:
+        bio_fp = bio_finger_print
+
+    for (bio, comp) in zip(bio_fp, fp):
         dist.append(abs(bio - comp))
     return dist
 
@@ -350,14 +392,20 @@ def comp_process_frequency(df):
 def strain_finger_prints(row):
     # Set up the individual fingerprints for each strain
     # Ecoli min
-    ecoli_min = [compare(row["Ecoli_Min_WT"], row["Ecoli_Min_DTA/DL"]),
-                 compare(row["Ecoli_Min_WT"], row["Ecoli_Min_DTA"]),
-                 compare(row["Ecoli_Min_DTA/DL"], row["Ecoli_Min_DTA"])]
+    if "Ecoli_Min_WT" in row.index:
+        ecoli_min = [compare(row["Ecoli_Min_WT"], row["Ecoli_Min_DTA/DL"]),
+                     compare(row["Ecoli_Min_WT"], row["Ecoli_Min_DTA"]),
+                     compare(row["Ecoli_Min_DTA/DL"], row["Ecoli_Min_DTA"])]
+    else:
+        ecoli_min = None
 
     # Ecoli full
-    ecoli_full = [compare(row["Ecoli_Full_WT"], row["Ecoli_Full_DTA/DL"]),
-                  compare(row["Ecoli_Full_WT"], row["Ecoli_Full_DTA"]),
-                  compare(row["Ecoli_Full_DTA/DL"], row["Ecoli_Full_DTA"])]
+    if "Ecoli_Full_WT" in row.index:
+        ecoli_full = [compare(row["Ecoli_Full_WT"], row["Ecoli_Full_DTA/DL"]),
+                      compare(row["Ecoli_Full_WT"], row["Ecoli_Full_DTA"]),
+                      compare(row["Ecoli_Full_DTA/DL"], row["Ecoli_Full_DTA"])]
+    else:
+        ecoli_full = None
 
     # Salmonella min
     salmonella_min = [compare(row["Salmonella_Min_WT"], row["Salmonella_Min_DTA"]),
@@ -370,22 +418,32 @@ def strain_finger_prints(row):
                        compare(row["Salmonella_Full_DTA"], row["Salmonella_Full_DTA/IL"])]
 
     # WT Comparison (same bacteria or same promoter)
-    WT_comps = [compare(row["Ecoli_Min_WT"], row["Ecoli_Full_WT"]),
-                compare(row["Salmonella_Min_WT"], row["Salmonella_Full_WT"]),
-                compare(row["Ecoli_Min_WT"], row["Salmonella_Min_WT"]),
-                compare(row["Ecoli_Full_WT"], row["Salmonella_Full_WT"])]
+
+    if "Ecoli_Min_WT" in row.index:
+        WT_comps = [compare(row["Ecoli_Min_WT"], row["Ecoli_Full_WT"]),
+                    compare(row["Salmonella_Min_WT"], row["Salmonella_Full_WT"]),
+                    compare(row["Ecoli_Min_WT"], row["Salmonella_Min_WT"]),
+                    compare(row["Ecoli_Full_WT"], row["Salmonella_Full_WT"])]
+    else:
+        WT_comps = [compare(row["Salmonella_Min_WT"], row["Salmonella_Full_WT"])]
 
     # No topA and No Lac Comparison (same bacteria or same promoter)
-    No_topA_No_Lac_comps = [compare(row["Ecoli_Min_DTA/DL"], row["Ecoli_Full_DTA/DL"]),
-                            compare(row["Salmonella_Min_DTA"], row["Salmonella_Full_DTA"]),
-                            compare(row["Ecoli_Min_DTA/DL"], row["Salmonella_Min_DTA"]),
-                            compare(row["Ecoli_Full_DTA/DL"], row["Salmonella_Full_DTA"])]
+    if "Ecoli_Min_WT" in row.index:
+        No_topA_No_Lac_comps = [compare(row["Ecoli_Min_DTA/DL"], row["Ecoli_Full_DTA/DL"]),
+                                compare(row["Salmonella_Min_DTA"], row["Salmonella_Full_DTA"]),
+                                compare(row["Ecoli_Min_DTA/DL"], row["Salmonella_Min_DTA"]),
+                                compare(row["Ecoli_Full_DTA/DL"], row["Salmonella_Full_DTA"])]
+    else:
+        No_topA_No_Lac_comps = [compare(row["Salmonella_Min_DTA"], row["Salmonella_Full_DTA"])]
 
     # No topA and Lac Comparison (same bacteria or same promoter)
-    No_topA_Lac_comps = [compare(row["Ecoli_Min_DTA"], row["Ecoli_Full_DTA"]),
-                         compare(row["Salmonella_Min_DTA/IL"], row["Salmonella_Full_DTA/IL"]),
-                         compare(row["Ecoli_Min_DTA"], row["Salmonella_Min_DTA/IL"]),
-                         compare(row["Ecoli_Full_DTA"], row["Salmonella_Full_DTA/IL"])]
+    if "Ecoli_Min_WT" in row.index:
+        No_topA_Lac_comps = [compare(row["Ecoli_Min_DTA"], row["Ecoli_Full_DTA"]),
+                             compare(row["Salmonella_Min_DTA/IL"], row["Salmonella_Full_DTA/IL"]),
+                             compare(row["Ecoli_Min_DTA"], row["Salmonella_Min_DTA/IL"]),
+                             compare(row["Ecoli_Full_DTA"], row["Salmonella_Full_DTA/IL"])]
+    else:
+        No_topA_Lac_comps = [compare(row["Salmonella_Min_DTA/IL"], row["Salmonella_Full_DTA/IL"])]
 
     # Form "fingerprints"
     # form multiple strain fingerprints (all eight)
@@ -393,24 +451,35 @@ def strain_finger_prints(row):
     sm_fp_only = salmonella_min
     ef_fp_only = ecoli_full
     em_fp_only = ecoli_min
-    sf_fp_focus = salmonella_full + [WT_comps[1], WT_comps[3], No_topA_No_Lac_comps[1], No_topA_No_Lac_comps[3],
-                                     No_topA_Lac_comps[1], No_topA_Lac_comps[3]]
-    sm_fp_focus = salmonella_min + [WT_comps[1], WT_comps[2], No_topA_No_Lac_comps[1], No_topA_No_Lac_comps[2],
-                                    No_topA_Lac_comps[1], No_topA_Lac_comps[2]]
-    ef_fp_focus = ecoli_full + [WT_comps[0], WT_comps[3], No_topA_No_Lac_comps[0], No_topA_No_Lac_comps[3],
-                                No_topA_Lac_comps[0], No_topA_Lac_comps[3]]
-    em_fp_focus = ecoli_min + [WT_comps[0], WT_comps[2], No_topA_No_Lac_comps[0], No_topA_No_Lac_comps[2],
-                               No_topA_Lac_comps[0], No_topA_Lac_comps[2]]
-    return sf_fp_only, sm_fp_only, ef_fp_only, em_fp_only, sf_fp_focus, sm_fp_focus, ef_fp_focus, em_fp_focus
+    if "Ecoli_Min_WT" in row.index:
+        sf_fp_focus = salmonella_full + [WT_comps[1], WT_comps[3], No_topA_No_Lac_comps[1], No_topA_No_Lac_comps[3],
+                                         No_topA_Lac_comps[1], No_topA_Lac_comps[3]]
+        sm_fp_focus = salmonella_min + [WT_comps[1], WT_comps[2], No_topA_No_Lac_comps[1], No_topA_No_Lac_comps[2],
+                                        No_topA_Lac_comps[1], No_topA_Lac_comps[2]]
+    else:
+        sf_fp_focus = salmonella_full + [WT_comps[0], No_topA_No_Lac_comps[0], No_topA_Lac_comps[0]]
+        sm_fp_focus = salmonella_min + [WT_comps[0], No_topA_No_Lac_comps[0], No_topA_Lac_comps[0]]
+    if "Ecoli_Min_WT" in row.index:
+        ef_fp_focus = ecoli_full + [WT_comps[0], WT_comps[3], No_topA_No_Lac_comps[0], No_topA_No_Lac_comps[3],
+                                    No_topA_Lac_comps[0], No_topA_Lac_comps[3]]
+        em_fp_focus = ecoli_min + [WT_comps[0], WT_comps[2], No_topA_No_Lac_comps[0], No_topA_No_Lac_comps[2],
+                                   No_topA_Lac_comps[0], No_topA_Lac_comps[2]]
+        return sf_fp_only, sm_fp_only, ef_fp_only, em_fp_only, sf_fp_focus, sm_fp_focus, ef_fp_focus, em_fp_focus
+    else:
+        return sf_fp_only, sm_fp_only, sf_fp_focus, sm_fp_focus
 
 
 # distance measure with bio fingerprint
-def strain_finger_print_distances(row):
-    # get the distances for the individual strain finger prints add focused and only version
+def strain_finger_print_distances(row, skip_ecoli=False):
+    # get the distances for the individual strain fingerprints add focused and only version
     dists = []
     strain_fps = strain_finger_prints(row)
+    if skip_ecoli:
+        bfp = salmonella_bio_finger_prints
+    else:
+        bfp = bio_finger_prints
     # compare each print with bio and get 4 dists to return
-    for (strain_fp, bio_fp) in zip(strain_fps, bio_finger_prints):
+    for (strain_fp, bio_fp) in zip(strain_fps, bfp):
         dist = 0
         for (bio, comp) in zip(bio_fp, strain_fp):
             dist = dist + abs(bio - comp)
@@ -418,40 +487,62 @@ def strain_finger_print_distances(row):
     return dists
 
 
-def add_combos(df):
-    combos = pd.DataFrame(columns=["Ecoli_Full_Process", "Ecoli_Min_Process", "Salmonella_Full_Process",
-                                   "Salmonella_Min_Process",
-                                   "Ecoli_Full_WT", "Ecoli_Full_DTA/DL", "Ecoli_Full_DTA",
-                                   "Ecoli_Min_WT", "Ecoli_Min_DTA/DL", "Ecoli_Min_DTA",
-                                   "Salmonella_Full_WT", "Salmonella_Full_DTA", "Salmonella_Full_DTA/IL",
-                                   "Salmonella_Min_WT", "Salmonella_Min_DTA", "Salmonella_Min_DTA/IL"])
-    for r_EF in df.iterrows():
-        # Ecoli Full process
-        row_EF = r_EF[1]
-        tags_1 = [row_EF["Ecoli_Full_Process"]]
-        values_1 = [row_EF["Ecoli_Full_WT"], row_EF["Ecoli_Full_DTA/DL"], row_EF["Ecoli_Full_DTA"]]
-        for r_EM in df.iterrows():
-            # Ecoli min process
-            row_EM = r_EM[1]
-            tags_2 = tags_1 + [row_EM["Ecoli_Min_Process"]]
-            values_2 = values_1 + [row_EM["Ecoli_Min_WT"], row_EM["Ecoli_Min_DTA/DL"], row_EM["Ecoli_Min_DTA"]]
-            for r_SF in df.iterrows():
-                # Salmonella full process
-                row_SF = r_SF[1]
-                tags_3 = tags_2 + [row_SF["Salmonella_Full_Process"]]
-                values_3 = values_2 + [row_SF["Salmonella_Full_WT"], row_SF["Salmonella_Full_DTA"],
-                                       row_SF["Salmonella_Full_DTA/IL"]]
-                for r_SM in df.iterrows():
-                    # Salmonella min process
-                    row_SM = r_SM[1]
-                    if not (row_EF.all() == row_EM.all()
-                            and row_EF.all() == row_SM.all()
-                            and row_EF.all() == row_SF.all()):
-                        tags_4 = tags_3 + [row_SM["Ecoli_Min_Process"]]
-                        values_4 = values_3 + [row_SM["Salmonella_Min_WT"], row_SM["Salmonella_Min_DTA"],
-                                               row_SM["Salmonella_Min_DTA/IL"]]
-                        new_row = tags_4 + values_4
-                        combos.loc[len(combos.index)] = new_row
+def add_combos(df, skip_ecoli=False):
+    if skip_ecoli:
+        combos = pd.DataFrame(columns=["Salmonella_Full_Process", "Salmonella_Min_Process",
+                                       "Salmonella_Full_WT", "Salmonella_Full_DTA", "Salmonella_Full_DTA/IL",
+                                       "Salmonella_Min_WT", "Salmonella_Min_DTA", "Salmonella_Min_DTA/IL"])
+    else:
+        combos = pd.DataFrame(columns=["Ecoli_Full_Process", "Ecoli_Min_Process", "Salmonella_Full_Process",
+                                       "Salmonella_Min_Process",
+                                       "Ecoli_Full_WT", "Ecoli_Full_DTA/DL", "Ecoli_Full_DTA",
+                                       "Ecoli_Min_WT", "Ecoli_Min_DTA/DL", "Ecoli_Min_DTA",
+                                       "Salmonella_Full_WT", "Salmonella_Full_DTA", "Salmonella_Full_DTA/IL",
+                                       "Salmonella_Min_WT", "Salmonella_Min_DTA", "Salmonella_Min_DTA/IL"])
+
+    if not skip_ecoli:
+        for r_EF in df.iterrows():
+            # Ecoli Full process
+            row_EF = r_EF[1]
+            tags_1 = [row_EF["Ecoli_Full_Process"]]
+            values_1 = [row_EF["Ecoli_Full_WT"], row_EF["Ecoli_Full_DTA/DL"], row_EF["Ecoli_Full_DTA"]]
+            for r_EM in df.iterrows():
+                # Ecoli min process
+                row_EM = r_EM[1]
+                tags_2 = tags_1 + [row_EM["Ecoli_Min_Process"]]
+                values_2 = values_1 + [row_EM["Ecoli_Min_WT"], row_EM["Ecoli_Min_DTA/DL"], row_EM["Ecoli_Min_DTA"]]
+                for r_SF in df.iterrows():
+                    # Salmonella full process
+                    row_SF = r_SF[1]
+                    tags_3 = tags_2 + [row_SF["Salmonella_Full_Process"]]
+                    values_3 = values_2 + [row_SF["Salmonella_Full_WT"], row_SF["Salmonella_Full_DTA"],
+                                           row_SF["Salmonella_Full_DTA/IL"]]
+                    for r_SM in df.iterrows():
+                        # Salmonella min process
+                        row_SM = r_SM[1]
+                        if not (row_EF.all() == row_EM.all()
+                                and row_EF.all() == row_SM.all()
+                                and row_EF.all() == row_SF.all()):
+                            tags_4 = tags_3 + [row_SM["Salmonella_Min_Process"]]
+                            values_4 = values_3 + [row_SM["Salmonella_Min_WT"], row_SM["Salmonella_Min_DTA"],
+                                                   row_SM["Salmonella_Min_DTA/IL"]]
+                            new_row = tags_4 + values_4
+                            combos.loc[len(combos.index)] = new_row
+    else:
+        for r_SF in df.iterrows():
+            # Salmonella full process
+            row_SF = r_SF[1]
+            tags_3 = [row_SF["Salmonella_Full_Process"]]
+            values_3 = [row_SF["Salmonella_Full_WT"], row_SF["Salmonella_Full_DTA"], row_SF["Salmonella_Full_DTA/IL"]]
+            for r_SM in df.iterrows():
+                # Salmonella min process
+                row_SM = r_SM[1]
+                if not (row_SF.all() == row_SM.all()):
+                    tags_4 = tags_3 + [row_SM["Salmonella_Min_Process"]]
+                    values_4 = values_3 + [row_SM["Salmonella_Min_WT"], row_SM["Salmonella_Min_DTA"],
+                                           row_SM["Salmonella_Min_DTA/IL"]]
+                    new_row = tags_4 + values_4
+                    combos.loc[len(combos.index)] = new_row
     # add_dist_col(combos)
     df = pd.concat([df, combos], ignore_index=True, sort=False)
     add_dist_col(df)
@@ -513,23 +604,26 @@ def add_strain_dist_cols(df):
     # set up for the set of strains rather than the full version, need to resolve multiple returns from apply
     #  statement to multiple columns
     df['ind_dist'] = df.apply(strain_finger_print_distances, axis=1)
-    df['sf_only_dist'], df['sm_only_dist'], df['ef_only_dist'], df['em_only_dist'], \
-        df['sf_focus_dist'], df['sm_focus_dist'], df['ef_focus_dist'], df['em_focus_dist'] \
-        = zip(*df['ind_dist'].to_list())
+    if 'Ecoli_Min_Process' in df.columns:
+        (df['sf_only_dist'], df['sm_only_dist'],
+         df['ef_only_dist'], df['em_only_dist'],
+         df['sf_focus_dist'], df['sm_focus_dist'],
+         df['ef_focus_dist'], df['em_focus_dist']) = zip(*df['ind_dist'].to_list())
+    else:
+        (df['sf_only_dist'], df['sm_only_dist'],
+         df['sf_focus_dist'], df['sm_focus_dist']) = zip(*df['ind_dist'].to_list())
 
 
 if __name__ == "__main__":
-    # process_set_run()
-    # data = pd.read_csv("Median_Process_Circuits_Run.csv")
-    # add_dist_col(data)
+    # process_set_run("Phys_Data_Salmonella_Only_", True, "normal")
+    # data = pd.read_csv("Phys_Data_Salmonella_Only_Median_Process_Circuits_Run.csv")
     # add individual strain dist
-    # data = add_combos(data)
-    # add_strain_dist_cols(data)
-    # data.to_csv("Full_Combined_Median_Process_Circuit_Results_Individual.csv", index=False)
-    data = pd.read_csv("Full_Combined_Median_Process_Circuit_Results_Individual.csv", index_col=None)
+    # data = add_combos(data, skip_ecoli=True)
+    # data.to_csv("Full_Combined_Phys_Data_Salmonella_Only_Median_Process_Circuit_Results.csv", index=False)
+    data = pd.read_csv("Full_Combined_Phys_Data_Salmonella_Only_Median_Process_Circuit_Results.csv", index_col=None)
     # TODO: Form new data frame of finger print errors
-    dist_data = fp_dist = fp_dist_df(data)
-    comp_process_frequency(dist_data)
+    # dist_data = fp_dist = fp_dist_df(data)
+    # comp_process_frequency(dist_data)
     # TODO: generate graphs for strain only and strain focus on processes
     # TODO: generate graphs for finger_print comparisons (full, focused and only)
     # sets = ["Ecoli_Min_Process", "Ecoli_Full_Process", "Salmonella_Min_Process", "Salmonella_Full_Process"]

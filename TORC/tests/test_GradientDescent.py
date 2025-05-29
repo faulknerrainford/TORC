@@ -97,7 +97,7 @@ class Test(TestCase):
         check_values = [0.6633588091, 20471.26332, 30860.01578]
         full_promoter = gd.parameter_setting("Gradient_Descent_Phys_Test_Full", 0.5,
                                             ["pleuWT_sigmoid", "gradient", "tetA_sc", "anti_tetA_sc"],
-                                             1000, 0.02, check_values, generation_limit=3)
+                                             1000, 1, check_values, generation_limit=3)
         os.remove("Gradient_Descent_Phys_Test_Full_Initial_Random_Search.csv")
         os.remove("Combined_Data_Gradient_Descent_Phys_Test_Full_Initial_Random_Search.csv")
         os.remove("Gradient_Descent_Phys_Test_Full.csv")

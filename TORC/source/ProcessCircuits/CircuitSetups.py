@@ -3,13 +3,13 @@ from TORC import Plasmid
 
 def RT_LL_circuit(params):
     # TODO: 1. Read through and lac loop formation
-    CF_response, gradient, CF_strong, CF_weak, relax, tetA_sc_rate, CF_sc_rate, Lac, anti_tet = params
+    CF_response, gradient, CF_strong, CF_weak, relax, tetA_sc_rate, CF_sc_rate, Lac, anti_tet, dist = params
     circuit = Plasmid([("tetA", {"sc_rate": tetA_sc_rate}), ("P", "anti-tet", "anticlockwise",
                                                              {"weak": 1, "strong": 1, "terminator": False}),
                        ("bridge", "lac"),
                        ("CF", "Yellow", "anticlockwise", {"strong": CF_strong, "weak": CF_weak, "sc_rate": CF_sc_rate,
                                                           "response": CF_response, "gradient": gradient,
-                                                          "rate_dist": "sigmoid"}),
+                                                          "rate_dist": dist}),
                        ("bridge", "lac")], environments=[("lac", Lac)],
                       relax=relax, read_through=[("anti-tet", "Yellow", "lac")])
     circuit.setup()
@@ -18,13 +18,13 @@ def RT_LL_circuit(params):
 
 def RT_CR_circuit(params):
     # TODO: 2. Read through and canonical repression
-    CF_response, gradient, CF_strong, CF_weak, relax, tetA_sc_rate, CF_sc_rate, Lac, anti_tet = params
+    CF_response, gradient, CF_strong, CF_weak, relax, tetA_sc_rate, CF_sc_rate, Lac, anti_tet, dist = params
     circuit = Plasmid([("tetA", {"sc_rate": tetA_sc_rate}), ("P", "anti-tet", "anticlockwise",
                                                              {"weak": 1, "strong": 1, "terminator": False}),
                        ("bridge", "lacX"),
                        ("CF", "Yellow", "anticlockwise", {"strong": CF_strong, "weak": CF_weak, "sc_rate": CF_sc_rate,
                                                           "response": CF_response, "gradient": gradient,
-                                                          "rate_dist": "sigmoid", "repress": "lac"}),
+                                                          "rate_dist": dist, "repress": "lac"}),
                        ("bridge", "lacX")], environments=[("lacX", 0), ("lac", Lac)],
                       relax=relax, read_through=[("anti-tet", "Yellow", "lacX")])
     circuit.setup()
@@ -33,13 +33,13 @@ def RT_CR_circuit(params):
 
 def RT_LL_CR_circuit(params):
     # TODO: 3. Read through, lac loop and canonical repression
-    CF_response, gradient, CF_strong, CF_weak, relax, tetA_sc_rate, CF_sc_rate, Lac, anti_tet = params
+    CF_response, gradient, CF_strong, CF_weak, relax, tetA_sc_rate, CF_sc_rate, Lac, anti_tet, dist = params
     circuit = Plasmid([("tetA", {"sc_rate": tetA_sc_rate}), ("P", "anti-tet", "anticlockwise",
                                                              {"weak": 1, "strong": 1, "terminator": False}),
                        ("bridge", "lac"),
                        ("CF", "Yellow", "anticlockwise", {"strong": CF_strong, "weak": CF_weak, "sc_rate": CF_sc_rate,
                                                           "response": CF_response, "gradient": gradient,
-                                                          "rate_dist": "sigmoid", "repress": "lac"}),
+                                                          "rate_dist": dist, "repress": "lac"}),
                        ("bridge", "lac")], environments=[("lac", Lac)],
                       relax=relax, read_through=[("anti-tet", "Yellow", "lac")])
     circuit.setup()
@@ -48,13 +48,13 @@ def RT_LL_CR_circuit(params):
 
 def RT_circuit(params):
     # 4. Just read through
-    CF_response, gradient, CF_strong, CF_weak, relax, tetA_sc_rate, CF_sc_rate, Lac, anti_tet = params
+    CF_response, gradient, CF_strong, CF_weak, relax, tetA_sc_rate, CF_sc_rate, Lac, anti_tet, dist = params
     circuit = Plasmid([("tetA", {"sc_rate": tetA_sc_rate}), ("P", "anti-tet", "anticlockwise",
                                                              {"weak": 1, "strong": 1, "terminator": False}),
                        ("bridge", "lacX"),
                        ("CF", "Yellow", "anticlockwise", {"strong": CF_strong, "weak": CF_weak, "sc_rate": CF_sc_rate,
                                                           "response": CF_response, "gradient": gradient,
-                                                          "rate_dist": "sigmoid"}),
+                                                          "rate_dist": dist}),
                        ("bridge", "lacX")], environments=[("lacX", 0), ("lac", 0)],
                       relax=relax, read_through=[("anti-tet", "Yellow", "lacX")])
     circuit.setup()
@@ -63,12 +63,12 @@ def RT_circuit(params):
 
 def SC_LL_circuit(params):
     # 5. Anti-tet supercoiling and lac loop formation
-    CF_response, gradient, CF_strong, CF_weak, relax, tetA_sc_rate, CF_sc_rate, Lac, anti_tet = params
+    CF_response, gradient, CF_strong, CF_weak, relax, tetA_sc_rate, CF_sc_rate, Lac, anti_tet, dist = params
     circuit = Plasmid([("tetA", {"sc_rate": tetA_sc_rate}), ("P", "anti-tet", "anticlockwise", {"sc_rate": anti_tet}),
                        ("bridge", "lac"),
                        ("CF", "Yellow", "anticlockwise", {"strong": CF_strong, "weak": CF_weak, "sc_rate": CF_sc_rate,
                                                           "response": CF_response, "gradient": gradient,
-                                                          "rate_dist": "sigmoid"}),
+                                                          "rate_dist": dist}),
                        ("bridge", "lac")], environments=[("lacX", 0), ("lac", Lac)], relax=relax)
     circuit.setup()
     return circuit
@@ -76,12 +76,12 @@ def SC_LL_circuit(params):
 
 def SC_CR_circuit(params):
     # 6. Anti-tet supercoiling and canonical repression
-    CF_response, gradient, CF_strong, CF_weak, relax, tetA_sc_rate, CF_sc_rate, Lac, anti_tet = params
+    CF_response, gradient, CF_strong, CF_weak, relax, tetA_sc_rate, CF_sc_rate, Lac, anti_tet, dist = params
     circuit = Plasmid([("tetA", {"sc_rate": tetA_sc_rate}), ("P", "anti-tet", "anticlockwise", {"sc_rate": anti_tet}),
                        ("bridge", "lacX"),
                        ("CF", "Yellow", "anticlockwise", {"strong": CF_strong, "weak": CF_weak, "sc_rate": CF_sc_rate,
                                                           "response": CF_response, "gradient": gradient,
-                                                          "rate_dist": "sigmoid", "repress": "lac"}),
+                                                          "rate_dist": dist, "repress": "lac"}),
                        ("bridge", "lacX")], environments=[("lacX", 0), ("lac", Lac)], relax=relax)
     circuit.setup()
     return circuit
@@ -89,12 +89,12 @@ def SC_CR_circuit(params):
 
 def SC_LL_CR_circuit(params):
     # 7. Anti-tet supercoiling, lac loop and canonical repression
-    CF_response, gradient, CF_strong, CF_weak, relax, tetA_sc_rate, CF_sc_rate, Lac, anti_tet = params
+    CF_response, gradient, CF_strong, CF_weak, relax, tetA_sc_rate, CF_sc_rate, Lac, anti_tet, dist = params
     circuit = Plasmid([("tetA", {"sc_rate": tetA_sc_rate}), ("P", "anti-tet", "anticlockwise", {"sc_rate": anti_tet}),
                        ("bridge", "lac"),
                        ("CF", "Yellow", "anticlockwise", {"strong": CF_strong, "weak": CF_weak, "sc_rate": CF_sc_rate,
                                                           "response": CF_response, "gradient": gradient,
-                                                          "rate_dist": "sigmoid", "repress": "lac"}),
+                                                          "rate_dist": dist, "repress": "lac"}),
                        ("bridge", "lac")], environments=[("lacX", 0), ("lac", Lac)], relax=relax)
     circuit.setup()
     return circuit
@@ -102,12 +102,12 @@ def SC_LL_CR_circuit(params):
 
 def SC_circuit(params):
     # 8. Anti-tet supercoiling
-    CF_response, gradient, CF_strong, CF_weak, relax, tetA_sc_rate, CF_sc_rate, Lac, anti_tet = params
+    CF_response, gradient, CF_strong, CF_weak, relax, tetA_sc_rate, CF_sc_rate, Lac, anti_tet, dist = params
     circuit = Plasmid([("tetA", {"sc_rate": tetA_sc_rate}), ("P", "anti-tet", "anticlockwise", {"sc_rate": anti_tet}),
                        ("bridge", "lacX"),
                        ("CF", "Yellow", "anticlockwise", {"strong": CF_strong, "weak": CF_weak, "sc_rate": CF_sc_rate,
                                                           "response": CF_response, "gradient": gradient,
-                                                          "rate_dist": "sigmoid"}),
+                                                          "rate_dist": dist}),
                        ("bridge", "lacX")], environments=[("lacX", 0), ("lac", 0)], relax=relax)
     circuit.setup()
     return circuit
@@ -115,14 +115,14 @@ def SC_circuit(params):
 
 def RT_SC_LL_circuit(params):
     # TODO: 9. Anti-tet supercoiling, read through and lac loop formation
-    CF_response, gradient, CF_strong, CF_weak, relax, tetA_sc_rate, CF_sc_rate, Lac, anti_tet = params
+    CF_response, gradient, CF_strong, CF_weak, relax, tetA_sc_rate, CF_sc_rate, Lac, anti_tet, dist = params
     circuit = Plasmid([("tetA", {"sc_rate": tetA_sc_rate}), ("P", "anti-tet", "anticlockwise",
                                                              {"weak": 1, "strong": 1, "terminator": False,
                                                               "sc_rate": anti_tet}),
                        ("bridge", "lac"),
                        ("CF", "Yellow", "anticlockwise", {"strong": CF_strong, "weak": CF_weak, "sc_rate": CF_sc_rate,
                                                           "response": CF_response, "gradient": gradient,
-                                                          "rate_dist": "sigmoid"}),
+                                                          "rate_dist": dist}),
                        ("bridge", "lac")], environments=[("lac", Lac)],
                       relax=relax, read_through=[("anti-tet", "Yellow", "lac")])
     circuit.setup()
@@ -131,14 +131,14 @@ def RT_SC_LL_circuit(params):
 
 def RT_SC_CR_circuit(params):
     # TODO: 10. Anti-tet supercoiling, read through and canonical repression
-    CF_response, gradient, CF_strong, CF_weak, relax, tetA_sc_rate, CF_sc_rate, Lac, anti_tet = params
+    CF_response, gradient, CF_strong, CF_weak, relax, tetA_sc_rate, CF_sc_rate, Lac, anti_tet, dist = params
     circuit = Plasmid([("tetA", {"sc_rate": tetA_sc_rate}), ("P", "anti-tet", "anticlockwise",
                                                              {"weak": 1, "strong": 1, "terminator": False,
                                                               "sc_rate": anti_tet}),
                        ("bridge", "lacX"),
                        ("CF", "Yellow", "anticlockwise", {"strong": CF_strong, "weak": CF_weak, "sc_rate": CF_sc_rate,
                                                           "response": CF_response, "gradient": gradient,
-                                                          "rate_dist": "sigmoid", "repress": "lac"}),
+                                                          "rate_dist": dist, "repress": "lac"}),
                        ("bridge", "lacX")], environments=[("lacX", 0), ("lac", Lac)],
                       relax=relax, read_through=[("anti-tet", "Yellow", "lacX")])
     circuit.setup()
@@ -147,14 +147,14 @@ def RT_SC_CR_circuit(params):
 
 def RT_SC_LL_CR_circuit(params):
     # TODO: 11. Anti-tet supercoiling, read through, lac loop formation and canonical repression
-    CF_response, gradient, CF_strong, CF_weak, relax, tetA_sc_rate, CF_sc_rate, Lac, anti_tet = params
+    CF_response, gradient, CF_strong, CF_weak, relax, tetA_sc_rate, CF_sc_rate, Lac, anti_tet, dist = params
     circuit = Plasmid([("tetA", {"sc_rate": tetA_sc_rate}), ("P", "anti-tet", "anticlockwise",
                                                              {"weak": 1, "strong": 1, "terminator": False,
                                                               "sc_rate": anti_tet}),
                        ("bridge", "lac"),
                        ("CF", "Yellow", "anticlockwise", {"strong": CF_strong, "weak": CF_weak, "sc_rate": CF_sc_rate,
                                                           "response": CF_response, "gradient": gradient,
-                                                          "rate_dist": "sigmoid", "repress": "lac"}),
+                                                          "rate_dist": dist, "repress": "lac"}),
                        ("bridge", "lac")], environments=[("lac", Lac)],
                       relax=relax, read_through=[("anti-tet", "Yellow", "lac")])
     circuit.setup()
@@ -163,14 +163,14 @@ def RT_SC_LL_CR_circuit(params):
 
 def RT_SC_circuit(params):
     # TODO: 12. Anti-tet supercoiling and read through
-    CF_response, gradient, CF_strong, CF_weak, relax, tetA_sc_rate, CF_sc_rate, Lac, anti_tet = params
+    CF_response, gradient, CF_strong, CF_weak, relax, tetA_sc_rate, CF_sc_rate, Lac, anti_tet, dist = params
     circuit = Plasmid([("tetA", {"sc_rate": tetA_sc_rate}), ("P", "anti-tet", "anticlockwise",
                                                              {"weak": 1, "strong": 1, "terminator": False,
                                                               "sc_rate": anti_tet}),
                        ("bridge", "lacX"),
                        ("CF", "Yellow", "anticlockwise", {"strong": CF_strong, "weak": CF_weak, "sc_rate": CF_sc_rate,
                                                           "response": CF_response, "gradient": gradient,
-                                                          "rate_dist": "sigmoid"}),
+                                                          "rate_dist": dist}),
                        ("bridge", "lacX")], environments=[("lacX", 0), ("lac", 0)],
                       relax=relax, read_through=[("anti-tet", "Yellow", "lacX")])
     circuit.setup()
@@ -179,12 +179,12 @@ def RT_SC_circuit(params):
 
 def LL_circuit(params):
     # 13. Lac loop formation
-    CF_response, gradient, CF_strong, CF_weak, relax, tetA_sc_rate, CF_sc_rate, Lac, anti_tet = params
+    CF_response, gradient, CF_strong, CF_weak, relax, tetA_sc_rate, CF_sc_rate, Lac, anti_tet, dist = params
     circuit = Plasmid([("tetA", {"sc_rate": tetA_sc_rate}),
                        ("bridge", "lac"),
                        ("CF", "Yellow", "anticlockwise", {"strong": CF_strong, "weak": CF_weak, "sc_rate": CF_sc_rate,
                                                           "response": CF_response, "gradient": gradient,
-                                                          "rate_dist": "sigmoid"}),
+                                                          "rate_dist": dist}),
                        ("bridge", "lac")], environments=[("lac", Lac)], relax=relax)
     circuit.setup()
     return circuit
@@ -192,12 +192,12 @@ def LL_circuit(params):
 
 def CR_circuit(params):
     # 14. Canonical repression
-    CF_response, gradient, CF_strong, CF_weak, relax, tetA_sc_rate, CF_sc_rate, Lac, anti_tet = params
+    CF_response, gradient, CF_strong, CF_weak, relax, tetA_sc_rate, CF_sc_rate, Lac, anti_tet, dist = params
     circuit = Plasmid([("tetA", {"sc_rate": tetA_sc_rate}),
                        ("bridge", "lacX"),
                        ("CF", "Yellow", "anticlockwise", {"strong": CF_strong, "weak": CF_weak, "sc_rate": CF_sc_rate,
                                                           "response": CF_response, "gradient": gradient,
-                                                          "rate_dist": "sigmoid", "repress": "lac"}),
+                                                          "rate_dist": dist, "repress": "lac"}),
                        ("bridge", "lacX")], environments=[("lac", Lac)], relax=relax)
     circuit.setup()
     return circuit
@@ -205,12 +205,12 @@ def CR_circuit(params):
 
 def LL_CR_circuit(params):
     # 15. Lac loop formation and canonical repression
-    CF_response, gradient, CF_strong, CF_weak, relax, tetA_sc_rate, CF_sc_rate, Lac, anti_tet = params
+    CF_response, gradient, CF_strong, CF_weak, relax, tetA_sc_rate, CF_sc_rate, Lac, anti_tet, dist = params
     circuit = Plasmid([("tetA", {"sc_rate": tetA_sc_rate}),
                        ("bridge", "lac"),
                        ("CF", "Yellow", "anticlockwise", {"strong": CF_strong, "weak": CF_weak, "sc_rate": CF_sc_rate,
                                                           "response": CF_response, "gradient": gradient,
-                                                          "rate_dist": "sigmoid", "repress": "lac"}),
+                                                          "rate_dist": dist, "repress": "lac"}),
                        ("bridge", "lac")], environments=[("lac", Lac)], relax=relax)
     circuit.setup()
     return circuit
@@ -218,12 +218,12 @@ def LL_CR_circuit(params):
 
 def None_circuit(params):
     # 16. No effects
-    CF_response, gradient, CF_strong, CF_weak, relax, tetA_sc_rate, CF_sc_rate, Lac, anti_tet = params
+    CF_response, gradient, CF_strong, CF_weak, relax, tetA_sc_rate, CF_sc_rate, Lac, anti_tet, dist = params
     circuit = Plasmid([("tetA", {"sc_rate": tetA_sc_rate}),
                        ("bridge", "lacX"),
                        ("CF", "Yellow", "anticlockwise", {"strong": CF_strong, "weak": CF_weak, "sc_rate": CF_sc_rate,
                                                           "response": CF_response, "gradient": gradient,
-                                                          "rate_dist": "sigmoid"}),
+                                                          "rate_dist": dist}),
                        ("bridge", "lacX")], environments=[("lacX", 0), ("lac", 0)], relax=relax)
     circuit.setup()
     return circuit
