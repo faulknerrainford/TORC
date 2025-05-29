@@ -273,3 +273,21 @@ sf_focus_dist - Distance between comparisons which include substrains from the S
 sm_focus_dist - Distance between comparisons which include substrains from the Salmonella Min strain
 ef_focus_dist - Distance between comparisons which include substrains from the Ecoli Full strain
 em_focus_dist - Distance between comparisons which include substrains from the Ecoli Min strain
+
+
+#####################
+Graphs
+#####################
+
+The graphs seen previously are all generated in the same ProcessCircuitsRun.py or by hand. The box plots are generated
+using the combo_graphs function which For a given strain compares if there is a difference in model runs which include
+for instance lac loop formation or don't. For these graphs since they are based on the finger print distances lower
+values represent a stronger match with the patterns in the experimental data.
+
+We can also generate the frequency graph of the values in the fingerprints. This is what was shown in the coloured box
+comparisons. The data for this can be gotten with the fp_dist_df() and comp_process_frequency() functions and then the
+graphs previously shown were done by hand. The is a good idea for a representation but the initial dimensionality is too
+high so some sort of limitation is needed before it can be used in a paper (possibly without ecoli this could work quiet
+well as a there are now only 9 rather than 24 comparisons to consider and they could be easily stacked or done in a
+grid).
+
